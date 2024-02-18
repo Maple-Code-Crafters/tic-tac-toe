@@ -1,0 +1,7 @@
+Parei:
+  > Add "computer" player
+  > Add Settings
+  > Search a way of connection way to play with two phones.
+
+For native:
+  > Set app as Portrait
