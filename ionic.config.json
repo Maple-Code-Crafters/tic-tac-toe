@@ -1,0 +1,8 @@
+{
+  "name": "tic-tac-toe",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite",
+  "id": "62444c06"
+}
