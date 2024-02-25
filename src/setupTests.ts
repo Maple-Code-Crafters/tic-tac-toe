@@ -4,6 +4,9 @@
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom/vitest";
 
+// Mock scrollBy
+window.HTMLElement.prototype.scrollBy = function () {};
+
 // Mock matchmedia
 window.matchMedia =
   window.matchMedia ||
