@@ -1,9 +1,9 @@
 import { render } from "../test-utils";
-import PlayPage from "./Play";
+import ResultsPage from "./Results";
 
-describe("PlayPage", () => {
+describe("ResultsPage", () => {
   test("renders without crashing", () => {
-    const { baseElement } = render(<PlayPage />);
+    const { baseElement } = render(<ResultsPage />);
     expect(baseElement).toBeDefined();
   });
 
