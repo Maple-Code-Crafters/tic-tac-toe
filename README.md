@@ -19,6 +19,12 @@
 
 `npm run build`
 
+## Generate icon and splash screemn
+
+- Add `icon.png` and `splash.png` files to `/resources`
+
+- `npx capacitor-assets generate`
+
 ## Android
 
 - Install Android Studio
