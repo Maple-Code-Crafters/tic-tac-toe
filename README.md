@@ -25,6 +25,8 @@
 
 - `npx capacitor-assets generate`
 
+- <https://capacitorjs.com/docs/guides/splash-screens-and-icons>
+
 ## Android
 
 - Install Android Studio
