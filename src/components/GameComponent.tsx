@@ -1,21 +1,25 @@
-import {
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonButton,
-  IonCard,
-  IonCardSubtitle,
-  IonCardHeader,
-  IonCardTitle,
-  IonLabel,
-} from "@ionic/react";
 import { useState } from "react";
 import { useHistory } from "react-router";
-import { GameStorage } from "../helpers/storage.helper";
-import { Value } from "../models/Cell";
-import { Game, Index } from "../models/Game";
-import { Player } from "../models/Player";
+
+import {
+  IonButton,
+  IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCol,
+  IonGrid,
+  IonLabel,
+  IonRow,
+} from "@ionic/react";
+
 import "./GameComponent.css";
+
+import { GameStorage } from "../helpers/storage.helper";
+import type { Value } from "../models/Cell";
+import type { Index } from "../models/Game";
+import { Game } from "../models/Game";
+import { Player } from "../models/Player";
 
 export const GameComponent = ({
   game,

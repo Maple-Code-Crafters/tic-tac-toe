@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import {
   IonContent,
   IonHeader,
@@ -5,11 +7,11 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+
 import { GameComponent } from "../components/GameComponent";
 import { NewGameForm } from "../components/NewGameForm";
 import { useParamQuery } from "../hooks/useParamQuery";
-import { Value } from "../models/Cell";
+import type { Value } from "../models/Cell";
 import { Game } from "../models/Game";
 import { Player } from "../models/Player";
 

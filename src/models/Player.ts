@@ -1,4 +1,4 @@
-import { Value } from "./Cell";
+import type { Value } from "./Cell";
 
 export type ArchivedPlayer = {
   name: string;

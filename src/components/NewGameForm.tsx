@@ -1,22 +1,25 @@
+import { useState } from "react";
+
 import {
+  IonButton,
   IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
-  IonCardContent,
-  IonItemGroup,
+  IonInput,
   IonItem,
+  IonItemGroup,
   IonLabel,
   IonSegment,
   IonSegmentButton,
-  IonInput,
-  IonButton,
   useIonAlert,
 } from "@ionic/react";
-import { useState } from "react";
-import { Value } from "../models/Cell";
+
+import "./NewGameForm.css";
+
+import type { Value } from "../models/Cell";
 import { Game } from "../models/Game";
 import { Player } from "../models/Player";
-import "./NewGameForm.css";
 
 type PlayersState = {
   player1Name: string;

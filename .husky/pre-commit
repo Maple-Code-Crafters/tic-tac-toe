@@ -1,5 +1,5 @@
 echo "eslint running..."
-#npx eslint --max-warnings=0 . --ext .tsx,.ts,.js
+npx eslint --max-warnings=0 . --ext .tsx,.ts,.js
 echo "tsc running..."
 #npx tsc
 #npx prettier --check .

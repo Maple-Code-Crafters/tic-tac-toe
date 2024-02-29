@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { fileTrayOutline } from "ionicons/icons";
+
 import {
   IonAvatar,
   IonButton,
@@ -14,11 +17,12 @@ import {
   useIonAlert,
   useIonViewWillEnter,
 } from "@ionic/react";
-import { fileTrayOutline } from "ionicons/icons";
-import { useState } from "react";
-import { GameComponent } from "../components/GameComponent";
-import { GameStorage, StoredGame } from "../helpers/storage.helper";
+
 import "./Results.css";
+
+import { GameComponent } from "../components/GameComponent";
+import type { StoredGame } from "../helpers/storage.helper";
+import { GameStorage } from "../helpers/storage.helper";
 
 const ResultsPage: React.FC = () => {
   const [presentAlert] = useIonAlert();

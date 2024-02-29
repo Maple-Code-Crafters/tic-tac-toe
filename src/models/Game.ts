@@ -1,5 +1,7 @@
-import { ArchivedCell, Cell, Value } from "./Cell";
-import { ArchivedPlayer, Player } from "./Player";
+import type { ArchivedCell, Value } from "./Cell";
+import { Cell } from "./Cell";
+import type { ArchivedPlayer} from "./Player";
+import { Player } from "./Player";
 
 export type Index = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
