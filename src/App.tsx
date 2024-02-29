@@ -9,7 +9,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact
+  setupIonicReact,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
@@ -28,11 +28,11 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
-import "./App.css";
+import './App.css';
 
-import PlayPage from "./pages/Play";
-import ResultsPage from "./pages/Results";
-import SettingsPage from "./pages/Settings";
+import PlayPage from './pages/Play';
+import ResultsPage from './pages/Results';
+import SettingsPage from './pages/Settings';
 
 setupIonicReact();
 

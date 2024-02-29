@@ -2,4 +2,4 @@ echo "eslint running..."
 npx eslint --max-warnings=0 . --ext .tsx,.ts
 echo "tsc running..."
 npx tsc
-#npx prettier --check .
+npx prettier --check .

@@ -1,7 +1,7 @@
-import type { ArchivedCell, Value } from "./Cell";
-import { Cell } from "./Cell";
-import type { ArchivedPlayer} from "./Player";
-import { Player } from "./Player";
+import type { ArchivedCell, Value } from './Cell';
+import { Cell } from './Cell';
+import type { ArchivedPlayer } from './Player';
+import { Player } from './Player';
 
 export type Index = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
@@ -72,20 +72,20 @@ export class Game {
       [this._cells[2], this._cells[4], this._cells[6]],
     ];
     const classNameCombs: [string, string][] = [
-      ["grid-horizontal-top", "horizontal"],
-      ["grid-horizontal-middle", "horizontal"],
-      ["grid-horizontal-bottom", "horizontal"],
-      ["grid-vertical-left", "vertical"],
-      ["grid-vertical-middle", "vertical"],
-      ["grid-vertical-right", "vertical"],
-      ["top-left-to-bottom-right", "top-left-to-bottom-right"],
-      ["top-right-to-bottom-left", "top-right-to-bottom-left"],
+      ['grid-horizontal-top', 'horizontal'],
+      ['grid-horizontal-middle', 'horizontal'],
+      ['grid-horizontal-bottom', 'horizontal'],
+      ['grid-vertical-left', 'vertical'],
+      ['grid-vertical-middle', 'vertical'],
+      ['grid-vertical-right', 'vertical'],
+      ['top-left-to-bottom-right', 'top-left-to-bottom-right'],
+      ['top-right-to-bottom-left', 'top-right-to-bottom-left'],
     ];
 
     for (let i = 0; i < combs.length; i++) {
       const comb = combs[i];
-      const result = comb.join("");
-      if (result === "OOO" || result === "XXX") {
+      const result = comb.join('');
+      if (result === 'OOO' || result === 'XXX') {
         const [gridClass, cellClass] = classNameCombs[i];
         this._gridClassNameWin = gridClass;
         this.winValue = result[0] as Value;
@@ -117,10 +117,7 @@ export class Game {
   }
 
   static fromArchived(archivedGame: ArchivedGame): Game {
-    const game = new Game(
-      Player.fromArchived(archivedGame.player1),
-      Player.fromArchived(archivedGame.player2)
-    );
+    const game = new Game(Player.fromArchived(archivedGame.player1), Player.fromArchived(archivedGame.player2));
 
     archivedGame.cells.forEach((c, i) => {
       const cell = game.getCell(i as Index);

@@ -1,4 +1,4 @@
-import type { Value } from "./Cell";
+import type { Value } from './Cell';
 
 export type ArchivedPlayer = {
   name: string;
@@ -6,7 +6,10 @@ export type ArchivedPlayer = {
 };
 
 export class Player {
-  constructor(private _name: string, private _value: Value) {}
+  constructor(
+    private _name: string,
+    private _value: Value,
+  ) {}
 
   public get name() {
     return this._name;

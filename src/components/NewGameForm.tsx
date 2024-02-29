@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 import {
   IonButton,
@@ -13,13 +13,13 @@ import {
   IonSegment,
   IonSegmentButton,
   useIonAlert,
-} from "@ionic/react";
+} from '@ionic/react';
 
-import "./NewGameForm.css";
+import './NewGameForm.css';
 
-import type { Value } from "../models/Cell";
-import { Game } from "../models/Game";
-import { Player } from "../models/Player";
+import type { Value } from '../models/Cell';
+import { Game } from '../models/Game';
+import { Player } from '../models/Player';
 
 type PlayersState = {
   player1Name: string;
@@ -28,17 +28,13 @@ type PlayersState = {
   player2Value: Value;
 };
 
-export const NewGameForm = ({
-  startGame,
-}: {
-  startGame: (game: Game) => void;
-}) => {
+export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) => {
   const [present] = useIonAlert();
   const [state, setState] = useState<PlayersState>({
-    player1Name: "",
-    player1Value: "O",
-    player2Name: "",
-    player2Value: "X",
+    player1Name: '',
+    player1Value: 'O',
+    player2Name: '',
+    player2Value: 'X',
   });
 
   return (
@@ -57,7 +53,7 @@ export const NewGameForm = ({
                 setState((s) => ({
                   ...s,
                   player1Value: e.detail.value as Value,
-                  player2Value: (e.detail.value as Value) === "O" ? "X" : "O",
+                  player2Value: (e.detail.value as Value) === 'O' ? 'X' : 'O',
                 }));
               }}
             >
@@ -94,7 +90,7 @@ export const NewGameForm = ({
                 setState((s) => ({
                   ...s,
                   player2Value: e.detail.value as Value,
-                  player1Value: (e.detail.value as Value) === "O" ? "X" : "O",
+                  player1Value: (e.detail.value as Value) === 'O' ? 'X' : 'O',
                 }));
               }}
             >
@@ -128,20 +124,20 @@ export const NewGameForm = ({
           onClick={() => {
             if (!state.player1Name) {
               present({
-                message: "Please, enter player 1 name.",
-                buttons: ["Ok"],
+                message: 'Please, enter player 1 name.',
+                buttons: ['Ok'],
               });
             } else if (!state.player2Name) {
               present({
-                message: "Please, enter player 2 name.",
-                buttons: ["Ok"],
+                message: 'Please, enter player 2 name.',
+                buttons: ['Ok'],
               });
             } else {
               startGame(
                 new Game(
                   new Player(state.player1Name, state.player1Value),
-                  new Player(state.player2Name, state.player2Value)
-                )
+                  new Player(state.player2Name, state.player2Value),
+                ),
               );
             }
           }}

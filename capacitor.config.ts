@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: 'tic-tac-toe',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
-  }
+    androidScheme: 'https',
+  },
 };
 
 export default config;
