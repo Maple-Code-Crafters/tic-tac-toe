@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { fileTrayOutline } from 'ionicons/icons';
+
 import {
   IonAvatar,
   IonButton,
@@ -13,12 +16,13 @@ import {
   IonToolbar,
   useIonAlert,
   useIonViewWillEnter,
-} from "@ionic/react";
-import { fileTrayOutline } from "ionicons/icons";
-import { useState } from "react";
-import { GameComponent } from "../components/GameComponent";
-import { GameStorage, StoredGame } from "../helpers/storage.helper";
-import "./Results.css";
+} from '@ionic/react';
+
+import './Results.css';
+
+import { GameComponent } from '../components/GameComponent';
+import type { StoredGame } from '../helpers/storage.helper';
+import { GameStorage } from '../helpers/storage.helper';
 
 const ResultsPage: React.FC = () => {
   const [presentAlert] = useIonAlert();
@@ -48,13 +52,12 @@ const ResultsPage: React.FC = () => {
             <IonButton
               onClick={() => {
                 presentAlert({
-                  header: "Confirm",
-                  message:
-                    "All your saved games will be deleted. Do you confirm?",
+                  header: 'Confirm',
+                  message: 'All your saved games will be deleted. Do you confirm?',
                   buttons: [
-                    "Cancel",
+                    'Cancel',
                     {
-                      text: "Delete",
+                      text: 'Delete',
                       handler: async () => {
                         await GameStorage.deteleAll();
                         load();
@@ -71,30 +74,24 @@ const ResultsPage: React.FC = () => {
           <IonListHeader>
             <IonLabel>
               <h3>
-                {selectedStoredGame.game.player1.name} vs{" "}
-                {selectedStoredGame.game.player2.name}
+                {selectedStoredGame.game.player1.name} vs {selectedStoredGame.game.player2.name}
               </h3>
               <p>Date: {selectedStoredGame.date.toLocaleString()}</p>
             </IonLabel>
-            <IonButton
-              className="ion-no-padding"
-              onClick={() => setSelectedStoredGame(undefined)}
-            >
+            <IonButton className="ion-no-padding" onClick={() => setSelectedStoredGame(undefined)}>
               Back
             </IonButton>
             <IonButton
               onClick={() => {
                 presentAlert({
-                  header: "Confirm",
-                  message: "This saved game will be deleted. Do you confirm?",
+                  header: 'Confirm',
+                  message: 'This saved game will be deleted. Do you confirm?',
                   buttons: [
-                    "Cancel",
+                    'Cancel',
                     {
-                      text: "Delete",
+                      text: 'Delete',
                       handler: async () => {
-                        await GameStorage.deteleOne(
-                          selectedStoredGame.date.toISOString()
-                        );
+                        await GameStorage.deteleOne(selectedStoredGame.date.toISOString());
                         setStoredGames(await GameStorage.getAllDescOrder());
                         setSelectedStoredGame(undefined);
                       },
@@ -113,25 +110,13 @@ const ResultsPage: React.FC = () => {
             {storedGames.length > 0 ? (
               <IonList>
                 {storedGames.map((sg) => (
-                  <IonItem
-                    key={sg.date.toISOString()}
-                    button
-                    onClick={() => setSelectedStoredGame(sg)}
-                  >
-                    <IonAvatar className="o-x-value">
-                      {sg.game.winValue}
-                    </IonAvatar>
+                  <IonItem key={sg.date.toISOString()} button onClick={() => setSelectedStoredGame(sg)}>
+                    <IonAvatar className="o-x-value">{sg.game.winValue}</IonAvatar>
                     <IonLabel>
                       <h3>
                         {sg.game.player1.name} vs {sg.game.player2.name}
                       </h3>
-                      <p>
-                        {sg.game.winValue
-                          ? `Winner: ${
-                              sg.game.getPlayer(sg.game.winValue)?.name
-                            }`
-                          : "No winner"}
-                      </p>
+                      <p>{sg.game.winValue ? `Winner: ${sg.game.getPlayer(sg.game.winValue)?.name}` : 'No winner'}</p>
                       <p>Date: {sg.date.toLocaleString()}</p>
                     </IonLabel>
                   </IonItem>
