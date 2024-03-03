@@ -1,20 +1,17 @@
-import type { RenderOptions } from "@testing-library/react";
-import { act, configure, render as rtlRender } from "@testing-library/react";
-import type { ReactElement, ReactNode } from "react";
-import { createMemoryHistory } from "history";
-import { IonApp, getConfig } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
+import { createMemoryHistory } from 'history';
+import type { ReactElement, ReactNode } from 'react';
+
+import { getConfig, IonApp } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
+import type { RenderOptions } from '@testing-library/react';
+import { act, configure, render as rtlRender } from '@testing-library/react';
 
 configure({
   ...getConfig(),
   reactStrictMode: true,
 });
 
-const render = (
-  ui: ReactElement,
-  customHistory = createMemoryHistory(),
-  renderOptions?: RenderOptions
-) => {
+const render = (ui: ReactElement, customHistory = createMemoryHistory(), renderOptions?: RenderOptions) => {
   const Wrapper = ({ children }: { children: ReactNode }) => {
     return (
       <IonApp>
@@ -29,7 +26,7 @@ const render = (
 const safeAct = () => act(async () => await Promise.resolve());
 
 // re-export everything
-export * from "@testing-library/react";
+export * from '@testing-library/react';
 
 // override render method
 export { render, safeAct, createMemoryHistory as createTestHistory };

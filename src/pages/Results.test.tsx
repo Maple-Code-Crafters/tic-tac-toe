@@ -1,8 +1,8 @@
-import { render } from "../test-utils";
-import ResultsPage from "./Results";
+import { render } from '../test-utils';
+import ResultsPage from './Results';
 
-describe("ResultsPage", () => {
-  test("renders without crashing", () => {
+describe('ResultsPage', () => {
+  test('renders without crashing', () => {
     const { baseElement } = render(<ResultsPage />);
     expect(baseElement).toBeDefined();
   });
