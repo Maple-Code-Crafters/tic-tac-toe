@@ -1,5 +1,7 @@
-import { Preferences } from "@capacitor/preferences";
-import { ArchivedGame, Game } from "../models/Game";
+import { Preferences } from '@capacitor/preferences';
+
+import type { ArchivedGame } from '../models/Game';
+import { Game } from '../models/Game';
 
 export type StoredGame = {
   date: Date;

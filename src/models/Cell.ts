@@ -1,4 +1,4 @@
-export type Value = "O" | "X";
+export type Value = 'O' | 'X';
 
 export type ArchivedCell = {
   index: number;
