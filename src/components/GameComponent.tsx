@@ -1,21 +1,25 @@
+import { useState } from 'react';
+import { useHistory } from 'react-router';
+
 import {
-  IonGrid,
-  IonRow,
-  IonCol,
   IonButton,
   IonCard,
-  IonCardSubtitle,
   IonCardHeader,
+  IonCardSubtitle,
   IonCardTitle,
+  IonCol,
+  IonGrid,
   IonLabel,
-} from "@ionic/react";
-import { useState } from "react";
-import { useHistory } from "react-router";
-import { GameStorage } from "../helpers/storage.helper";
-import { Value } from "../models/Cell";
-import { Game, Index } from "../models/Game";
-import { Player } from "../models/Player";
-import "./GameComponent.css";
+  IonRow,
+} from '@ionic/react';
+
+import './GameComponent.css';
+
+import { GameStorage } from '../helpers/storage.helper';
+import type { Value } from '../models/Cell';
+import type { Index } from '../models/Game';
+import { Game } from '../models/Game';
+import { Player } from '../models/Player';
 
 export const GameComponent = ({
   game,
@@ -34,7 +38,7 @@ export const GameComponent = ({
 
   const handleCellClick = (index: Index) => {
     game.getCell(index).value = turn;
-    setTurn(turn === "O" ? "X" : "O");
+    setTurn(turn === 'O' ? 'X' : 'O');
   };
 
   return (
@@ -43,19 +47,12 @@ export const GameComponent = ({
         <IonCardHeader>
           {(!finished || (finished && hasWin)) && (
             <>
-              <IonCardSubtitle>
-                {hasWin ? "Winner" : "Player turn"}
-              </IonCardSubtitle>
+              <IonCardSubtitle>{hasWin ? 'Winner' : 'Player turn'}</IonCardSubtitle>
               <IonCardTitle>
-                <IonLabel
-                  className="turnLabel ion-margin-end o-x-value"
-                  color="medium"
-                >
+                <IonLabel className="turnLabel ion-margin-end o-x-value" color="medium">
                   {hasWin ? game.winValue : turn}
                 </IonLabel>
-                {hasWin
-                  ? game.getPlayer(game.winValue)?.name
-                  : game.getPlayer(turn)?.name}
+                {hasWin ? game.getPlayer(game.winValue)?.name : game.getPlayer(turn)?.name}
               </IonCardTitle>
             </>
           )}
@@ -64,15 +61,15 @@ export const GameComponent = ({
       </IonCard>
       <div className="main">
         <IonGrid
-          className={`ion-margin ${finished || hasWin ? "noClick" : ""} ${
-            hasWin ? `${game.getGridClassNameWin()}` : ""
+          className={`ion-margin ${finished || hasWin ? 'noClick' : ''} ${
+            hasWin ? `${game.getGridClassNameWin()}` : ''
           }`}
         >
           <IonRow>
             <IonCol className="cell cell-1 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(0).className : ""}
+                className={hasWin ? game.getCell(0).className : ''}
                 onClick={() => handleCellClick(0)}
               >
                 {game.getCell(0).value}
@@ -81,7 +78,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-2 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(1).className : ""}
+                className={hasWin ? game.getCell(1).className : ''}
                 onClick={() => handleCellClick(1)}
               >
                 {game.getCell(1).value}
@@ -90,7 +87,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-3 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(2).className : ""}
+                className={hasWin ? game.getCell(2).className : ''}
                 onClick={() => handleCellClick(2)}
               >
                 {game.getCell(2).value}
@@ -101,7 +98,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-4 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(3).className : ""}
+                className={hasWin ? game.getCell(3).className : ''}
                 onClick={() => handleCellClick(3)}
               >
                 {game.getCell(3).value}
@@ -110,7 +107,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-5 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(4).className : ""}
+                className={hasWin ? game.getCell(4).className : ''}
                 onClick={() => handleCellClick(4)}
               >
                 {game.getCell(4).value}
@@ -119,7 +116,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-6 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(5).className : ""}
+                className={hasWin ? game.getCell(5).className : ''}
                 onClick={() => handleCellClick(5)}
               >
                 {game.getCell(5).value}
@@ -130,7 +127,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-7 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(6).className : ""}
+                className={hasWin ? game.getCell(6).className : ''}
                 onClick={() => handleCellClick(6)}
               >
                 {game.getCell(6).value}
@@ -139,7 +136,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-8 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(7).className : ""}
+                className={hasWin ? game.getCell(7).className : ''}
                 onClick={() => handleCellClick(7)}
               >
                 {game.getCell(7).value}
@@ -148,7 +145,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-9 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(8).className : ""}
+                className={hasWin ? game.getCell(8).className : ''}
                 onClick={() => handleCellClick(8)}
               >
                 {game.getCell(8).value}
@@ -168,13 +165,13 @@ export const GameComponent = ({
                 setGame(
                   new Game(
                     new Player(game.player1.name, game.player1.value),
-                    new Player(game.player2.name, game.player2.value)
-                  )
+                    new Player(game.player2.name, game.player2.value),
+                  ),
                 );
               } else {
                 setGame(undefined);
                 history.push(
-                  `/play?player1Name=${game.player1.name}&player1Value=${game.player1.value}&player2Name=${game.player2.name}&player2Value=${game.player2.value}`
+                  `/play?player1Name=${game.player1.name}&player1Value=${game.player1.value}&player2Name=${game.player2.name}&player2Value=${game.player2.value}`,
                 );
               }
             }}

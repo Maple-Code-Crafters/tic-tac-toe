@@ -1,4 +1,4 @@
-import { useLocation } from "react-router";
+import { useLocation } from 'react-router';
 
 export const useParamQuery = () => {
   const location = useLocation();
