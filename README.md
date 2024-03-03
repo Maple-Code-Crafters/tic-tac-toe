@@ -11,9 +11,13 @@
 
 `npm i`
 
-## development
+## Development
 
 `npm run dev`
+
+## Test
+
+- Cypress needs the app/server running to work
 
 ## Build
 
