@@ -21,11 +21,11 @@
 
 ## Generate icon and splash screemn
 
-- Add `icon.png` and `splash.png` files to `/resources`
+- Add `logo.png` files to `/resources`
 
-- `npx capacitor-assets generate`
+- `npx @capacitor/assets generate --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'`
 
-- <https://capacitorjs.com/docs/guides/splash-screens-and-icons>
+- <https://github.com/ionic-team/capacitor-assets>
 
 ## Android
 
@@ -33,8 +33,12 @@
 
 - [Running for Android](https://capacitorjs.com/docs/android)
 
+- `npm run build:android`
+
 ## iOS
 
 - Install Xcode (only Mac)
 
 - [Running for iOS](https://capacitorjs.com/docs/ios)
+
+- `npm run build:ios`

@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:android": "npm run build && npx cap copy android",
+    "build:ios": "build && npx cap copy ios",
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",
