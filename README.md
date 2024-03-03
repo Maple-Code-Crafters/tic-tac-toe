@@ -11,9 +11,13 @@
 
 `npm i`
 
+## Plugins
+
+- After adding or updating any Capacitor plugin, run `ionic capacitor sync`
+
 ## development
 
-`npm run dev`
+`npm start`
 
 ## Build
 
@@ -23,22 +27,26 @@
 
 - Add `logo.png` files to `/resources`
 
-- `npx @capacitor/assets generate --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'`
+- `npm run generate`
 
 - <https://github.com/ionic-team/capacitor-assets>
 
 ## Android
 
+- To add android app: `ionic capacitor add android`
+
 - Install Android Studio
 
 - [Running for Android](https://capacitorjs.com/docs/android)
 
-- `npm run build:android`
+- To copy source code changes: `npm run build:android`
 
 ## iOS
+
+- To add ios app: `ionic capacitor add ios`
 
 - Install Xcode (only Mac)
 
 - [Running for iOS](https://capacitorjs.com/docs/ios)
 
-- `npm run build:ios`
+- To copy source code changes: `npm run build:ios`

@@ -4,16 +4,17 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "build:android": "npm run build && npx cap copy android",
-    "build:ios": "npm run build && npx cap copy ios",
-    "preview": "vite preview",
+    "start": "ionic serve",
+    "build": "tsc && ionic build",
+    "build:android": "ionic capacitor copy android",
+    "build:ios": "ionic capacitor copy ios",
     "test.e2e": "cypress run",
     "test.unit": "vitest",
     "lint": "npx eslint . --ext .tsx,.ts --fix",
     "p": "npm run lint && npx prettier --log-level=warn --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "generate:ios": "npx @capacitor/assets generate --ios --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'",
+    "generate:android": "npx @capacitor/assets generate --android --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'"
   },
   "dependencies": {
     "@capacitor/android": "5.7.1",
@@ -23,6 +24,7 @@
     "@capacitor/ios": "5.7.1",
     "@capacitor/keyboard": "5.0.8",
     "@capacitor/preferences": "^5.0.7",
+    "@capacitor/splash-screen": "^5.0.7",
     "@capacitor/status-bar": "5.0.7",
     "@ionic/react": "^7.7.3",
     "@ionic/react-router": "^7.7.3",
