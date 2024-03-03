@@ -22,7 +22,32 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Ionic App" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <style>
+    <style type="text/css">
+      /* https://cssloaders.github.io/ */
+      #loader {
+        position: absolute;
+        top: calc(50% - 13px);
+        left: calc(50% - 13px);
+        transform: translateX(calc(-50% + 13px));
+        width: 26px;
+        height: 26px;
+        border: 3px solid #b8b8b8;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: loader-rotation 1s linear infinite;
+      }
+
+      @keyframes loader-rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
       @font-face {
         font-family: 'Fuzzy Bubbles';
         src: url('./assets/fonts/FuzzyBubbles-Regular.ttf');
@@ -30,6 +55,7 @@
     </style>
   </head>
   <body>
+    <span id="loader"></span>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

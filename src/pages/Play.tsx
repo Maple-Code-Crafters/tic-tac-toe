@@ -4,7 +4,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/rea
 
 import { GameComponent } from '../components/GameComponent';
 import { NewGameForm } from '../components/NewGameForm';
-import { useParamQuery } from '../hooks/useParamQuery';
+import { useParamQuery } from '../hooks';
 import type { Value } from '../models/Cell';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
