@@ -1,11 +1,9 @@
 {
+  "parserOptions": {
+    "warnOnUnsupportedTypeScriptVersion": false
+  },
   "plugins": ["simple-import-sort"],
-  "extends": [
-    "react-app",
-    "react-app/jest",
-    "prettier",
-    "plugin:jest-dom/recommended"
-  ],
+  "extends": ["react-app", "react-app/jest", "prettier", "plugin:jest-dom/recommended"],
   "rules": {
     "no-console": "warn",
     "@typescript-eslint/ban-ts-comment": ["off"],

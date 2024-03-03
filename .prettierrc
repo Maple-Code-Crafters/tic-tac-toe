@@ -4,5 +4,13 @@
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
-  "bracketSpacing": true
+  "bracketSpacing": true,
+  "overrides": [
+    {
+      "files": [".json", ".eslintrc"],
+      "options": {
+        "trailingComma": "none"
+      }
+    }
+  ]
 }
