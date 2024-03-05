@@ -13,8 +13,7 @@
     "lint": "npx eslint . --ext .tsx,.ts --fix",
     "p": "npm run lint && npx prettier --log-level=warn --write .",
     "prepare": "husky",
-    "generate:ios": "npx @capacitor/assets generate --ios --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'",
-    "generate:android": "npx @capacitor/assets generate --android --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'"
+    "generate": "npx @capacitor/assets generate --ios --android --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'"
   },
   "dependencies": {
     "@capacitor/android": "5.7.1",
