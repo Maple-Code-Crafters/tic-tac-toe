@@ -1,11 +1,9 @@
-import React from 'react';
-import { expect, test } from 'vitest';
-
-import { render } from '@testing-library/react';
-
 import App from './App';
+import { render } from './test-utils';
 
-test('renders without crashing', () => {
-  const { baseElement } = render(<App />);
-  expect(baseElement).toBeDefined();
+describe('App', () => {
+  test('renders without crashing', () => {
+    const { baseElement } = render(<App />);
+    expect(baseElement).toBeDefined();
+  });
 });
