@@ -41,14 +41,6 @@
 
 `npm run build`
 
-## Generate icon and splash screemn
-
-- Add `logo.png` files to `/resources`
-
-- `npm run generate`
-
-- <https://github.com/ionic-team/capacitor-assets>
-
 ## Android
 
 - To add android app: `ionic capacitor add android`
@@ -68,3 +60,11 @@
 - [Running for iOS](https://capacitorjs.com/docs/ios)
 
 - To copy source code changes: `npm run build:ios`
+
+## Generate icon and splash screemn
+
+- Add `logo.png` files to `/resources`
+
+- `npm run generate`
+
+- <https://github.com/ionic-team/capacitor-assets>
