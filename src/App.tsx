@@ -30,47 +30,52 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import './App.css';
 
+import { useAppInit } from './hooks';
 import PlayPage from './pages/Play';
 import ResultsPage from './pages/Results';
 import SettingsPage from './pages/Settings';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/play">
-            <PlayPage />
-          </Route>
-          <Route exact path="/results">
-            <ResultsPage />
-          </Route>
-          <Route path="/settings">
-            <SettingsPage />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/play" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="play" href="/play">
-            <IonIcon aria-hidden="true" icon={appsSharp} />
-            <IonLabel>Play</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="results" href="/results">
-            <IonIcon aria-hidden="true" icon={listSharp} />
-            <IonLabel>Results</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="settings" href="/settings">
-            <IonIcon aria-hidden="true" icon={settingsSharp} />
-            <IonLabel>Settings</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  useAppInit();
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/play">
+              <PlayPage />
+            </Route>
+            <Route exact path="/results">
+              <ResultsPage />
+            </Route>
+            <Route path="/settings">
+              <SettingsPage />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/play" />
+            </Route>
+          </IonRouterOutlet>
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="play" href="/play">
+              <IonIcon aria-hidden="true" icon={appsSharp} />
+              <IonLabel>Play</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="results" href="/results">
+              <IonIcon aria-hidden="true" icon={listSharp} />
+              <IonLabel>Results</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="settings" href="/settings">
+              <IonIcon aria-hidden="true" icon={settingsSharp} />
+              <IonLabel>Settings</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
