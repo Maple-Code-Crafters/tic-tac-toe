@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 
 import {
@@ -27,14 +27,22 @@ export const GameComponent = ({
   isStoredGame,
 }: {
   game: Game;
-  setGame: (game: Game | undefined) => void;
+  setGame: React.Dispatch<React.SetStateAction<Game | undefined>>;
   isStoredGame?: boolean;
 }) => {
   const history = useHistory();
   const height = (window.screen.availWidth * 0.86675) / 3;
   const [turn, setTurn] = useState<Value>(game.player1.value);
+  const [saved, setSaved] = useState(false);
   const hasWin = game.hasWin();
   const finished = game.finished();
+
+  useEffect(() => {
+    if ((hasWin || finished) && !isStoredGame && !saved) {
+      GameStorage.saveGame(new Date(), game);
+      setSaved(true);
+    }
+  }, [finished, game, hasWin, isStoredGame, saved]);
 
   const handleCellClick = (index: Index) => {
     game.getCell(index).value = turn;
@@ -159,9 +167,8 @@ export const GameComponent = ({
           <IonButton
             className="ion-margin"
             expand="block"
-            onClick={async () => {
+            onClick={() => {
               if (!isStoredGame) {
-                await GameStorage.saveGame(new Date(), game);
                 setGame(
                   new Game(
                     new Player(game.player1.name, game.player1.value),
@@ -179,14 +186,7 @@ export const GameComponent = ({
             Play Again
           </IonButton>
           {!isStoredGame && (
-            <IonButton
-              className="ion-margin"
-              expand="block"
-              onClick={async () => {
-                await GameStorage.saveGame(new Date(), game);
-                setGame(undefined);
-              }}
-            >
+            <IonButton className="ion-margin" expand="block" onClick={() => setGame(undefined)}>
               New Game
             </IonButton>
           )}
