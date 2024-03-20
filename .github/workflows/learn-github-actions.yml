@@ -11,3 +11,20 @@ jobs:
           node-version: '14'
       - run: npm install -g bats
       - run: bats -v
+  echo-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Step 1"
+      - run: echo "Step 2"
+      - run: echo "Step 3"
+      - run: echo "Step 4"
+  npm-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+      - run: npm install
+      - run: npm run test.unit
+      - run: echo "I am happy! Hopefully..."

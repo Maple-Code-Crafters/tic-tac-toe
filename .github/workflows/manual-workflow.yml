@@ -1,0 +1,14 @@
+name: learn-github-actions
+run-name: ${{ github.actor }} is testing manual workflow runs
+on: [workflow_dispatch]
+jobs:
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+      - run: echo "Node.js $(node -v) and npm $(npm -v) are installed."
+      - run: echo "Working directory is $(pwd)."
+      - run: echo "Contents of the current directory are $(ls -a)."
