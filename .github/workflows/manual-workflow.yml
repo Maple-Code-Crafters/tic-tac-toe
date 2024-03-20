@@ -1,4 +1,4 @@
-name: learn-github-actions
+name: manual-workflow-test
 run-name: ${{ github.actor }} is testing manual workflow runs
 on: [workflow_dispatch]
 jobs:
