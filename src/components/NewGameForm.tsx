@@ -69,7 +69,7 @@ export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) 
             <IonInput
               placeholder="Enter player 1 name"
               value={state.player1Name}
-              onIonChange={(e) => {
+              onIonInput={(e) => {
                 setState((s) => ({
                   ...s,
                   player1Name: e.detail.value!,
@@ -106,7 +106,7 @@ export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) 
             <IonInput
               placeholder="Enter player 2 name"
               value={state.player2Name}
-              onIonChange={(e) => {
+              onIonInput={(e) => {
                 setState((s) => ({
                   ...s,
                   player2Name: e.detail.value!,
