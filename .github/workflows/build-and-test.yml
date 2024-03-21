@@ -1,7 +1,11 @@
-name: build-and-test
-on: [push]
+name: Tic-Tac-Toe CI
+on: 
+  push:
+    branches: [main, 24-add-github-action-to-run-tests-in-prs]
+  pull_request:
+    branches: [main]
 jobs:
-  build-test:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -11,6 +15,6 @@ jobs:
       - run: npm install -g vitest
       - run: npm install -g @ionic/cli
       - run: npm install rollup --save-dev
-      - run: npm install
+      - run: npm ci
       - run: npm run build
       - run: npm run test.unit
