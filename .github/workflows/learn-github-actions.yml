@@ -27,6 +27,7 @@ jobs:
           node-version: '21'
       - run: npm install -g vitest
       - run: npm install -g @ionic/cli
+      - run: npm install rollup --save-dev
       - run: npm install
       - run: npm run build
       - run: npm run test.unit
