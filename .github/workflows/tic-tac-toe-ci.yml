@@ -8,8 +8,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '21'
-      - run: npm install -g vitest 
-      - run: npm install @ionic/cli 
+      - run: npm install -g vitest
+      - run: npm install @ionic/cli
       - run: npm install rollup --save-dev
       - name: Install dependencies
         run: npm ci
