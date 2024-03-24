@@ -1,5 +1,17 @@
 # tic-tac-toe
 
+## Workflow
+
+- `main` branch (Prod)
+
+- `dev` branch (Development)
+
+- Branching from `dev` and PR to `dev`
+
+- `dev` to `main` for release to Prod
+
+- [Gitflow workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+
 ## Ionic
 
 - [docs](https://ionicframework.com/docs)
