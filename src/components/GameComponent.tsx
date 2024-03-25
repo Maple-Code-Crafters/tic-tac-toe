@@ -186,7 +186,14 @@ export const GameComponent = ({
             Play Again
           </IonButton>
           {!isStoredGame && (
-            <IonButton className="ion-margin" expand="block" onClick={() => setGame(undefined)}>
+            <IonButton
+              className="ion-margin"
+              expand="block"
+              onClick={() => {
+                setGame(undefined);
+                history.replace('/play');
+              }}
+            >
               New Game
             </IonButton>
           )}
