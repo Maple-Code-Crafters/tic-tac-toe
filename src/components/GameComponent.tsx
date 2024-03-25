@@ -38,11 +38,11 @@ export const GameComponent = ({
   const finished = game.finished();
 
   useEffect(() => {
-    if ((hasWin || finished) && !isStoredGame && !saved) {
+    if ((hasWin || finished) && !saved) {
       GameStorage.saveGame(new Date(), game);
       setSaved(true);
     }
-  }, [finished, game, hasWin, isStoredGame, saved]);
+  }, [finished, game, hasWin, saved]);
 
   const handleCellClick = (index: Index) => {
     game.getCell(index).value = turn;
