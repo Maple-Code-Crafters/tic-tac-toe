@@ -162,7 +162,7 @@ export const GameComponent = ({
           </IonRow>
         </IonGrid>
       </div>
-      {(hasWin || finished) && (
+      {hasWin || finished ? (
         <IonCard>
           <IonButton
             className="ion-margin"
@@ -197,6 +197,19 @@ export const GameComponent = ({
               New Game
             </IonButton>
           )}
+        </IonCard>
+      ) : (
+        <IonCard>
+          <IonButton
+            className="ion-margin"
+            expand="block"
+            onClick={() => {
+              setGame(undefined);
+              history.push('/play');
+            }}
+          >
+            Cancel
+          </IonButton>
         </IonCard>
       )}
     </>
