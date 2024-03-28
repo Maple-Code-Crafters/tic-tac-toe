@@ -46,6 +46,7 @@ export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) 
         <IonItemGroup>
           <IonItem lines="none">
             <IonSegment
+              slot="end"
               scrollable={true}
               value={state.player1Value}
               onIonChange={(e) => {
@@ -82,6 +83,7 @@ export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) 
           </IonItem>
           <IonItem lines="none">
             <IonSegment
+              slot="end"
               scrollable={true}
               value={state.player2Value}
               onIonChange={(e) => {
