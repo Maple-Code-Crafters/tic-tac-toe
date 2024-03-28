@@ -28,7 +28,7 @@ type PlayersState = {
   player2Value: Value;
 };
 
-export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) => {
+export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.SetStateAction<Game | undefined>> }) => {
   const [present] = useIonAlert();
   const [state, setState] = useState<PlayersState>({
     player1Name: 'Player 1',
