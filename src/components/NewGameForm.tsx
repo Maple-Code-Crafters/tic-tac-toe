@@ -31,9 +31,9 @@ type PlayersState = {
 export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) => {
   const [present] = useIonAlert();
   const [state, setState] = useState<PlayersState>({
-    player1Name: '',
+    player1Name: 'Player 1',
     player1Value: 'O',
-    player2Name: '',
+    player2Name: 'Player 2',
     player2Value: 'X',
   });
 
@@ -45,7 +45,6 @@ export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) 
       <IonCardContent>
         <IonItemGroup>
           <IonItem lines="none">
-            <IonLabel position="stacked">Player 1</IonLabel>
             <IonSegment
               scrollable={true}
               value={state.player1Value}
@@ -82,7 +81,6 @@ export const NewGameForm = ({ startGame }: { startGame: (game: Game) => void }) 
             ></IonInput>
           </IonItem>
           <IonItem lines="none">
-            <IonLabel position="stacked">Player 2</IonLabel>
             <IonSegment
               scrollable={true}
               value={state.player2Value}
