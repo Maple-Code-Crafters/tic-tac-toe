@@ -5,7 +5,6 @@ build/
 coverage/
 ios/
 resources/
-cypress/
 
 # Caches
 .eslintcache
