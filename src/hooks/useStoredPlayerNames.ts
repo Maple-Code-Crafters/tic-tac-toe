@@ -1,22 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 
 import { DEFAULT_PLAYER_1_NAME, DEFAULT_PLAYER_2_NAME, PLAYER_1_KEY, PLAYER_2_KEY } from '../constants';
 import { StorageService } from '../helpers/storage.helper';
 
 export const useStoredPlayerNames = () => {
+  const history = useHistory();
   const [storedPlayer1Name, setStoredPlayer1Name] = useState('');
   const [storedPlayer2Name, setStoredPlayer2Name] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const [storedPlayer1, storedPlayer2] = await Promise.all([
-        StorageService.get(PLAYER_1_KEY),
-        StorageService.get(PLAYER_2_KEY),
-      ]);
-      setStoredPlayer1Name(storedPlayer1 ?? DEFAULT_PLAYER_1_NAME);
-      setStoredPlayer2Name(storedPlayer2 ?? DEFAULT_PLAYER_2_NAME);
-    })();
+  const updateNames = useCallback(async () => {
+    const [storedPlayer1, storedPlayer2] = await Promise.all([
+      StorageService.get(PLAYER_1_KEY),
+      StorageService.get(PLAYER_2_KEY),
+    ]);
+    setStoredPlayer1Name(storedPlayer1 ?? DEFAULT_PLAYER_1_NAME);
+    setStoredPlayer2Name(storedPlayer2 ?? DEFAULT_PLAYER_2_NAME);
   }, []);
+
+  useEffect(() => {
+    updateNames();
+    const unlisten = history.listen(updateNames);
+    return () => {
+      unlisten();
+    };
+  }, [history, updateNames]);
 
   const savePlayer1Name = (name: string) => {
     setStoredPlayer1Name(name);

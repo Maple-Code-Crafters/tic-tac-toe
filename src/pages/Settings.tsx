@@ -53,7 +53,7 @@ const SettingsPage: React.FC = () => {
     present({
       message: `${player} name saved!`,
       duration: 1500,
-      position: 'bottom',
+      position: 'top',
     });
   };
 
