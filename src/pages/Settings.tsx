@@ -1,15 +1,26 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonContent,
+  IonHeader,
+  IonImg,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react';
 
 import './Settings.css';
 
-import ExploreContainer from '../components/ExploreContainer';
+import { APP_NAME, VERSION } from '../constants';
 
 const SettingsPage: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 3</IonTitle>
+          <IonTitle>Settings</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -18,7 +29,13 @@ const SettingsPage: React.FC = () => {
             <IonTitle size="large">Settings</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Settings page" />
+        <IonCard className="logo-card">
+          <IonCardHeader className="ion-justify-content-center logo-card-header">
+            <IonCardTitle className="ion-text-center">{APP_NAME}</IonCardTitle>
+            <IonImg className="logo" src="assets/icons/logo.png" alt={`${APP_NAME} logo`}></IonImg>
+          </IonCardHeader>
+          <IonCardContent className="ion-text-center">version: {VERSION}</IonCardContent>
+        </IonCard>
       </IonContent>
     </IonPage>
   );

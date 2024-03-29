@@ -1,0 +1,13 @@
+.logo-card {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.logo-card-header {
+  padding-bottom: 0;
+}
+
+.logo {
+  height: 102.4px;
+}
