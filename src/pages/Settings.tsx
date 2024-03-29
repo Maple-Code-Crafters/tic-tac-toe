@@ -19,6 +19,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from '@ionic/react';
 
 import './Settings.css';
@@ -27,6 +28,7 @@ import { APP_NAME, VERSION } from '../constants';
 import { useStoredPlayerNames } from '../hooks';
 
 const SettingsPage: React.FC = () => {
+  const [present] = useIonToast();
   const { storedPlayer1Name, savePlayer1Name, storedPlayer2Name, savePlayer2Name } = useStoredPlayerNames();
   const [player1Name, setPlayer1Name] = useState('');
   const [player2Name, setPlayer2Name] = useState('');
@@ -46,6 +48,14 @@ const SettingsPage: React.FC = () => {
       setPlayer2NameRestored(true);
     }
   }, [player2NameRestored, storedPlayer2Name]);
+
+  const showSavedToast = (player: 'Player 1' | 'Player 2') => {
+    present({
+      message: `${player} name saved!`,
+      duration: 1500,
+      position: 'bottom',
+    });
+  };
 
   return (
     <IonPage>
@@ -85,9 +95,11 @@ const SettingsPage: React.FC = () => {
                 onIonInput={(e) => setPlayer1Name((e.target.value as string) ?? '')}
               ></IonInput>
               <IonButton
+                disabled={!player1Name || player1Name === storedPlayer1Name}
                 onClick={() => {
                   savePlayer1Name(player1Name);
                   setPlayer1NameRestored(false);
+                  showSavedToast('Player 1');
                 }}
               >
                 Save
@@ -101,9 +113,11 @@ const SettingsPage: React.FC = () => {
                 onIonInput={(e) => setPlayer2Name((e.target.value as string) ?? '')}
               ></IonInput>
               <IonButton
+                disabled={!player2Name || player2Name === storedPlayer2Name}
                 onClick={() => {
                   savePlayer2Name(player2Name);
                   setPlayer2NameRestored(false);
+                  showSavedToast('Player 2');
                 }}
               >
                 Save
