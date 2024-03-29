@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react';
+
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -6,6 +9,13 @@ import {
   IonContent,
   IonHeader,
   IonImg,
+  IonInput,
+  IonItem,
+  IonItemDivider,
+  IonItemGroup,
+  IonLabel,
+  IonList,
+  IonListHeader,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -14,8 +24,29 @@ import {
 import './Settings.css';
 
 import { APP_NAME, VERSION } from '../constants';
+import { useStoredPlayerNames } from '../hooks';
 
 const SettingsPage: React.FC = () => {
+  const { storedPlayer1Name, savePlayer1Name, storedPlayer2Name, savePlayer2Name } = useStoredPlayerNames();
+  const [player1Name, setPlayer1Name] = useState('');
+  const [player2Name, setPlayer2Name] = useState('');
+  const [player1NameRestored, setPlayer1NameRestored] = useState(false);
+  const [player2NameRestored, setPlayer2NameRestored] = useState(false);
+
+  useEffect(() => {
+    if (storedPlayer1Name && !player1NameRestored) {
+      setPlayer1Name(storedPlayer1Name);
+      setPlayer1NameRestored(true);
+    }
+  }, [player1NameRestored, storedPlayer1Name]);
+
+  useEffect(() => {
+    if (storedPlayer2Name && !player2NameRestored) {
+      setPlayer2Name(storedPlayer2Name);
+      setPlayer2NameRestored(true);
+    }
+  }, [player2NameRestored, storedPlayer2Name]);
+
   return (
     <IonPage>
       <IonHeader>
@@ -23,6 +54,7 @@ const SettingsPage: React.FC = () => {
           <IonTitle>Settings</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
@@ -36,6 +68,65 @@ const SettingsPage: React.FC = () => {
           </IonCardHeader>
           <IonCardContent className="ion-text-center">version: {VERSION}</IonCardContent>
         </IonCard>
+
+        <IonList>
+          <IonListHeader>
+            <IonLabel>Configurations</IonLabel>
+          </IonListHeader>
+          <IonItemGroup>
+            <IonItemDivider>
+              <IonLabel>Names</IonLabel>
+            </IonItemDivider>
+            <IonItem>
+              <IonInput
+                placeholder="Player 1"
+                clearInput
+                value={player1Name}
+                onIonInput={(e) => setPlayer1Name((e.target.value as string) ?? '')}
+              ></IonInput>
+              <IonButton
+                onClick={() => {
+                  savePlayer1Name(player1Name);
+                  setPlayer1NameRestored(false);
+                }}
+              >
+                Save
+              </IonButton>
+            </IonItem>
+            <IonItem lines="none">
+              <IonInput
+                placeholder="Player 2"
+                clearInput
+                value={player2Name}
+                onIonInput={(e) => setPlayer2Name((e.target.value as string) ?? '')}
+              ></IonInput>
+              <IonButton
+                onClick={() => {
+                  savePlayer2Name(player2Name);
+                  setPlayer2NameRestored(false);
+                }}
+              >
+                Save
+              </IonButton>
+            </IonItem>
+          </IonItemGroup>
+
+          <IonItemGroup>
+            <IonItemDivider>
+              <IonLabel>Section B</IonLabel>
+            </IonItemDivider>
+
+            <IonItem>
+              <IonLabel>B1</IonLabel>
+            </IonItem>
+            <IonItem>
+              <IonLabel>B2</IonLabel>
+            </IonItem>
+            <IonItem lines="none">
+              <IonLabel>B3</IonLabel>
+            </IonItem>
+          </IonItemGroup>
+        </IonList>
       </IonContent>
     </IonPage>
   );

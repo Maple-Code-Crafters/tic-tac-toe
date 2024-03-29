@@ -39,3 +39,14 @@ export const GameStorage = {
 
   deteleOne: (key: string) => Preferences.remove({ key }),
 };
+
+export const StorageService = {
+  save: (key: string, value: string) => {
+    return Preferences.set({ key, value });
+  },
+
+  get: async (key: string) => {
+    const { value } = await Preferences.get({ key });
+    return value;
+  },
+};
