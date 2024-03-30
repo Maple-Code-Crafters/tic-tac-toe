@@ -85,11 +85,12 @@ const SettingsPage: React.FC = () => {
           </IonListHeader>
           <IonItemGroup>
             <IonItemDivider>
-              <IonLabel>Names</IonLabel>
+              <IonLabel>Players names</IonLabel>
             </IonItemDivider>
             <IonItem>
               <IonInput
-                placeholder="Player 1"
+                label="Player 1"
+                placeholder="Add name"
                 clearInput
                 value={player1Name}
                 onIonInput={(e) => setPlayer1Name((e.target.value as string) ?? '')}
@@ -107,7 +108,8 @@ const SettingsPage: React.FC = () => {
             </IonItem>
             <IonItem lines="none">
               <IonInput
-                placeholder="Player 2"
+                label="Player 2"
+                placeholder="Add name"
                 clearInput
                 value={player2Name}
                 onIonInput={(e) => setPlayer2Name((e.target.value as string) ?? '')}
@@ -127,7 +129,7 @@ const SettingsPage: React.FC = () => {
 
           <IonItemGroup>
             <IonItemDivider>
-              <IonLabel>Section B</IonLabel>
+              <IonLabel>Symbols</IonLabel>
             </IonItemDivider>
 
             <IonItem>
