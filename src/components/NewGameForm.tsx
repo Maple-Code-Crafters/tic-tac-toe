@@ -32,11 +32,17 @@ type PlayersState = {
 export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.SetStateAction<Game | undefined>> }) => {
   const [present] = useIonAlert();
   const { restored, storedDefault } = useStoredDefault();
-  const [state, setState] = useState<PlayersState>({ ...storedDefault, player1Value: 'O', player2Value: 'X' });
+  const [state, setState] = useState<PlayersState>({
+    player1Name: '',
+    player1Value: 'O',
+    player2Name: '',
+    player2Value: 'X',
+  });
 
   useEffect(() => {
     if (restored) {
-      setState({ ...storedDefault, player1Value: 'O', player2Value: 'X' });
+      const { player1Name, player2Name } = storedDefault;
+      setState((s) => ({ ...s, player1Name, player2Name }));
     }
   }, [restored, storedDefault]);
 

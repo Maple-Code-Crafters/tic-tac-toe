@@ -9,6 +9,7 @@
     "build:android": "ionic capacitor copy android",
     "build:ios": "ionic capacitor copy ios",
     "test.e2e": "cypress run",
+    "test.e2e:debug": "cypress run --headed --no-exit",
     "test.unit": "vitest",
     "lint": "npx eslint . --ext .tsx,.ts --fix",
     "p": "npm run lint && npx prettier --log-level=warn --write .",
