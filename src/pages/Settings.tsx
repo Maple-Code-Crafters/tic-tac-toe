@@ -47,8 +47,19 @@ const SettingsPage: React.FC = () => {
     }
   }, [restored, storedDefault]);
 
-  const onInput = (e: InputCustomEvent) => {
+  const onNameInput = (e: InputCustomEvent) => {
     setNewDefault((prev) => ({ ...prev, [e.target.name]: e.target.value as string }));
+  };
+
+  const onSymbolInput = (e: InputCustomEvent) => {
+    const emojiRegex = /\p{Emoji_Presentation}/gu;
+    let value = e.detail.value as string;
+    const isEmoji = emojiRegex.test(value);
+    if (!isEmoji) {
+      value = value?.[0];
+      e.target.value = value;
+    }
+    setNewDefault((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const showSavedToast = () => {
@@ -94,7 +105,7 @@ const SettingsPage: React.FC = () => {
                 placeholder="Add a name"
                 clearInput
                 value={newDefault.player1Name}
-                onIonInput={onInput}
+                onIonInput={onNameInput}
               ></IonInput>
             </IonItem>
             <IonItem lines="none">
@@ -104,7 +115,7 @@ const SettingsPage: React.FC = () => {
                 placeholder="Add a name"
                 clearInput
                 value={newDefault.player2Name}
-                onIonInput={onInput}
+                onIonInput={onNameInput}
               ></IonInput>
             </IonItem>
           </IonItemGroup>
@@ -120,9 +131,9 @@ const SettingsPage: React.FC = () => {
                 label="O"
                 placeholder="Add a symbol"
                 clearInput
-                maxlength={1}
+                maxlength={2}
                 value={newDefault.O}
-                onIonInput={onInput}
+                onIonInput={onSymbolInput}
               ></IonInput>
             </IonItem>
             <IonItem lines="none">
@@ -131,9 +142,9 @@ const SettingsPage: React.FC = () => {
                 label="X"
                 placeholder="Add a symbol"
                 clearInput
-                maxlength={1}
+                maxlength={2}
                 value={newDefault.X}
-                onIonInput={onInput}
+                onIonInput={onSymbolInput}
               ></IonInput>
             </IonItem>
           </IonItemGroup>
