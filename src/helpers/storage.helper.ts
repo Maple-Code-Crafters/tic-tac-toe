@@ -11,9 +11,13 @@ export type StoredGame = {
 
 export type Default = {
   player1Name: string;
-  player1Symbol: string;
   player2Name: string;
-  player2Symbol: string;
+  X: string;
+  O: string;
+};
+
+const isValidDate = (dateString: string) => {
+  return !isNaN(Date.parse(dateString));
 };
 
 export const GameStorage = {
@@ -29,14 +33,15 @@ export const GameStorage = {
     const { keys } = await Preferences.keys();
 
     for (const key of keys) {
-      const { value } = await Preferences.get({ key });
-
-      if (value) {
-        const recoveredGame = JSON.parse(value) as ArchivedGame;
-        storedGames.push({
-          date: new Date(key),
-          game: Game.fromArchived(recoveredGame),
-        });
+      if (isValidDate(key)) {
+        const { value } = await Preferences.get({ key });
+        if (value) {
+          const recoveredGame = JSON.parse(value) as ArchivedGame;
+          storedGames.push({
+            date: new Date(key),
+            game: Game.fromArchived(recoveredGame),
+          });
+        }
       }
     }
 

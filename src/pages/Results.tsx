@@ -23,9 +23,11 @@ import './Results.css';
 import { GameComponent } from '../components/GameComponent';
 import type { StoredGame } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
+import { useStoredDefault } from '../hooks';
 
 const ResultsPage: React.FC = () => {
   const [presentAlert] = useIonAlert();
+  const { storedDefault } = useStoredDefault();
   const [storedGames, setStoredGames] = useState<StoredGame[]>();
   const [selectedStoredGame, setSelectedStoredGame] = useState<StoredGame>();
 
@@ -111,7 +113,9 @@ const ResultsPage: React.FC = () => {
               <IonList>
                 {storedGames.map((sg) => (
                   <IonItem key={sg.date.toISOString()} button onClick={() => setSelectedStoredGame(sg)}>
-                    <IonAvatar className="o-x-value">{sg.game.winValue}</IonAvatar>
+                    <IonAvatar className="o-x-value">
+                      {sg.game.winValue ? storedDefault[sg.game.winValue] : ''}
+                    </IonAvatar>
                     <IonLabel>
                       <h3>
                         {sg.game.player1.name} vs {sg.game.player2.name}

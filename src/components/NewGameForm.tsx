@@ -32,19 +32,11 @@ type PlayersState = {
 export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.SetStateAction<Game | undefined>> }) => {
   const [present] = useIonAlert();
   const { restored, storedDefault } = useStoredDefault();
-  const [state, setState] = useState<PlayersState>({
-    ...storedDefault,
-    player1Value: storedDefault.player1Symbol as Value,
-    player2Value: storedDefault.player2Symbol as Value,
-  });
+  const [state, setState] = useState<PlayersState>({ ...storedDefault, player1Value: 'O', player2Value: 'X' });
 
   useEffect(() => {
     if (restored) {
-      setState({
-        ...storedDefault,
-        player1Value: storedDefault.player1Symbol as Value,
-        player2Value: storedDefault.player2Symbol as Value,
-      });
+      setState({ ...storedDefault, player1Value: 'O', player2Value: 'X' });
     }
   }, [restored, storedDefault]);
 
@@ -69,10 +61,10 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               }}
             >
               <IonSegmentButton value="O">
-                <IonLabel className="o-x-value">O</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.O}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="X">
-                <IonLabel className="o-x-value">X</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.X}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
           </IonItem>
@@ -106,10 +98,10 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               }}
             >
               <IonSegmentButton value="O">
-                <IonLabel className="o-x-value">O</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.O}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="X">
-                <IonLabel className="o-x-value">X</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.X}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
           </IonItem>

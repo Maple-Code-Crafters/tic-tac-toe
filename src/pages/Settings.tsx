@@ -116,21 +116,23 @@ const SettingsPage: React.FC = () => {
 
             <IonItem>
               <IonInput
-                name="player1Symbol"
-                label="Player 1"
+                name="O"
+                label="O"
                 placeholder="Add a symbol"
                 clearInput
-                value={newDefault.player1Symbol}
+                maxlength={1}
+                value={newDefault.O}
                 onIonInput={onInput}
               ></IonInput>
             </IonItem>
             <IonItem lines="none">
               <IonInput
-                name="player2Symbol"
-                label="Player 2"
+                name="X"
+                label="X"
                 placeholder="Add a symbol"
                 clearInput
-                value={newDefault.player2Symbol}
+                maxlength={1}
+                value={newDefault.X}
                 onIonInput={onInput}
               ></IonInput>
             </IonItem>
@@ -143,12 +145,12 @@ const SettingsPage: React.FC = () => {
             disabled={
               !newDefault.player1Name ||
               !newDefault.player2Name ||
-              !newDefault.player1Symbol ||
-              !newDefault.player2Symbol ||
+              !newDefault.O ||
+              !newDefault.X ||
               (newDefault.player1Name === storedDefault.player1Name &&
                 newDefault.player2Name === storedDefault.player2Name &&
-                newDefault.player1Symbol === storedDefault.player1Symbol &&
-                newDefault.player2Symbol === storedDefault.player2Symbol)
+                newDefault.O === storedDefault.O &&
+                newDefault.X === storedDefault.X)
             }
             onClick={() => {
               saveDefault(newDefault);
