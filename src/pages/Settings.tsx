@@ -71,6 +71,7 @@ const SettingsPage: React.FC = () => {
             <IonTitle size="large">Settings</IonTitle>
           </IonToolbar>
         </IonHeader>
+
         <IonCard className="logo-card">
           <IonCardHeader className="ion-justify-content-center logo-card-header">
             <IonCardTitle className="ion-text-center">{APP_NAME}</IonCardTitle>
@@ -80,9 +81,6 @@ const SettingsPage: React.FC = () => {
         </IonCard>
 
         <IonList>
-          <IonListHeader>
-            <IonLabel>Configurations</IonLabel>
-          </IonListHeader>
           <IonItemGroup>
             <IonItemDivider>
               <IonLabel>Players names</IonLabel>
@@ -134,9 +132,6 @@ const SettingsPage: React.FC = () => {
 
             <IonItem>
               <IonLabel>B1</IonLabel>
-            </IonItem>
-            <IonItem>
-              <IonLabel>B2</IonLabel>
             </IonItem>
             <IonItem lines="none">
               <IonLabel>B3</IonLabel>
