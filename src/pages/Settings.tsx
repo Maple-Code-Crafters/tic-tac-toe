@@ -23,7 +23,7 @@ import {
 
 import './Settings.css';
 
-import { APP_NAME, VERSION } from '../constants';
+import { APP_NAME, APP_VERSION } from '../constants';
 import type { Default } from '../helpers/storage.helper';
 import { useStoredDefault } from '../hooks';
 
@@ -90,7 +90,7 @@ const SettingsPage: React.FC = () => {
             <IonCardTitle className="ion-text-center">{APP_NAME}</IonCardTitle>
             <IonImg className="logo" src="assets/icons/logo.png" alt={`${APP_NAME} logo`}></IonImg>
           </IonCardHeader>
-          <IonCardContent className="ion-text-center">version: {VERSION}</IonCardContent>
+          <IonCardContent className="ion-text-center">version: {APP_VERSION}</IonCardContent>
         </IonCard>
 
         <IonList>
