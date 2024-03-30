@@ -1,11 +1,19 @@
 import { Preferences } from '@capacitor/preferences';
 
+import { DEFAULT } from '../constants';
 import type { ArchivedGame } from '../models/Game';
 import { Game } from '../models/Game';
 
 export type StoredGame = {
   date: Date;
   game: Game;
+};
+
+export type Default = {
+  player1Name: string;
+  player1Symbol: string;
+  player2Name: string;
+  player2Symbol: string;
 };
 
 export const GameStorage = {
@@ -40,13 +48,20 @@ export const GameStorage = {
   deteleOne: (key: string) => Preferences.remove({ key }),
 };
 
-export const StorageService = {
-  save: (key: string, value: string) => {
-    return Preferences.set({ key, value });
+export const DefaultStorage = {
+  save: (data: Default) => {
+    const value = JSON.stringify(data);
+    return Preferences.set({ key: 'default', value });
   },
 
-  get: async (key: string) => {
-    const { value } = await Preferences.get({ key });
-    return value;
+  get: async () => {
+    const { value } = await Preferences.get({ key: 'default' });
+    try {
+      return value ? (JSON.parse(value) as Default) : DEFAULT;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error parsing default preferences', error);
+      return DEFAULT;
+    }
   },
 };

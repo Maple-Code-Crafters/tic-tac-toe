@@ -15,7 +15,6 @@ import {
   IonItemGroup,
   IonLabel,
   IonList,
-  IonListHeader,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -25,33 +24,36 @@ import {
 import './Settings.css';
 
 import { APP_NAME, VERSION } from '../constants';
-import { useStoredPlayerNames } from '../hooks';
+import type { Default } from '../helpers/storage.helper';
+import { useStoredDefault } from '../hooks';
+
+interface InputChangeEventDetail {
+  value?: string | undefined | null;
+}
+
+interface InputCustomEvent extends CustomEvent {
+  detail: InputChangeEventDetail;
+  target: HTMLIonInputElement;
+}
 
 const SettingsPage: React.FC = () => {
   const [present] = useIonToast();
-  const { storedPlayer1Name, savePlayer1Name, storedPlayer2Name, savePlayer2Name } = useStoredPlayerNames();
-  const [player1Name, setPlayer1Name] = useState('');
-  const [player2Name, setPlayer2Name] = useState('');
-  const [player1NameRestored, setPlayer1NameRestored] = useState(false);
-  const [player2NameRestored, setPlayer2NameRestored] = useState(false);
+  const { restored, setRestored, storedDefault, saveDefault } = useStoredDefault();
+  const [newDefault, setNewDefault] = useState<Default>(storedDefault);
 
   useEffect(() => {
-    if (storedPlayer1Name && !player1NameRestored) {
-      setPlayer1Name(storedPlayer1Name);
-      setPlayer1NameRestored(true);
+    if (restored) {
+      setNewDefault(storedDefault);
     }
-  }, [player1NameRestored, storedPlayer1Name]);
+  }, [restored, storedDefault]);
 
-  useEffect(() => {
-    if (storedPlayer2Name && !player2NameRestored) {
-      setPlayer2Name(storedPlayer2Name);
-      setPlayer2NameRestored(true);
-    }
-  }, [player2NameRestored, storedPlayer2Name]);
+  const onInput = (e: InputCustomEvent) => {
+    setNewDefault((prev) => ({ ...prev, [e.target.name]: e.target.value as string }));
+  };
 
-  const showSavedToast = (player: 'Player 1' | 'Player 2') => {
+  const showSavedToast = () => {
     present({
-      message: `${player} name saved!`,
+      message: 'New changes saved!',
       duration: 1500,
       position: 'top',
     });
@@ -87,41 +89,23 @@ const SettingsPage: React.FC = () => {
             </IonItemDivider>
             <IonItem>
               <IonInput
+                name="player1Name"
                 label="Player 1"
-                placeholder="Add name"
+                placeholder="Add a name"
                 clearInput
-                value={player1Name}
-                onIonInput={(e) => setPlayer1Name((e.target.value as string) ?? '')}
+                value={newDefault.player1Name}
+                onIonInput={onInput}
               ></IonInput>
-              <IonButton
-                disabled={!player1Name || player1Name === storedPlayer1Name}
-                onClick={() => {
-                  savePlayer1Name(player1Name);
-                  setPlayer1NameRestored(false);
-                  showSavedToast('Player 1');
-                }}
-              >
-                Save
-              </IonButton>
             </IonItem>
             <IonItem lines="none">
               <IonInput
+                name="player2Name"
                 label="Player 2"
-                placeholder="Add name"
+                placeholder="Add a name"
                 clearInput
-                value={player2Name}
-                onIonInput={(e) => setPlayer2Name((e.target.value as string) ?? '')}
+                value={newDefault.player2Name}
+                onIonInput={onInput}
               ></IonInput>
-              <IonButton
-                disabled={!player2Name || player2Name === storedPlayer2Name}
-                onClick={() => {
-                  savePlayer2Name(player2Name);
-                  setPlayer2NameRestored(false);
-                  showSavedToast('Player 2');
-                }}
-              >
-                Save
-              </IonButton>
             </IonItem>
           </IonItemGroup>
 
@@ -131,13 +115,50 @@ const SettingsPage: React.FC = () => {
             </IonItemDivider>
 
             <IonItem>
-              <IonLabel>B1</IonLabel>
+              <IonInput
+                name="player1Symbol"
+                label="Player 1"
+                placeholder="Add a symbol"
+                clearInput
+                value={newDefault.player1Symbol}
+                onIonInput={onInput}
+              ></IonInput>
             </IonItem>
             <IonItem lines="none">
-              <IonLabel>B3</IonLabel>
+              <IonInput
+                name="player2Symbol"
+                label="Player 2"
+                placeholder="Add a symbol"
+                clearInput
+                value={newDefault.player2Symbol}
+                onIonInput={onInput}
+              ></IonInput>
             </IonItem>
           </IonItemGroup>
         </IonList>
+        <IonCard>
+          <IonButton
+            className="ion-margin"
+            expand="block"
+            disabled={
+              !newDefault.player1Name ||
+              !newDefault.player2Name ||
+              !newDefault.player1Symbol ||
+              !newDefault.player2Symbol ||
+              (newDefault.player1Name === storedDefault.player1Name &&
+                newDefault.player2Name === storedDefault.player2Name &&
+                newDefault.player1Symbol === storedDefault.player1Symbol &&
+                newDefault.player2Symbol === storedDefault.player2Symbol)
+            }
+            onClick={() => {
+              saveDefault(newDefault);
+              setRestored(false);
+              showSavedToast();
+            }}
+          >
+            Save
+          </IonButton>
+        </IonCard>
       </IonContent>
     </IonPage>
   );

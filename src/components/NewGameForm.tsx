@@ -17,7 +17,7 @@ import {
 
 import './NewGameForm.css';
 
-import { useStoredPlayerNames } from '../hooks';
+import { useStoredDefault } from '../hooks';
 import type { Value } from '../models/Cell';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
@@ -31,28 +31,22 @@ type PlayersState = {
 
 export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.SetStateAction<Game | undefined>> }) => {
   const [present] = useIonAlert();
-  const { storedPlayer1Name, storedPlayer2Name } = useStoredPlayerNames();
+  const { restored, storedDefault } = useStoredDefault();
   const [state, setState] = useState<PlayersState>({
-    player1Name: 'Player 1',
-    player1Value: 'O',
-    player2Name: 'Player 2',
-    player2Value: 'X',
+    ...storedDefault,
+    player1Value: storedDefault.player1Symbol as Value,
+    player2Value: storedDefault.player2Symbol as Value,
   });
 
   useEffect(() => {
-    if (storedPlayer1Name) {
-      setState((s) => ({
-        ...s,
-        player1Name: storedPlayer1Name,
-      }));
+    if (restored) {
+      setState({
+        ...storedDefault,
+        player1Value: storedDefault.player1Symbol as Value,
+        player2Value: storedDefault.player2Symbol as Value,
+      });
     }
-    if (storedPlayer2Name) {
-      setState((s) => ({
-        ...s,
-        player2Name: storedPlayer2Name,
-      }));
-    }
-  }, [storedPlayer1Name, storedPlayer2Name]);
+  }, [restored, storedDefault]);
 
   return (
     <IonCard>
