@@ -22,10 +22,11 @@ export const useStoredDefault = () => {
     return unlisten;
   }, [history, retrieve]);
 
-  const saveDefault = (newDefault: Default) => {
-    DefaultStorage.save(newDefault);
+  const saveDefault = async (newDefault: Default) => {
+    await DefaultStorage.save(newDefault);
     setStoredDefault(newDefault);
+    setRestored(false);
   };
 
-  return { restored, setRestored, storedDefault, saveDefault } as const;
+  return { restored, storedDefault, saveDefault } as const;
 };

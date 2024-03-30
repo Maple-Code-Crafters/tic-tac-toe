@@ -38,7 +38,7 @@ interface InputCustomEvent extends CustomEvent {
 
 const SettingsPage: React.FC = () => {
   const [present] = useIonToast();
-  const { restored, setRestored, storedDefault, saveDefault } = useStoredDefault();
+  const { restored, storedDefault, saveDefault } = useStoredDefault();
   const [newDefault, setNewDefault] = useState<Default>(storedDefault);
 
   useEffect(() => {
@@ -165,9 +165,8 @@ const SettingsPage: React.FC = () => {
                 newDefault.O === storedDefault.O &&
                 newDefault.X === storedDefault.X)
             }
-            onClick={() => {
-              saveDefault(newDefault);
-              setRestored(false);
+            onClick={async () => {
+              await saveDefault(newDefault);
               showSavedToast();
             }}
           >
