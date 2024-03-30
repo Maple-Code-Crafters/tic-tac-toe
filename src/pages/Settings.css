@@ -11,3 +11,7 @@
 .logo {
   height: 102.4px;
 }
+
+ion-input.emoji input {
+  height: 1.5rem;
+}

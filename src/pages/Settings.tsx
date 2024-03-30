@@ -127,6 +127,7 @@ const SettingsPage: React.FC = () => {
 
             <IonItem>
               <IonInput
+                className="emoji"
                 name="O"
                 label="O"
                 placeholder="Add a symbol"
@@ -138,6 +139,7 @@ const SettingsPage: React.FC = () => {
             </IonItem>
             <IonItem lines="none">
               <IonInput
+                className="emoji"
                 name="X"
                 label="X"
                 placeholder="Add a symbol"
