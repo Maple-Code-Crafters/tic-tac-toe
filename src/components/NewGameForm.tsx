@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   IonButton,
@@ -17,6 +17,7 @@ import {
 
 import './NewGameForm.css';
 
+import { useStoredDefault } from '../hooks';
 import type { Value } from '../models/Cell';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
@@ -30,12 +31,20 @@ type PlayersState = {
 
 export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.SetStateAction<Game | undefined>> }) => {
   const [present] = useIonAlert();
+  const { restored, storedDefault } = useStoredDefault();
   const [state, setState] = useState<PlayersState>({
-    player1Name: 'Player 1',
+    player1Name: '',
     player1Value: 'O',
-    player2Name: 'Player 2',
+    player2Name: '',
     player2Value: 'X',
   });
+
+  useEffect(() => {
+    if (restored) {
+      const { player1Name, player2Name } = storedDefault;
+      setState((s) => ({ ...s, player1Name, player2Name }));
+    }
+  }, [restored, storedDefault]);
 
   return (
     <IonCard>
@@ -58,10 +67,10 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               }}
             >
               <IonSegmentButton value="O">
-                <IonLabel className="o-x-value">O</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.O}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="X">
-                <IonLabel className="o-x-value">X</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.X}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
           </IonItem>
@@ -95,10 +104,10 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               }}
             >
               <IonSegmentButton value="O">
-                <IonLabel className="o-x-value">O</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.O}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="X">
-                <IonLabel className="o-x-value">X</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.X}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
           </IonItem>

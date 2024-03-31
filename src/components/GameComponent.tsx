@@ -16,6 +16,7 @@ import {
 import './GameComponent.css';
 
 import { GameStorage } from '../helpers/storage.helper';
+import { useStoredDefault } from '../hooks';
 import type { Value } from '../models/Cell';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
@@ -32,6 +33,7 @@ export const GameComponent = ({
 }) => {
   const history = useHistory();
   const height = (window.screen.availWidth * 0.86675) / 3;
+  const { storedDefault } = useStoredDefault();
   const [turn, setTurn] = useState<Value>(game.player1.value);
   const [saved, setSaved] = useState(false);
   const hasWin = game.hasWin();
@@ -58,7 +60,7 @@ export const GameComponent = ({
               <IonCardSubtitle>{hasWin ? 'Winner' : 'Player turn'}</IonCardSubtitle>
               <IonCardTitle>
                 <IonLabel className="turnLabel ion-margin-end o-x-value" color="medium">
-                  {hasWin ? game.winValue : turn}
+                  {storedDefault[hasWin && game.winValue ? game.winValue : turn]}
                 </IonLabel>
                 {hasWin ? game.getPlayer(game.winValue)?.name : game.getPlayer(turn)?.name}
               </IonCardTitle>
@@ -80,7 +82,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(0).className : ''}
                 onClick={() => handleCellClick(0)}
               >
-                {game.getCell(0).value}
+                {storedDefault[game.getCell(0).value]}
               </div>
             </IonCol>
             <IonCol className="cell cell-2 o-x-value">
@@ -89,7 +91,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(1).className : ''}
                 onClick={() => handleCellClick(1)}
               >
-                {game.getCell(1).value}
+                {storedDefault[game.getCell(1).value]}
               </div>
             </IonCol>
             <IonCol className="cell cell-3 o-x-value">
@@ -98,7 +100,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(2).className : ''}
                 onClick={() => handleCellClick(2)}
               >
-                {game.getCell(2).value}
+                {storedDefault[game.getCell(2).value]}
               </div>
             </IonCol>
           </IonRow>
@@ -109,7 +111,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(3).className : ''}
                 onClick={() => handleCellClick(3)}
               >
-                {game.getCell(3).value}
+                {storedDefault[game.getCell(3).value]}
               </div>
             </IonCol>
             <IonCol className="cell cell-5 o-x-value">
@@ -118,7 +120,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(4).className : ''}
                 onClick={() => handleCellClick(4)}
               >
-                {game.getCell(4).value}
+                {storedDefault[game.getCell(4).value]}
               </div>
             </IonCol>
             <IonCol className="cell cell-6 o-x-value">
@@ -127,7 +129,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(5).className : ''}
                 onClick={() => handleCellClick(5)}
               >
-                {game.getCell(5).value}
+                {storedDefault[game.getCell(5).value]}
               </div>
             </IonCol>
           </IonRow>
@@ -138,7 +140,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(6).className : ''}
                 onClick={() => handleCellClick(6)}
               >
-                {game.getCell(6).value}
+                {storedDefault[game.getCell(6).value]}
               </div>
             </IonCol>
             <IonCol className="cell cell-8 o-x-value">
@@ -147,7 +149,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(7).className : ''}
                 onClick={() => handleCellClick(7)}
               >
-                {game.getCell(7).value}
+                {storedDefault[game.getCell(7).value]}
               </div>
             </IonCol>
             <IonCol className="cell cell-9 o-x-value">
@@ -156,7 +158,7 @@ export const GameComponent = ({
                 className={hasWin ? game.getCell(8).className : ''}
                 onClick={() => handleCellClick(8)}
               >
-                {game.getCell(8).value}
+                {storedDefault[game.getCell(8).value]}
               </div>
             </IonCol>
           </IonRow>
