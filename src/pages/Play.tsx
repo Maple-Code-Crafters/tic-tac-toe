@@ -44,7 +44,7 @@ const PlayPage: React.FC = () => {
             <NewGameForm startGame={setGame} />
           </>
         )}
-        {game && <GameComponent game={game} setGame={setGame} />}
+        {game && <GameComponent game={game} setGame={setGame} isStoredGame={false} />}
       </IonContent>
     </IonPage>
   );

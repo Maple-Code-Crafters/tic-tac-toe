@@ -29,13 +29,13 @@ export const GameComponent = ({
 }: {
   game: Game;
   setGame: React.Dispatch<React.SetStateAction<Game | undefined>>;
-  isStoredGame?: boolean;
+  isStoredGame: boolean;
 }) => {
   const history = useHistory();
   const height = (window.screen.availWidth * 0.86675) / 3;
   const { storedDefault } = useStoredDefault();
   const [turn, setTurn] = useState<Value>(game.player1.value);
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(isStoredGame);
   const hasWin = game.hasWin();
   const finished = game.finished();
 
@@ -178,6 +178,7 @@ export const GameComponent = ({
                   ),
                 );
               } else {
+                setSaved(false);
                 setGame(undefined);
                 history.push(
                   `/play?player1Name=${game.player1.name}&player1Value=${game.player1.value}&player2Name=${game.player2.name}&player2Value=${game.player2.value}`,
