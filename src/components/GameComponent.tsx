@@ -178,7 +178,6 @@ export const GameComponent = ({
                   ),
                 );
               } else {
-                setSaved(false);
                 setGame(undefined);
                 history.push(
                   `/play?player1Name=${game.player1.name}&player1Value=${game.player1.value}&player2Name=${game.player2.name}&player2Value=${game.player2.value}`,
