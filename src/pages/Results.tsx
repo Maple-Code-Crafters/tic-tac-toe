@@ -108,15 +108,21 @@ const ResultsPage: React.FC = () => {
           <>
             {playedGames.length > 0 ? (
               <IonList>
-                {playedGames.map((sg) => (
-                  <IonItem key={sg.date.toISOString()} button onClick={() => setSelectedPlayedGame(sg)}>
-                    <IonAvatar className="o-x-value">{sg.game.winValue ? sg.symbols[sg.game.winValue] : ''}</IonAvatar>
+                {playedGames.map((playedGame) => (
+                  <IonItem key={playedGame.date.toISOString()} button onClick={() => setSelectedPlayedGame(playedGame)}>
+                    <IonAvatar className="o-x-value">
+                      {playedGame.game.winValue ? playedGame.symbols[playedGame.game.winValue] : ''}
+                    </IonAvatar>
                     <IonLabel>
                       <h3>
-                        {sg.game.player1.name} vs {sg.game.player2.name}
+                        {playedGame.game.player1.name} vs {playedGame.game.player2.name}
                       </h3>
-                      <p>{sg.game.winValue ? `Winner: ${sg.game.getPlayer(sg.game.winValue)?.name}` : 'No winner'}</p>
-                      <p>Date: {sg.date.toLocaleString()}</p>
+                      <p>
+                        {playedGame.game.winValue
+                          ? `Winner: ${playedGame.game.getPlayer(playedGame.game.winValue)?.name}`
+                          : 'No winner'}
+                      </p>
+                      <p>Date: {playedGame.date.toLocaleString()}</p>
                     </IonLabel>
                   </IonItem>
                 ))}
