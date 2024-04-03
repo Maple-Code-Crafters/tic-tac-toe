@@ -26,12 +26,12 @@ import { GameStorage } from '../helpers/storage.helper';
 
 const ResultsPage: React.FC = () => {
   const [presentAlert] = useIonAlert();
-  const [storedGames, setStoredGames] = useState<PlayedGame[]>();
-  const [selectedStoredGame, setSelectedStoredGame] = useState<PlayedGame>();
+  const [playedGames, setPlayedGames] = useState<PlayedGame[]>();
+  const [selectedPlayedGame, setSelectedPlayedGame] = useState<PlayedGame>();
 
   const load = useCallback(async () => {
-    setSelectedStoredGame(undefined);
-    setStoredGames(await GameStorage.getResults());
+    setSelectedPlayedGame(undefined);
+    setPlayedGames(await GameStorage.getResults());
   }, []);
 
   useIonViewWillEnter(() => {
@@ -46,7 +46,7 @@ const ResultsPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        {!selectedStoredGame ? (
+        {!selectedPlayedGame ? (
           <IonListHeader>
             <IonLabel>Your Games</IonLabel>
             <IonButton
@@ -74,11 +74,11 @@ const ResultsPage: React.FC = () => {
           <IonListHeader>
             <IonLabel>
               <h3>
-                {selectedStoredGame.game.player1.name} vs {selectedStoredGame.game.player2.name}
+                {selectedPlayedGame.game.player1.name} vs {selectedPlayedGame.game.player2.name}
               </h3>
-              <p>Date: {selectedStoredGame.date.toLocaleString()}</p>
+              <p>Date: {selectedPlayedGame.date.toLocaleString()}</p>
             </IonLabel>
-            <IonButton className="ion-no-padding" onClick={() => setSelectedStoredGame(undefined)}>
+            <IonButton className="ion-no-padding" onClick={() => setSelectedPlayedGame(undefined)}>
               Back
             </IonButton>
             <IonButton
@@ -91,7 +91,7 @@ const ResultsPage: React.FC = () => {
                     {
                       text: 'Delete',
                       handler: async () => {
-                        await GameStorage.deteleOne(selectedStoredGame);
+                        await GameStorage.deteleOne(selectedPlayedGame);
                         load();
                       },
                     },
@@ -104,12 +104,12 @@ const ResultsPage: React.FC = () => {
           </IonListHeader>
         )}
 
-        {storedGames && !selectedStoredGame && (
+        {playedGames && !selectedPlayedGame && (
           <>
-            {storedGames.length > 0 ? (
+            {playedGames.length > 0 ? (
               <IonList>
-                {storedGames.map((sg) => (
-                  <IonItem key={sg.date.toISOString()} button onClick={() => setSelectedStoredGame(sg)}>
+                {playedGames.map((sg) => (
+                  <IonItem key={sg.date.toISOString()} button onClick={() => setSelectedPlayedGame(sg)}>
                     <IonAvatar className="o-x-value">{sg.game.winValue ? sg.symbols[sg.game.winValue] : ''}</IonAvatar>
                     <IonLabel>
                       <h3>
@@ -129,11 +129,11 @@ const ResultsPage: React.FC = () => {
             )}
           </>
         )}
-        {selectedStoredGame && (
+        {selectedPlayedGame && (
           <GameComponent
-            game={selectedStoredGame.game}
-            symbols={selectedStoredGame.symbols}
-            setGame={() => setSelectedStoredGame(undefined)}
+            game={selectedPlayedGame.game}
+            symbols={selectedPlayedGame.symbols}
+            setGame={() => setSelectedPlayedGame(undefined)}
             isStoredGame={true}
           />
         )}
