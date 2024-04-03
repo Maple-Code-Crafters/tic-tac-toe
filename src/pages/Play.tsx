@@ -30,26 +30,18 @@ const PlayPage: React.FC = () => {
 
   return (
     <IonPage>
-      {!game && (
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>New Game</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-      )}
+      <IonHeader collapse="condense">
+        <IonToolbar>
+          <IonTitle size="large">New Game</IonTitle>
+        </IonToolbar>
+      </IonHeader>
 
       <IonContent>
-        {!game && (
-          <>
-            <IonHeader collapse="condense">
-              <IonToolbar>
-                <IonTitle size="large">New Game </IonTitle>
-              </IonToolbar>
-            </IonHeader>
-            <NewGameForm startGame={setGame} />
-          </>
+        {game ? (
+          <GameComponent game={game} symbols={symbols} setGame={setGame} isStoredGame={false} />
+        ) : (
+          <NewGameForm startGame={setGame} />
         )}
-        {game && <GameComponent game={game} symbols={symbols} setGame={setGame} isStoredGame={false} />}
       </IonContent>
     </IonPage>
   );
