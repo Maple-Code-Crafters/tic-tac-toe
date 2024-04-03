@@ -183,6 +183,7 @@ export const GameComponent = ({
                   `/play?player1Name=${game.player1.name}&player1Value=${game.player1.value}&player2Name=${game.player2.name}&player2Value=${game.player2.value}`,
                 );
               }
+              setSaved(false);
             }}
           >
             Play Again
@@ -194,6 +195,7 @@ export const GameComponent = ({
               onClick={() => {
                 setGame(undefined);
                 history.replace('/play');
+                setSaved(false);
               }}
             >
               New Game
