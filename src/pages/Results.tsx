@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { fileTrayOutline } from 'ionicons/icons';
 
 import {
@@ -21,24 +21,22 @@ import {
 import './Results.css';
 
 import { GameComponent } from '../components/GameComponent';
-import type { StoredGame } from '../helpers/storage.helper';
+import type { PlayedGame } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
-import { useStoredDefault } from '../hooks';
 
 const ResultsPage: React.FC = () => {
   const [presentAlert] = useIonAlert();
-  const { storedDefault } = useStoredDefault();
-  const [storedGames, setStoredGames] = useState<StoredGame[]>();
-  const [selectedStoredGame, setSelectedStoredGame] = useState<StoredGame>();
+  const [storedGames, setStoredGames] = useState<PlayedGame[]>();
+  const [selectedStoredGame, setSelectedStoredGame] = useState<PlayedGame>();
 
-  const load = async () => {
-    setStoredGames(undefined);
-    setStoredGames(await GameStorage.getAllDescOrder());
-  };
+  const load = useCallback(async () => {
+    setSelectedStoredGame(undefined);
+    setStoredGames(await GameStorage.getResults());
+  }, []);
 
   useIonViewWillEnter(() => {
     load();
-  });
+  }, [load]);
 
   return (
     <IonPage>
@@ -93,9 +91,8 @@ const ResultsPage: React.FC = () => {
                     {
                       text: 'Delete',
                       handler: async () => {
-                        await GameStorage.deteleOne(selectedStoredGame.date.toISOString());
-                        setStoredGames(await GameStorage.getAllDescOrder());
-                        setSelectedStoredGame(undefined);
+                        await GameStorage.deteleOne(selectedStoredGame);
+                        load();
                       },
                     },
                   ],
@@ -113,9 +110,7 @@ const ResultsPage: React.FC = () => {
               <IonList>
                 {storedGames.map((sg) => (
                   <IonItem key={sg.date.toISOString()} button onClick={() => setSelectedStoredGame(sg)}>
-                    <IonAvatar className="o-x-value">
-                      {sg.game.winValue ? storedDefault[sg.game.winValue] : ''}
-                    </IonAvatar>
+                    <IonAvatar className="o-x-value">{sg.game.winValue ? sg.symbols[sg.game.winValue] : ''}</IonAvatar>
                     <IonLabel>
                       <h3>
                         {sg.game.player1.name} vs {sg.game.player2.name}
@@ -137,6 +132,7 @@ const ResultsPage: React.FC = () => {
         {selectedStoredGame && (
           <GameComponent
             game={selectedStoredGame.game}
+            symbols={selectedStoredGame.symbols}
             setGame={() => setSelectedStoredGame(undefined)}
             isStoredGame={true}
           />
