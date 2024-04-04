@@ -72,13 +72,19 @@ const SettingsPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader collapse="condense">
+      <IonHeader>
         <IonToolbar>
-          <IonTitle size="large">Settings</IonTitle>
+          <IonTitle>Settings</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Settings</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+
         <IonCard className="logo-card">
           <IonCardHeader className="ion-justify-content-center logo-card-header">
             <IonCardTitle className="ion-text-center">{APP_NAME}</IonCardTitle>

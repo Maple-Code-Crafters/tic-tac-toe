@@ -40,12 +40,11 @@ const ResultsPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader collapse="condense">
+      <IonHeader>
         <IonToolbar>
-          <IonTitle size="large">Results</IonTitle>
+          <IonTitle>Results</IonTitle>
         </IonToolbar>
       </IonHeader>
-
       <IonContent fullscreen>
         {!selectedPlayedGame ? (
           <IonListHeader>
