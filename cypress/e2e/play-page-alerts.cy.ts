@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Player Name Alert Tests', () => {
+describe('Play page - player name alert tests', () => {
   it('When player1 name is not set then the alert shows the player1 message', () => {
     cy.viewport('iphone-x');
     cy.visit('/');
