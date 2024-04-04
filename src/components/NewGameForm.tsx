@@ -67,10 +67,10 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               }}
             >
               <IonSegmentButton value="O">
-                <IonLabel className="o-x-value">{storedDefault.O}</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.symbols.O}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="X">
-                <IonLabel className="o-x-value">{storedDefault.X}</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.symbols.X}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
           </IonItem>
@@ -104,10 +104,10 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               }}
             >
               <IonSegmentButton value="O">
-                <IonLabel className="o-x-value">{storedDefault.O}</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.symbols.O}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="X">
-                <IonLabel className="o-x-value">{storedDefault.X}</IonLabel>
+                <IonLabel className="o-x-value">{storedDefault.symbols.X}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
           </IonItem>

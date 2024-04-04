@@ -59,7 +59,7 @@ const SettingsPage: React.FC = () => {
       value = value?.[0];
       e.target.value = value;
     }
-    setNewDefault((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setNewDefault((prev) => ({ ...prev, symbols: { ...prev.symbols, [e.target.name]: value } }));
   };
 
   const showSavedToast = () => {
@@ -133,7 +133,7 @@ const SettingsPage: React.FC = () => {
                 placeholder="Add a symbol"
                 clearInput
                 maxlength={2}
-                value={newDefault.O}
+                value={newDefault.symbols.O}
                 onIonInput={onSymbolInput}
               ></IonInput>
             </IonItem>
@@ -145,7 +145,7 @@ const SettingsPage: React.FC = () => {
                 placeholder="Add a symbol"
                 clearInput
                 maxlength={2}
-                value={newDefault.X}
+                value={newDefault.symbols.X}
                 onIonInput={onSymbolInput}
               ></IonInput>
             </IonItem>
@@ -158,12 +158,12 @@ const SettingsPage: React.FC = () => {
             disabled={
               !newDefault.player1Name ||
               !newDefault.player2Name ||
-              !newDefault.O ||
-              !newDefault.X ||
+              !newDefault.symbols.O ||
+              !newDefault.symbols.X ||
               (newDefault.player1Name === storedDefault.player1Name &&
                 newDefault.player2Name === storedDefault.player2Name &&
-                newDefault.O === storedDefault.O &&
-                newDefault.X === storedDefault.X)
+                newDefault.symbols.O === storedDefault.symbols.O &&
+                newDefault.symbols.X === storedDefault.symbols.X)
             }
             onClick={async () => {
               await saveDefault(newDefault);

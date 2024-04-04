@@ -4,53 +4,81 @@ import { DEFAULT } from '../constants';
 import type { ArchivedGame } from '../models/Game';
 import { Game } from '../models/Game';
 
-export type StoredGame = {
+export type Symbols = {
+  X: string;
+  O: string;
+};
+
+export type PlayedGame = {
   date: Date;
   game: Game;
+  symbols: Symbols;
+};
+
+export type SavedGame = {
+  date: string;
+  game: ArchivedGame;
+  symbols: Symbols;
 };
 
 export type Default = {
   player1Name: string;
   player2Name: string;
-  X: string;
-  O: string;
-};
-
-const isValidDate = (dateString: string) => {
-  return !isNaN(Date.parse(dateString));
+  symbols: Symbols;
 };
 
 export const GameStorage = {
-  saveGame: (date: Date, game: Game) => {
-    return Preferences.set({
-      key: date.toISOString(),
-      value: JSON.stringify(game.toArchived()),
-    });
-  },
-
-  getAllDescOrder: async () => {
-    const storedGames: StoredGame[] = [];
-    const { keys } = await Preferences.keys();
-
-    for (const key of keys) {
-      if (isValidDate(key)) {
-        const { value } = await Preferences.get({ key });
-        if (value) {
-          const recoveredGame = JSON.parse(value) as ArchivedGame;
-          storedGames.push({
-            date: new Date(key),
-            game: Game.fromArchived(recoveredGame),
-          });
-        }
-      }
+  saveGame: async ({ date, game, symbols }: PlayedGame) => {
+    try {
+      const { value } = await Preferences.get({ key: 'results' });
+      const results: SavedGame[] = value ? JSON.parse(value) : [];
+      results.unshift({
+        date: date.toISOString(),
+        game: game.toArchived(),
+        symbols,
+      });
+      await Preferences.set({
+        key: 'results',
+        value: JSON.stringify(results),
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error saving game', error);
     }
-
-    return storedGames.sort((a, b) => b.date.getTime() - a.date.getTime());
   },
 
-  deteleAll: Preferences.clear,
+  getResults: async () => {
+    try {
+      const { value } = await Preferences.get({ key: 'results' });
+      const results: SavedGame[] = value ? JSON.parse(value) : [];
+      return results.map<PlayedGame>(({ date, game, symbols }) => ({
+        date: new Date(date),
+        game: Game.fromArchived(game),
+        symbols,
+      }));
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error getting results', error);
+      return [];
+    }
+  },
 
-  deteleOne: (key: string) => Preferences.remove({ key }),
+  deteleAll: () => Preferences.remove({ key: 'results' }),
+
+  deteleOne: async (game: PlayedGame) => {
+    try {
+      const { value } = await Preferences.get({ key: 'results' });
+      const results: SavedGame[] = value ? JSON.parse(value) : [];
+      const newResults = results.filter(({ date }) => date !== game.date.toISOString());
+      await Preferences.set({
+        key: 'results',
+        value: JSON.stringify(newResults),
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error deleting saved result', error);
+    }
+  },
 };
 
 export const DefaultStorage = {
@@ -60,12 +88,12 @@ export const DefaultStorage = {
   },
 
   get: async () => {
-    const { value } = await Preferences.get({ key: 'default' });
     try {
+      const { value } = await Preferences.get({ key: 'default' });
       return value ? (JSON.parse(value) as Default) : DEFAULT;
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Error parsing default preferences', error);
+      console.error('Error getting default', error);
       return DEFAULT;
     }
   },

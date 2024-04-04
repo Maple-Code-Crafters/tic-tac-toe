@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { fileTrayOutline } from 'ionicons/icons';
 
 import {
@@ -21,24 +21,22 @@ import {
 import './Results.css';
 
 import { GameComponent } from '../components/GameComponent';
-import type { StoredGame } from '../helpers/storage.helper';
+import type { PlayedGame } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
-import { useStoredDefault } from '../hooks';
 
 const ResultsPage: React.FC = () => {
   const [presentAlert] = useIonAlert();
-  const { storedDefault } = useStoredDefault();
-  const [storedGames, setStoredGames] = useState<StoredGame[]>();
-  const [selectedStoredGame, setSelectedStoredGame] = useState<StoredGame>();
+  const [playedGames, setPlayedGames] = useState<PlayedGame[]>();
+  const [selectedPlayedGame, setSelectedPlayedGame] = useState<PlayedGame>();
 
-  const load = async () => {
-    setStoredGames(undefined);
-    setStoredGames(await GameStorage.getAllDescOrder());
-  };
+  const load = useCallback(async () => {
+    setSelectedPlayedGame(undefined);
+    setPlayedGames(await GameStorage.getResults());
+  }, []);
 
   useIonViewWillEnter(() => {
     load();
-  });
+  }, [load]);
 
   return (
     <IonPage>
@@ -48,7 +46,7 @@ const ResultsPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        {!selectedStoredGame ? (
+        {!selectedPlayedGame ? (
           <IonListHeader>
             <IonLabel>Your Games</IonLabel>
             <IonButton
@@ -76,11 +74,11 @@ const ResultsPage: React.FC = () => {
           <IonListHeader>
             <IonLabel>
               <h3>
-                {selectedStoredGame.game.player1.name} vs {selectedStoredGame.game.player2.name}
+                {selectedPlayedGame.game.player1.name} vs {selectedPlayedGame.game.player2.name}
               </h3>
-              <p>Date: {selectedStoredGame.date.toLocaleString()}</p>
+              <p>Date: {selectedPlayedGame.date.toLocaleString()}</p>
             </IonLabel>
-            <IonButton className="ion-no-padding" onClick={() => setSelectedStoredGame(undefined)}>
+            <IonButton className="ion-no-padding" onClick={() => setSelectedPlayedGame(undefined)}>
               Back
             </IonButton>
             <IonButton
@@ -93,9 +91,8 @@ const ResultsPage: React.FC = () => {
                     {
                       text: 'Delete',
                       handler: async () => {
-                        await GameStorage.deteleOne(selectedStoredGame.date.toISOString());
-                        setStoredGames(await GameStorage.getAllDescOrder());
-                        setSelectedStoredGame(undefined);
+                        await GameStorage.deteleOne(selectedPlayedGame);
+                        load();
                       },
                     },
                   ],
@@ -107,21 +104,25 @@ const ResultsPage: React.FC = () => {
           </IonListHeader>
         )}
 
-        {storedGames && !selectedStoredGame && (
+        {playedGames && !selectedPlayedGame && (
           <>
-            {storedGames.length > 0 ? (
+            {playedGames.length > 0 ? (
               <IonList>
-                {storedGames.map((sg) => (
-                  <IonItem key={sg.date.toISOString()} button onClick={() => setSelectedStoredGame(sg)}>
+                {playedGames.map((playedGame) => (
+                  <IonItem key={playedGame.date.toISOString()} button onClick={() => setSelectedPlayedGame(playedGame)}>
                     <IonAvatar className="o-x-value">
-                      {sg.game.winValue ? storedDefault[sg.game.winValue] : ''}
+                      {playedGame.game.winValue ? playedGame.symbols[playedGame.game.winValue] : ''}
                     </IonAvatar>
                     <IonLabel>
                       <h3>
-                        {sg.game.player1.name} vs {sg.game.player2.name}
+                        {playedGame.game.player1.name} vs {playedGame.game.player2.name}
                       </h3>
-                      <p>{sg.game.winValue ? `Winner: ${sg.game.getPlayer(sg.game.winValue)?.name}` : 'No winner'}</p>
-                      <p>Date: {sg.date.toLocaleString()}</p>
+                      <p>
+                        {playedGame.game.winValue
+                          ? `Winner: ${playedGame.game.getPlayer(playedGame.game.winValue)?.name}`
+                          : 'No winner'}
+                      </p>
+                      <p>Date: {playedGame.date.toLocaleString()}</p>
                     </IonLabel>
                   </IonItem>
                 ))}
@@ -134,10 +135,11 @@ const ResultsPage: React.FC = () => {
             )}
           </>
         )}
-        {selectedStoredGame && (
+        {selectedPlayedGame && (
           <GameComponent
-            game={selectedStoredGame.game}
-            setGame={() => setSelectedStoredGame(undefined)}
+            game={selectedPlayedGame.game}
+            symbols={selectedPlayedGame.symbols}
+            setGame={() => setSelectedPlayedGame(undefined)}
             isStoredGame={true}
           />
         )}
