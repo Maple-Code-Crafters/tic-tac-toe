@@ -5,7 +5,7 @@ import { APP_NAME, APP_VERSION } from './constants';
 
 Sentry.init(
   {
-    dsn: import.meta.env.SENTRY_DNS,
+    dsn: import.meta.env.VITE_SENTRY_DNS,
     release: `${APP_NAME}@${APP_VERSION}`,
     dist: '1',
     // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
