@@ -15,9 +15,9 @@ import {
 
 import './GameComponent.css';
 
+import { BOT_THINKING_TIME } from '../constants';
 import type { Symbols } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
-import type { Value } from '../models/Cell';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
@@ -36,7 +36,7 @@ export const GameComponent = ({
   const history = useHistory();
   const height = (window.screen.availWidth * 0.86675) / 3;
   const [_symbols] = useState<Symbols>(symbols);
-  const [turn, setTurn] = useState<Value>(game.player1.value);
+  const [, setStateChange] = useState({});
   const [saved, setSaved] = useState(isStoredGame);
   const hasWin = game.hasWin();
   const finished = game.finished();
@@ -49,8 +49,60 @@ export const GameComponent = ({
   }, [finished, game, hasWin, saved, _symbols]);
 
   const handleCellClick = (index: Index) => {
-    game.getCell(index).value = turn;
-    setTurn(turn === 'O' ? 'X' : 'O');
+    if (game.getCell(index).value !== undefined || finished || hasWin) {
+      return;
+    }
+
+    game.makeHumanMove(index);
+    refreshComponent();
+
+    if (game.isSinglePlayerMode()) {
+      botMove();
+    }
+  };
+
+  const botMove = () => {
+    if (game.finished() || game.hasWin()) {
+      return;
+    }
+    // add a sleep to simulate the bot thinking
+    setTimeout(() => {
+      game.makeBotMove();
+      refreshComponent();
+    }, BOT_THINKING_TIME);
+  };
+
+  const handlePlayAgain = () => {
+    if (!isStoredGame) {
+      setGame(
+        new Game(
+          new Player(game.player1.name, game.player1.value),
+          new Player(game.player2.name, game.player2.value),
+          game.numberOfPlayers,
+        ),
+      );
+    } else {
+      setGame(undefined);
+      history.push(
+        `/play?player1Name=${game.player1.name}&player1Value=${game.player1.value}&player2Name=${game.player2.name}&player2Value=${game.player2.value}&X=${_symbols.X}&O=${_symbols.O}&numberOfPlayers=${game.numberOfPlayers}`,
+      );
+    }
+    setSaved(false);
+  };
+
+  const handleNewGame = () => {
+    setGame(undefined);
+    history.replace('/play');
+    setSaved(false);
+  };
+
+  const handleCancel = () => {
+    setGame(undefined);
+    history.push('/play');
+  };
+
+  const refreshComponent = () => {
+    setStateChange({});
   };
 
   return (
@@ -62,9 +114,9 @@ export const GameComponent = ({
               <IonCardSubtitle>{hasWin ? 'Winner' : 'Player turn'}</IonCardSubtitle>
               <IonCardTitle>
                 <IonLabel className="turnLabel ion-margin-end o-x-value" color="medium">
-                  {_symbols[hasWin && game.winValue ? game.winValue : turn]}
+                  {_symbols[hasWin && game.winValue ? game.winValue : game.getTurn()]}
                 </IonLabel>
-                {hasWin ? game.getPlayer(game.winValue)?.name : game.getPlayer(turn)?.name}
+                {hasWin ? game.getPlayer(game.winValue)?.name : game.getCurrentPlayer()?.name}
               </IonCardTitle>
             </>
           )}
@@ -168,52 +220,18 @@ export const GameComponent = ({
       </div>
       {hasWin || finished ? (
         <IonCard>
-          <IonButton
-            className="ion-margin"
-            expand="block"
-            onClick={() => {
-              if (!isStoredGame) {
-                setGame(
-                  new Game(
-                    new Player(game.player1.name, game.player1.value),
-                    new Player(game.player2.name, game.player2.value),
-                  ),
-                );
-              } else {
-                setGame(undefined);
-                history.push(
-                  `/play?player1Name=${game.player1.name}&player1Value=${game.player1.value}&player2Name=${game.player2.name}&player2Value=${game.player2.value}&X=${_symbols.X}&O=${_symbols.O}`,
-                );
-              }
-              setSaved(false);
-            }}
-          >
+          <IonButton className="ion-margin" expand="block" onClick={() => handlePlayAgain()}>
             Play Again
           </IonButton>
           {!isStoredGame && (
-            <IonButton
-              className="ion-margin"
-              expand="block"
-              onClick={() => {
-                setGame(undefined);
-                history.replace('/play');
-                setSaved(false);
-              }}
-            >
+            <IonButton className="ion-margin" expand="block" onClick={() => handleNewGame()}>
               New Game
             </IonButton>
           )}
         </IonCard>
       ) : (
         <IonCard>
-          <IonButton
-            className="ion-margin"
-            expand="block"
-            onClick={() => {
-              setGame(undefined);
-              history.push('/play');
-            }}
-          >
+          <IonButton className="ion-margin" expand="block" onClick={() => handleCancel()}>
             Cancel
           </IonButton>
         </IonCard>
