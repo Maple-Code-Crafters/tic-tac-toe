@@ -164,3 +164,15 @@ div.main {
 .turnLabel {
   font-size: 1.5em;
 }
+
+.non-clickable-board {
+  pointer-events: none;
+}
+
+.bot-thinking-image {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  z-index: 1;
+}

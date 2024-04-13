@@ -15,7 +15,7 @@ import {
 
 import './GameComponent.css';
 
-import { BOT_THINKING_TIME } from '../constants';
+import { BOT_THINKING_IMAGE, BOT_THINKING_TIME } from '../constants';
 import type { Symbols } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
 import type { Index } from '../models/Game';
@@ -38,6 +38,8 @@ export const GameComponent = ({
   const [_symbols] = useState<Symbols>(symbols);
   const [, setStateChange] = useState({});
   const [saved, setSaved] = useState(isStoredGame);
+  const [boardCalss, setBoardCalss] = useState('main');
+  const [botIsThinking, setBotIsThinking] = useState(false);
   const hasWin = game.hasWin();
   const finished = game.finished();
 
@@ -65,8 +67,12 @@ export const GameComponent = ({
     if (game.finished() || game.hasWin()) {
       return;
     }
+    setBoardCalss('main non-clickable-board');
+    setBotIsThinking(true);
     // add a sleep to simulate the bot thinking
     setTimeout(() => {
+      setBoardCalss('main');
+      setBotIsThinking(false);
       game.makeBotMove();
       refreshComponent();
     }, BOT_THINKING_TIME);
@@ -123,7 +129,8 @@ export const GameComponent = ({
           {finished && !hasWin && <IonCardTitle>No winner</IonCardTitle>}
         </IonCardHeader>
       </IonCard>
-      <div className="main">
+      <div id="board" className={boardCalss}>
+      {botIsThinking && <img src={BOT_THINKING_IMAGE} className="bot-thinking-image" alt="Bot is thinking" />}
         <IonGrid
           className={`ion-margin ${finished || hasWin ? 'noClick' : ''} ${
             hasWin ? `${game.getGridClassNameWin()}` : ''
