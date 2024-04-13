@@ -31,7 +31,7 @@ describe('Play page', () => {
           cy.wrap($el).click();
         }
       });
-      //  clean player 2 name
+      //  clear player 2 name
       cy.get('[aria-label="reset"]').each(($el, index) => {
         if (index === 1) {
           cy.wrap($el).click();

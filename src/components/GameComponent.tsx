@@ -67,15 +67,23 @@ export const GameComponent = ({
     if (game.finished() || game.hasWin()) {
       return;
     }
-    setBoardCalss('main non-clickable-board');
-    setBotIsThinking(true);
+    startBotThinking();
     // add a sleep to simulate the bot thinking
     setTimeout(() => {
-      setBoardCalss('main');
-      setBotIsThinking(false);
+      stopBotThinking();
       game.makeBotMove();
       refreshComponent();
     }, BOT_THINKING_TIME);
+  };
+
+  const startBotThinking = () => {
+    setBoardCalss('main non-clickable-board');
+    setBotIsThinking(true);
+  };
+
+  const stopBotThinking = () => {
+    setBoardCalss('main');
+    setBotIsThinking(false);
   };
 
   const handlePlayAgain = () => {

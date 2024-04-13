@@ -13,7 +13,6 @@ describe('Game', () => {
   beforeEach(() => {
     player1 = new Player('Player 1', 'X');
     player2 = new Player('Player 2', 'O');
-
     game = new Game(player1, player2, numberOfPlayers);
   });
 

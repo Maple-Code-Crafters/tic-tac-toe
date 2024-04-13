@@ -12,7 +12,6 @@ export class Bot {
     if (game.finished() || game.hasWin() || !availableCells.length) {
       return -1;
     }
-
     return availableCells[Math.floor(Math.random() * availableCells.length)];
   }
 }
