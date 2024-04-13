@@ -24,15 +24,10 @@ const PlayPage: React.FC = () => {
   const [game, setGame] = useState<Game>();
   const symbols = useMemo<Symbols>(() => (X && O ? { X, O } : storedDefault.symbols), [X, O, storedDefault.symbols]);
 
-  const numberOfPlayersEnum = (numberOfPlayers:string) => {
-    console.log('numberOfPlayersEnum numberOfPlayers', numberOfPlayers);
+  const numberOfPlayersEnum = (numberOfPlayers: string) => {
     if (numberOfPlayers === '0') {
       return NumberOfPlayers.OnePlayer;
-    }
-    if (numberOfPlayers === '1') {
-      return NumberOfPlayers.TwoPlayers;
-    }
-    return storedDefault.numberOfPlayers;
+    } else return NumberOfPlayers.TwoPlayers;
   };
 
   useEffect(() => {

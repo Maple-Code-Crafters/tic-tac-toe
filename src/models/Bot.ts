@@ -1,11 +1,7 @@
-import type { Game, Index } from './Game';
+import type { Game } from './Game';
 
 export class Bot {
   private _name: string = 'CPU (easy)';
-
-  constructor() {
-    console.log('Bot constructor');
-  }
 
   public get name() {
     return this._name;

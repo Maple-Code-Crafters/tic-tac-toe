@@ -130,7 +130,7 @@ export const GameComponent = ({
         </IonCardHeader>
       </IonCard>
       <div id="board" className={boardCalss}>
-      {botIsThinking && <img src={BOT_THINKING_IMAGE} className="bot-thinking-image" alt="Bot is thinking" />}
+        {botIsThinking && <img src={BOT_THINKING_IMAGE} className="bot-thinking-image" alt="Bot is thinking" />}
         <IonGrid
           className={`ion-margin ${finished || hasWin ? 'noClick' : ''} ${
             hasWin ? `${game.getGridClassNameWin()}` : ''

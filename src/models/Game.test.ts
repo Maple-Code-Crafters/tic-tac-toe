@@ -1,19 +1,20 @@
 import { Cell } from './Cell';
-import type { ArchivedGame, NumberOfPlayers } from './Game';
+import type { ArchivedGame } from './Game';
+import { NumberOfPlayers } from './Game';
 import { Game } from './Game';
 import { Player } from './Player';
 
 describe('Game', () => {
   let player1: Player;
   let player2: Player;
-  let players: NumberOfPlayers = '1';
+  let numberOfPlayers: NumberOfPlayers = NumberOfPlayers.OnePlayer;
   let game: Game;
 
   beforeEach(() => {
     player1 = new Player('Player 1', 'X');
     player2 = new Player('Player 2', 'O');
 
-    game = new Game(player1, player2, players);
+    game = new Game(player1, player2, numberOfPlayers);
   });
 
   test('should initialize with correct players', () => {
@@ -86,7 +87,7 @@ describe('Game', () => {
     const archivedGame: ArchivedGame = {
       player1: player1.toArchived(),
       player2: player2.toArchived(),
-      numberOfPlayers: players,
+      numberOfPlayers: numberOfPlayers,
       cells: [
         { index: 0, value: 'X', className: 'horizontal' },
         { index: 1, value: 'O', className: 'vertical' },
@@ -106,7 +107,7 @@ describe('Game', () => {
 
     expect(newGame.player1).toEqual(player1);
     expect(newGame.player2).toEqual(player2);
-    expect(newGame.numberOfPlayers).toBe(players);
+    expect(newGame.numberOfPlayers).toBe(numberOfPlayers);
     expect(newGame.getCell(0).value).toBe('X');
     expect(newGame.getCell(0).className).toBe('horizontal');
     expect(newGame.getCell(1).value).toBe('O');

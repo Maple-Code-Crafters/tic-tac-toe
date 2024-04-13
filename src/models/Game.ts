@@ -34,7 +34,6 @@ export class Game {
     this._player1 = player1;
     this._player2 = player2;
     this._numberOfPlayers = numberOfPlayers;
-    console.log('Game -> constructor -> this._numberOfPlayers', this._numberOfPlayers);
     if (this._numberOfPlayers === NumberOfPlayers.OnePlayer) {
       this._bot = new Bot();
       this._player2.name = this._bot.name;
