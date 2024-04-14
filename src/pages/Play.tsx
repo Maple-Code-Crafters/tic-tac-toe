@@ -7,7 +7,6 @@ import { NewGameForm } from '../components/NewGameForm';
 import type { Symbols } from '../helpers/storage.helper';
 import { useParamQuery, useStoredDefault } from '../hooks';
 import type { Value } from '../models/Cell';
-import { NumberOfPlayers } from '../models/Game';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
 
@@ -24,19 +23,13 @@ const PlayPage: React.FC = () => {
   const [game, setGame] = useState<Game>();
   const symbols = useMemo<Symbols>(() => (X && O ? { X, O } : storedDefault.symbols), [X, O, storedDefault.symbols]);
 
-  const numberOfPlayersEnum = (numberOfPlayers: string) => {
-    if (numberOfPlayers === '0') {
-      return NumberOfPlayers.OnePlayer;
-    } else return NumberOfPlayers.TwoPlayers;
-  };
-
   useEffect(() => {
     if (player1Name && player1Value && player2Name && player2Value && numberOfPlayers) {
       setGame(
         new Game(
           new Player(player1Name, player1Value as Value),
           new Player(player2Name, player2Value as Value),
-          numberOfPlayersEnum(numberOfPlayers),
+          Number(numberOfPlayers),
         ),
       );
     }

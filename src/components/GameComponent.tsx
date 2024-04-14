@@ -19,6 +19,7 @@ import { BOT_THINKING_TIME } from '../constants';
 import type { Symbols } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
 import { useBotCellAnimation } from '../hooks';
+import { Bot } from '../models/Bot';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
@@ -39,26 +40,31 @@ export const GameComponent = ({
   const [_symbols] = useState<Symbols>(symbols);
   const [, setStateChange] = useState({});
   const [saved, setSaved] = useState(isStoredGame);
-  const [boardCalss, setBoardCalss] = useState('main');
-  const [botIsThinking, setBotIsThinking] = useState(false);
-  const { animatedCellIndex } = useBotCellAnimation({ botIsThinking, game });
+  const [botThinking, setBotThinking] = useState(false);
+  const { animatedCellIndex } = useBotCellAnimation({ botThinking, game });
   const hasWin = game.hasWin();
   const finished = game.finished();
+  const [bot, setBot] = useState<Bot>();
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
       GameStorage.saveGame({ date: new Date(), game, symbols: _symbols });
       setSaved(true);
     }
-  }, [finished, game, hasWin, saved, _symbols]);
+    if (game.isSinglePlayerMode() && !bot) {
+      setBot(new Bot());
+    }
+  }, [finished, game, hasWin, saved, _symbols, bot]);
 
   const handleCellClick = (index: Index) => {
     if (game.getCell(index).value !== undefined || finished || hasWin) {
       return;
     }
 
-    game.makeHumanMove(index);
-    refreshComponent();
+    game.makeMove(index);
+
+    // force re-render
+    setStateChange({});
 
     if (game.isSinglePlayerMode()) {
       botMove();
@@ -69,23 +75,15 @@ export const GameComponent = ({
     if (game.finished() || game.hasWin()) {
       return;
     }
-    startBotThinking();
+    setBotThinking(true);
     // add a sleep to simulate the bot thinking
     setTimeout(() => {
-      stopBotThinking();
-      game.makeBotMove();
-      refreshComponent();
+      let index = bot?.chooseMove(game);
+      if (index) {
+        game.makeMove(index);
+      }
+      setBotThinking(false);
     }, BOT_THINKING_TIME);
-  };
-
-  const startBotThinking = () => {
-    setBoardCalss('main non-clickable-board');
-    setBotIsThinking(true);
-  };
-
-  const stopBotThinking = () => {
-    setBoardCalss('main');
-    setBotIsThinking(false);
   };
 
   const handlePlayAgain = () => {
@@ -117,10 +115,6 @@ export const GameComponent = ({
     history.push('/play');
   };
 
-  const refreshComponent = () => {
-    setStateChange({});
-  };
-
   return (
     <>
       <IonCard>
@@ -139,7 +133,7 @@ export const GameComponent = ({
           {finished && !hasWin && <IonCardTitle>No winner</IonCardTitle>}
         </IonCardHeader>
       </IonCard>
-      <div id="board" className={boardCalss}>
+      <div id="board" className={`main ${botThinking ? 'non-clickable-board' : ''}`}>
         <IonGrid
           className={`ion-margin ${finished || hasWin ? 'noClick' : ''} ${
             hasWin ? `${game.getGridClassNameWin()}` : ''

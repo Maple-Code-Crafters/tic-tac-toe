@@ -1,4 +1,3 @@
-import { Bot } from './Bot';
 import type { ArchivedCell, Value } from './Cell';
 import { Cell } from './Cell';
 import type { ArchivedPlayer } from './Player';
@@ -7,8 +6,8 @@ import { Player } from './Player';
 export type Index = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 export enum NumberOfPlayers {
-  OnePlayer,
-  TwoPlayers,
+  OnePlayer = 1,
+  TwoPlayers = 2,
 }
 
 export type ArchivedGame = {
@@ -27,17 +26,12 @@ export class Game {
   private _cells: [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
   private _gridClassNameWin!: string;
   private _turn: Value;
-  private _bot: Bot | undefined;
   public winValue: Value | undefined;
 
   constructor(player1: Player, player2: Player, numberOfPlayers: NumberOfPlayers) {
     this._player1 = player1;
     this._player2 = player2;
     this._numberOfPlayers = numberOfPlayers;
-    if (this._numberOfPlayers === NumberOfPlayers.OnePlayer) {
-      this._bot = new Bot();
-      this._player2.name = this._bot.name;
-    }
     this._turn = player1.value;
     this._cells = [
       new Cell(0),
@@ -84,25 +78,12 @@ export class Game {
     return this.getPlayer(this._turn);
   }
 
-  public makeHumanMove(index: Index) {
+  public makeMove(index: Index) {
     if (this._cells[index].value !== undefined || this.finished() || this.hasWin()) {
       return;
     }
     this._cells[index].value = this._turn;
     this._turn = this._turn === 'O' ? 'X' : 'O';
-  }
-
-  public makeBotMove() {
-    if (this.finished() || this.hasWin()) {
-      return;
-    }
-    if (this.isSinglePlayerMode() && this._bot && this._turn === this._player2.value) {
-      const botMove = this._bot.makeMove(this);
-      if (botMove > -1) {
-        this._cells[botMove].value = this._turn;
-        this._turn = this._turn === 'O' ? 'X' : 'O';
-      }
-    }
   }
 
   public isSinglePlayerMode() {

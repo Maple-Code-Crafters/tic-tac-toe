@@ -1,7 +1,6 @@
 import { Cell } from './Cell';
 import type { ArchivedGame } from './Game';
-import { NumberOfPlayers } from './Game';
-import { Game } from './Game';
+import { Game, NumberOfPlayers } from './Game';
 import { Player } from './Player';
 
 describe('Game', () => {
