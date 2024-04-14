@@ -7,16 +7,19 @@ export const useBotCellAnimation = ({ botIsThinking, game }: { botIsThinking: bo
   const [animatedCellIndex, setAnimatedCellIndex] = useState<Index>();
 
   const setNextAnimatedCell = useCallback(() => {
-    const index = game.getAvailableCells().indexOf(animatedCellIndex as Index);
-    setAnimatedCellIndex(game.getAvailableCells()[index === -1 ? 0 : index + 1]);
+    const availableCells = game.getAvailableCells();
+    if (animatedCellIndex === undefined) {
+      setAnimatedCellIndex(availableCells[0]);
+    } else {
+      const index = availableCells.indexOf(animatedCellIndex as Index);
+      setAnimatedCellIndex(availableCells[(index + 1) % availableCells.length]);
+    }
   }, [animatedCellIndex, game]);
 
   useEffect(() => {
     let setIntervalId: NodeJS.Timeout | undefined = undefined;
     if (botIsThinking) {
-      setIntervalId = setInterval(() => {
-        setNextAnimatedCell();
-      }, BOT_THINKING_TIME / 10);
+      setIntervalId = setInterval(setNextAnimatedCell, BOT_THINKING_TIME / 10);
     } else {
       setAnimatedCellIndex(undefined);
       clearInterval(setIntervalId);
