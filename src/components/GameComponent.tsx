@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 
 import {
@@ -18,6 +18,7 @@ import './GameComponent.css';
 import { BOT_THINKING_TIME } from '../constants';
 import type { Symbols } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
+import { useBotCellAnimation } from '../hooks';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
@@ -40,7 +41,7 @@ export const GameComponent = ({
   const [saved, setSaved] = useState(isStoredGame);
   const [boardCalss, setBoardCalss] = useState('main');
   const [botIsThinking, setBotIsThinking] = useState(false);
-  const [animatedCellIndex, setAnimatedCellIndex] = useState<Index>();
+  const { animatedCellIndex } = useBotCellAnimation({ botIsThinking, game });
   const hasWin = game.hasWin();
   const finished = game.finished();
 
@@ -50,27 +51,6 @@ export const GameComponent = ({
       setSaved(true);
     }
   }, [finished, game, hasWin, saved, _symbols]);
-
-  const setNextAnimatedCell = useCallback(() => {
-    const index = game.getAvailableCells().indexOf(animatedCellIndex as Index);
-    setAnimatedCellIndex(game.getAvailableCells()[index === -1 ? 0 : index + 1]);
-  }, [animatedCellIndex, game]);
-
-  useEffect(() => {
-    let setIntervalId: NodeJS.Timeout | undefined = undefined;
-    if (botIsThinking) {
-      setIntervalId = setInterval(() => {
-        setNextAnimatedCell();
-      }, BOT_THINKING_TIME / 10);
-    } else {
-      setAnimatedCellIndex(undefined);
-      clearInterval(setIntervalId);
-    }
-
-    return () => {
-      clearInterval(setIntervalId);
-    };
-  }, [setNextAnimatedCell, botIsThinking]);
 
   const handleCellClick = (index: Index) => {
     if (game.getCell(index).value !== undefined || finished || hasWin) {
