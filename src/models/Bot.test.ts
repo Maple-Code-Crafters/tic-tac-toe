@@ -13,30 +13,26 @@ describe('Bot', () => {
     };
   });
 
-  test('should have a name', () => {
-    expect(bot.name).toBe('CPU (easy)');
-  });
-
   test('should make a move', () => {
-    const move = bot.makeMove(game);
-    expect(move).toBeGreaterThanOrEqual(-1);
+    const move = bot.chooseMove(game);
+    expect(move).toBeGreaterThanOrEqual(0);
   });
 
   test('should return -1 if game is finished', () => {
     game.finished = () => true;
-    const move = bot.makeMove(game);
-    expect(move).toBe(-1);
+    const move = bot.chooseMove(game);
+    expect(move).toBeUndefined();
   });
 
   test('should return -1 if game has a win', () => {
     game.hasWin = () => true;
-    const move = bot.makeMove(game);
-    expect(move).toBe(-1);
+    const move = bot.chooseMove(game);
+    expect(move).toBeUndefined();
   });
 
   test('should return -1 if no available cells', () => {
     game.getAvailableCells = () => [];
-    const move = bot.makeMove(game);
-    expect(move).toBe(-1);
+    const move = bot.chooseMove(game);
+    expect(move).toBeUndefined();
   });
 });

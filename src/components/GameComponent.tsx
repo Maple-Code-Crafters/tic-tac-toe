@@ -18,6 +18,7 @@ import './GameComponent.css';
 import { BOT_THINKING_IMAGE, BOT_THINKING_TIME } from '../constants';
 import type { Symbols } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
+import { Bot } from '../models/Bot';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
@@ -41,21 +42,27 @@ export const GameComponent = ({
   const [botThinking, setBotThinking] = useState(false);
   const hasWin = game.hasWin();
   const finished = game.finished();
+  const [bot, setBot] = useState<Bot>();
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
       GameStorage.saveGame({ date: new Date(), game, symbols: _symbols });
       setSaved(true);
     }
-  }, [finished, game, hasWin, saved, _symbols]);
+    if (game.isSinglePlayerMode() && !bot) {
+      setBot(new Bot());
+    }
+  }, [finished, game, hasWin, saved, _symbols, bot]);
 
   const handleCellClick = (index: Index) => {
     if (game.getCell(index).value !== undefined || finished || hasWin) {
       return;
     }
 
-    game.makeHumanMove(index);
-    refreshComponent();
+    game.makeMove(index);
+
+    // force re-render
+    setStateChange({});
 
     if (game.isSinglePlayerMode()) {
       botMove();
@@ -69,8 +76,11 @@ export const GameComponent = ({
     setBotThinking(true);
     // add a sleep to simulate the bot thinking
     setTimeout(() => {
+      let index = bot?.chooseMove(game);
+      if (index) {
+        game.makeMove(index);
+      }
       setBotThinking(false);
-      game.makeBotMove();
     }, BOT_THINKING_TIME);
   };
 
@@ -101,10 +111,6 @@ export const GameComponent = ({
   const handleCancel = () => {
     setGame(undefined);
     history.push('/play');
-  };
-
-  const refreshComponent = () => {
-    setStateChange({});
   };
 
   return (

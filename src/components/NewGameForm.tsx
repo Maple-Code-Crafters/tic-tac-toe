@@ -171,7 +171,10 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               startGame(
                 new Game(
                   new Player(state.player1Name, state.player1Value),
-                  new Player(state.player2Name, state.player2Value),
+                  new Player(
+                    state.numberOfPlayers === NumberOfPlayers.OnePlayer ? 'CPU' : state.player2Name,
+                    state.player2Value,
+                  ),
                   state.numberOfPlayers,
                 ),
               );
