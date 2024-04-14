@@ -11,11 +11,15 @@ export class Player {
     private _value: Value,
   ) {}
 
-  public get name() {
+  public get name(): string {
     return this._name;
   }
 
-  public get value() {
+  public set name(name: string) {
+    this._name = name;
+  }
+
+  public get value(): Value {
     return this._value;
   }
 

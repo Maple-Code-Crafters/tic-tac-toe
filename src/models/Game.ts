@@ -5,24 +5,34 @@ import { Player } from './Player';
 
 export type Index = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
+export enum NumberOfPlayers {
+  OnePlayer = 1,
+  TwoPlayers = 2,
+}
+
 export type ArchivedGame = {
   player1: ArchivedPlayer;
   player2: ArchivedPlayer;
   cells: ArchivedCell[];
   gridClassNameWin: string;
   winValue: Value | undefined;
+  numberOfPlayers: NumberOfPlayers;
 };
 
 export class Game {
   private _player1: Player;
   private _player2: Player;
+  private _numberOfPlayers: NumberOfPlayers;
   private _cells: [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
   private _gridClassNameWin!: string;
+  private _turn: Value;
   public winValue: Value | undefined;
 
-  constructor(player1: Player, player2: Player) {
+  constructor(player1: Player, player2: Player, numberOfPlayers: NumberOfPlayers) {
     this._player1 = player1;
     this._player2 = player2;
+    this._numberOfPlayers = numberOfPlayers;
+    this._turn = player1.value;
     this._cells = [
       new Cell(0),
       new Cell(1),
@@ -44,6 +54,10 @@ export class Game {
     return this._player2;
   }
 
+  public get numberOfPlayers() {
+    return this._numberOfPlayers;
+  }
+
   public getPlayer(v: Value | undefined) {
     if (!v) {
       return undefined;
@@ -54,6 +68,35 @@ export class Game {
     } else {
       return this._player2;
     }
+  }
+
+  public getTurn() {
+    return this._turn;
+  }
+
+  public getCurrentPlayer() {
+    return this.getPlayer(this._turn);
+  }
+
+  public makeMove(index: Index) {
+    if (this._cells[index].value !== undefined || this.finished() || this.hasWin()) {
+      return;
+    }
+    this._cells[index].value = this._turn;
+    this._turn = this._turn === 'O' ? 'X' : 'O';
+  }
+
+  public isSinglePlayerMode() {
+    return this._numberOfPlayers === NumberOfPlayers.OnePlayer;
+  }
+
+  public getAvailableCells(): Index[] {
+    return this._cells.reduce((availableCells, cell, index) => {
+      if (!cell.value) {
+        availableCells.push(index as Index);
+      }
+      return availableCells;
+    }, [] as Index[]);
   }
 
   public getCell(index: Index) {
@@ -113,11 +156,16 @@ export class Game {
       cells: this._cells.map((c) => c.toArchived()),
       gridClassNameWin: this._gridClassNameWin,
       winValue: this.winValue,
+      numberOfPlayers: this._numberOfPlayers,
     };
   }
 
   static fromArchived(archivedGame: ArchivedGame): Game {
-    const game = new Game(Player.fromArchived(archivedGame.player1), Player.fromArchived(archivedGame.player2));
+    const game = new Game(
+      Player.fromArchived(archivedGame.player1),
+      Player.fromArchived(archivedGame.player2),
+      archivedGame.numberOfPlayers,
+    );
 
     archivedGame.cells.forEach((c, i) => {
       const cell = game.getCell(i as Index);
