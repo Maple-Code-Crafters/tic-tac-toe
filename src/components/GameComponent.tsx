@@ -15,9 +15,10 @@ import {
 
 import './GameComponent.css';
 
-import { BOT_THINKING_IMAGE, BOT_THINKING_TIME } from '../constants';
+import { BOT_THINKING_TIME } from '../constants';
 import type { Symbols } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
+import { useBotCellAnimation } from '../hooks';
 import { Bot } from '../models/Bot';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
@@ -40,6 +41,7 @@ export const GameComponent = ({
   const [, setStateChange] = useState({});
   const [saved, setSaved] = useState(isStoredGame);
   const [botThinking, setBotThinking] = useState(false);
+  const { animatedCellIndex } = useBotCellAnimation({ botThinking, game });
   const hasWin = game.hasWin();
   const finished = game.finished();
   const [bot, setBot] = useState<Bot>();
@@ -132,7 +134,6 @@ export const GameComponent = ({
         </IonCardHeader>
       </IonCard>
       <div id="board" className={`main ${botThinking ? 'non-clickable-board' : ''}`}>
-        {botThinking && <img src={BOT_THINKING_IMAGE} className="bot-thinking-image" alt="Bot is thinking" />}
         <IonGrid
           className={`ion-margin ${finished || hasWin ? 'noClick' : ''} ${
             hasWin ? `${game.getGridClassNameWin()}` : ''
@@ -142,7 +143,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-1 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(0).className : ''}
+                className={hasWin ? game.getCell(0).className : `${animatedCellIndex === 0 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(0)}
               >
                 {_symbols[game.getCell(0).value]}
@@ -151,7 +152,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-2 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(1).className : ''}
+                className={hasWin ? game.getCell(1).className : `${animatedCellIndex === 1 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(1)}
               >
                 {_symbols[game.getCell(1).value]}
@@ -160,7 +161,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-3 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(2).className : ''}
+                className={hasWin ? game.getCell(2).className : `${animatedCellIndex === 2 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(2)}
               >
                 {_symbols[game.getCell(2).value]}
@@ -171,7 +172,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-4 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(3).className : ''}
+                className={hasWin ? game.getCell(3).className : `${animatedCellIndex === 3 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(3)}
               >
                 {_symbols[game.getCell(3).value]}
@@ -180,7 +181,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-5 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(4).className : ''}
+                className={hasWin ? game.getCell(4).className : `${animatedCellIndex === 4 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(4)}
               >
                 {_symbols[game.getCell(4).value]}
@@ -189,7 +190,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-6 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(5).className : ''}
+                className={hasWin ? game.getCell(5).className : `${animatedCellIndex === 5 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(5)}
               >
                 {_symbols[game.getCell(5).value]}
@@ -200,7 +201,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-7 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(6).className : ''}
+                className={hasWin ? game.getCell(6).className : `${animatedCellIndex === 6 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(6)}
               >
                 {_symbols[game.getCell(6).value]}
@@ -209,7 +210,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-8 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(7).className : ''}
+                className={hasWin ? game.getCell(7).className : `${animatedCellIndex === 7 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(7)}
               >
                 {_symbols[game.getCell(7).value]}
@@ -218,7 +219,7 @@ export const GameComponent = ({
             <IonCol className="cell cell-9 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(8).className : ''}
+                className={hasWin ? game.getCell(8).className : `${animatedCellIndex === 8 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(8)}
               >
                 {_symbols[game.getCell(8).value]}
