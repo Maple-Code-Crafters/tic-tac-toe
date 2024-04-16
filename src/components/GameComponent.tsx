@@ -19,10 +19,11 @@ import { BOT_THINKING_TIME } from '../constants';
 import type { Symbols } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
 import { useBotCellAnimation } from '../hooks';
-import { Bot } from '../models/Bot';
+import { Bot } from '../models/bot/Bot';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
+import { BotBuilder } from '../models/bot/BotBuilder';
 
 export const GameComponent = ({
   game,
@@ -52,7 +53,7 @@ export const GameComponent = ({
       setSaved(true);
     }
     if (game.isSinglePlayerMode() && !bot) {
-      setBot(new Bot());
+      setBot(BotBuilder.build(game.level));
     }
   }, [finished, game, hasWin, saved, _symbols, bot]);
 
@@ -79,7 +80,7 @@ export const GameComponent = ({
     // add a sleep to simulate the bot thinking
     setTimeout(() => {
       let index = bot?.chooseMove(game);
-      if (index) {
+      if (index !== undefined) {
         game.makeMove(index);
       }
       setBotThinking(false);
@@ -93,6 +94,7 @@ export const GameComponent = ({
           new Player(game.player1.name, game.player1.value),
           new Player(game.player2.name, game.player2.value),
           game.numberOfPlayers,
+          game.level,
         ),
       );
     } else {

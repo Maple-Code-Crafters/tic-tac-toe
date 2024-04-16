@@ -7,6 +7,7 @@ import { NewGameForm } from '../components/NewGameForm';
 import type { Symbols } from '../helpers/storage.helper';
 import { useParamQuery, useStoredDefault } from '../hooks';
 import type { Value } from '../models/Cell';
+import type { Level, NumberOfPlayers } from '../models/Game';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
 
@@ -18,22 +19,24 @@ const PlayPage: React.FC = () => {
   const player2Name = params.get('player2Name');
   const player2Value = params.get('player2Value');
   const numberOfPlayers = params.get('numberOfPlayers');
+  const level = params.get('level');
   const X = params.get('X');
   const O = params.get('O');
   const [game, setGame] = useState<Game>();
   const symbols = useMemo<Symbols>(() => (X && O ? { X, O } : storedDefault.symbols), [X, O, storedDefault.symbols]);
 
   useEffect(() => {
-    if (player1Name && player1Value && player2Name && player2Value && numberOfPlayers) {
+    if (player1Name && player1Value && player2Name && player2Value && numberOfPlayers && level) {
       setGame(
         new Game(
           new Player(player1Name, player1Value as Value),
           new Player(player2Name, player2Value as Value),
-          Number(numberOfPlayers),
+          Number(numberOfPlayers) as NumberOfPlayers,
+          level as Level,
         ),
       );
     }
-  }, [player1Name, player1Value, player2Name, player2Value, numberOfPlayers]);
+  }, [player1Name, player1Value, player2Name, player2Value, numberOfPlayers, level]);
 
   return (
     <IonPage>
