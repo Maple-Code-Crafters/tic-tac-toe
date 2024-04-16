@@ -1,3 +1,4 @@
+import { Value } from '../Cell';
 import type { Game, Index } from '../Game';
 import type { Bot } from './Bot';
 
@@ -12,12 +13,13 @@ export class HardBot implements Bot {
       return;
     }
 
+    const botTurn: Value = gameCopy.getTurn();
     let bestScore = -Infinity;
     let move: Index | undefined;
 
-    availableCells.forEach((cell, index) => {
+    availableCells.forEach((c, index) => {
       gameCopy.makeMove(availableCells[index]);
-      let score = this.minimax(gameCopy, 0, false);
+      let score = this.minimax(gameCopy, 0, false, botTurn);
       console.log('score', score);
       console.log('bestScore', bestScore);
       gameCopy.undoMove(availableCells[index]);
@@ -32,9 +34,9 @@ export class HardBot implements Bot {
     return move;
   }
 
-  private minimax(game: Game, depth: number, isMaximizing: boolean): number {
+  private minimax(game: Game, depth: number, isMaximizing: boolean, botTurn: Value): number {
     if (game.hasWin()) {
-      return isMaximizing ? -1 : 1;
+      return game.winValue === botTurn ? -1 : 1;
     } else if (game.finished()) {
       return 0;
     }
@@ -44,7 +46,7 @@ export class HardBot implements Bot {
       const availableCells = game.getAvailableCells();
       for (let i = 0; i < availableCells.length; i++) {
         game.makeMove(availableCells[i]);
-        let score = this.minimax(game, depth + 1, false);
+        let score = this.minimax(game, depth + 1, false, botTurn);
         game.undoMove(availableCells[i]);
         bestScore = Math.max(score, bestScore);
       }
@@ -54,7 +56,7 @@ export class HardBot implements Bot {
       const availableCells = game.getAvailableCells();
       for (let i = 0; i < availableCells.length; i++) {
         game.makeMove(availableCells[i]);
-        let score = this.minimax(game, depth + 1, true);
+        let score = this.minimax(game, depth + 1, true, botTurn);
         game.undoMove(availableCells[i]);
         bestScore = Math.min(score, bestScore);
       }
