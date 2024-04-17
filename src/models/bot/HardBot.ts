@@ -22,10 +22,11 @@ export class HardBot implements Bot {
 
     availableCells.forEach((c, index) => {
       console.log('XXXXXXXXXXX');
+      gameCopy = readOnlygame.clone();
 
       gameCopy.makeMove(availableCells[index]);
       let score = this.minimax(gameCopy.clone(), 0, false, botTurn);
-      gameCopy.undoMove(availableCells[index]);
+      //gameCopy.undoMove(availableCells[index]);
       console.log('after undo move gameCopy.getCells()' + gameCopy.getCells());
 
       console.log('before score', score);
@@ -47,10 +48,10 @@ export class HardBot implements Bot {
   }
 
   private minimax(game: Game, depth: number, isMaximizing: boolean, botTurn: Value): number {
-    console.log('game cells' + game.getCells());
-    console.log(
-      `game hasWin=${game.hasWin()} finished=${game.finished()} isMaximizing=${isMaximizing} depth=${depth} botTurn=${botTurn}`,
-    );
+    // console.log('game cells' + game.getCells());
+    // console.log(
+    //   `game hasWin=${game.hasWin()} finished=${game.finished()} isMaximizing=${isMaximizing} depth=${depth} botTurn=${botTurn}`,
+    // );
     if (game.hasWin()) {
       return game.winValue === botTurn ? 1 : -1;
     } else if (game.finished()) {
@@ -61,8 +62,9 @@ export class HardBot implements Bot {
       let bestScore = -Infinity;
       const availableCells = game.getAvailableCells();
       for (let i = 0; i < availableCells.length; i++) {
-        game.makeMove(availableCells[i]);
-        let score = this.minimax(game.clone(), depth + 1, false, botTurn);
+        let gameCopy = game.clone();
+        gameCopy.makeMove(availableCells[i]);
+        let score = this.minimax(gameCopy, depth + 1, false, botTurn);
         //game.undoMove(availableCells[i]);
         bestScore = Math.max(score, bestScore);
       }
@@ -71,8 +73,9 @@ export class HardBot implements Bot {
       let bestScore = Infinity;
       const availableCells = game.getAvailableCells();
       for (let i = 0; i < availableCells.length; i++) {
-        game.makeMove(availableCells[i]);
-        let score = this.minimax(game.clone(), depth + 1, true, botTurn);
+        let gameCopy = game.clone();
+        gameCopy.makeMove(availableCells[i]);
+        let score = this.minimax(gameCopy, depth + 1, true, botTurn);
         //game.undoMove(availableCells[i]);
         bestScore = Math.min(score, bestScore);
       }
