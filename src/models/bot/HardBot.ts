@@ -6,9 +6,9 @@ export class HardBot implements Bot {
   public chooseMove(readOnlygame: Game): Index | undefined {
     let gameCopy = readOnlygame.clone();
     const availableCells = readOnlygame.getAvailableCells();
-    console.log('availableCells',availableCells);
-    console.log('game'+gameCopy.getCells());
-    console.log('gameCopy.getCells()'+gameCopy.getCells());
+    console.log('availableCells', availableCells);
+    console.log('game' + gameCopy.getCells());
+    console.log('gameCopy.getCells()' + gameCopy.getCells());
 
     if (gameCopy.finished() || gameCopy.hasWin() || !availableCells.length) {
       return;
@@ -24,8 +24,10 @@ export class HardBot implements Bot {
       console.log('XXXXXXXXXXX');
 
       gameCopy.makeMove(availableCells[index]);
-      let score = this.minimax(gameCopy, 0, false, botTurn);
+      let score = this.minimax(gameCopy.clone(), 0, false, botTurn);
       gameCopy.undoMove(availableCells[index]);
+      console.log('after undo move gameCopy.getCells()' + gameCopy.getCells());
+
       console.log('before score', score);
       console.log('before bestScore', bestScore);
       if (score > bestScore) {
@@ -45,8 +47,10 @@ export class HardBot implements Bot {
   }
 
   private minimax(game: Game, depth: number, isMaximizing: boolean, botTurn: Value): number {
-    console.log('game cells'+game.getCells());
-    console.log(`game hasWin=${game.hasWin()} finished=${game.finished()} isMaximizing=${isMaximizing} depth=${depth} botTurn=${botTurn}`);
+    console.log('game cells' + game.getCells());
+    console.log(
+      `game hasWin=${game.hasWin()} finished=${game.finished()} isMaximizing=${isMaximizing} depth=${depth} botTurn=${botTurn}`,
+    );
     if (game.hasWin()) {
       return game.winValue === botTurn ? 1 : -1;
     } else if (game.finished()) {
@@ -58,7 +62,7 @@ export class HardBot implements Bot {
       const availableCells = game.getAvailableCells();
       for (let i = 0; i < availableCells.length; i++) {
         game.makeMove(availableCells[i]);
-        let score = this.minimax(game, depth + 1, false, botTurn);
+        let score = this.minimax(game.clone(), depth + 1, false, botTurn);
         //game.undoMove(availableCells[i]);
         bestScore = Math.max(score, bestScore);
       }
@@ -68,7 +72,7 @@ export class HardBot implements Bot {
       const availableCells = game.getAvailableCells();
       for (let i = 0; i < availableCells.length; i++) {
         game.makeMove(availableCells[i]);
-        let score = this.minimax(game, depth + 1, true, botTurn);
+        let score = this.minimax(game.clone(), depth + 1, true, botTurn);
         //game.undoMove(availableCells[i]);
         bestScore = Math.min(score, bestScore);
       }
