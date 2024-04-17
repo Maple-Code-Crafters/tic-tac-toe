@@ -64,6 +64,8 @@ export const GameComponent = ({
 
     game.makeMove(index);
 
+    //console.log('cloned game', game.clone());
+
     // force re-render
     setStateChange({});
 
