@@ -12,4 +12,4 @@ export const DEFAULT: Default = {
   },
   numberOfPlayers: NumberOfPlayers.OnePlayer,
 };
-export const BOT_THINKING_TIME = 1000;
+export const CPU_THINKING_TIME = 1000;

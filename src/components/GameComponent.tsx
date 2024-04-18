@@ -15,15 +15,14 @@ import {
 
 import './GameComponent.css';
 
-import { BOT_THINKING_TIME } from '../constants';
+import { CPU_THINKING_TIME } from '../constants';
 import type { Symbols } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
-import { useBotCellAnimation } from '../hooks';
-import { Bot } from '../models/bot/Bot';
+import { useCpuCellAnimation } from '../hooks';
+import { Cpu } from '../models/cpu/Cpu';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
 import { Player } from '../models/Player';
-import { BotBuilder } from '../models/bot/BotBuilder';
 
 export const GameComponent = ({
   game,
@@ -41,21 +40,21 @@ export const GameComponent = ({
   const [_symbols] = useState<Symbols>(symbols);
   const [, setStateChange] = useState({});
   const [saved, setSaved] = useState(isStoredGame);
-  const [botThinking, setBotThinking] = useState(false);
-  const { animatedCellIndex } = useBotCellAnimation({ botThinking, game });
+  const [cpuThinking, setCpuThinking] = useState(false);
+  const { animatedCellIndex } = useCpuCellAnimation({ cpuThinking, game });
   const hasWin = game.hasWin();
   const finished = game.finished();
-  const [bot, setBot] = useState<Bot>();
+  const [cpu, setCpu] = useState<Cpu>();
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
       GameStorage.saveGame({ date: new Date(), game, symbols: _symbols });
       setSaved(true);
     }
-    if (game.isSinglePlayerMode() && !bot) {
-      setBot(BotBuilder.build(game.level));
+    if (game.isSinglePlayerMode() && !cpu) {
+      setCpu(new Cpu(game.level));
     }
-  }, [finished, game, hasWin, saved, _symbols, bot]);
+  }, [finished, game, hasWin, saved, _symbols, cpu]);
 
   const handleCellClick = (index: Index) => {
     if (game.getCell(index).value !== undefined || finished || hasWin) {
@@ -64,29 +63,27 @@ export const GameComponent = ({
 
     game.makeMove(index);
 
-    //console.log('cloned game', game.clone());
-
     // force re-render
     setStateChange({});
 
     if (game.isSinglePlayerMode()) {
-      botMove();
+      cpuMove();
     }
   };
 
-  const botMove = () => {
+  const cpuMove = () => {
     if (game.finished() || game.hasWin()) {
       return;
     }
-    setBotThinking(true);
-    // add a sleep to simulate the bot thinking
+    setCpuThinking(true);
+    // add a sleep to simulate the cpu thinking
     setTimeout(() => {
-      let index = bot?.chooseMove(game);
+      let index = cpu?.chooseMove(game);
       if (index !== undefined) {
         game.makeMove(index);
       }
-      setBotThinking(false);
-    }, BOT_THINKING_TIME);
+      setCpuThinking(false);
+    }, CPU_THINKING_TIME);
   };
 
   const handlePlayAgain = () => {
@@ -137,7 +134,7 @@ export const GameComponent = ({
           {finished && !hasWin && <IonCardTitle>No winner</IonCardTitle>}
         </IonCardHeader>
       </IonCard>
-      <div id="board" className={`main ${botThinking ? 'non-clickable-board' : ''}`}>
+      <div id="board" className={`main ${cpuThinking ? 'non-clickable-board' : ''}`}>
         <IonGrid
           className={`ion-margin ${finished || hasWin ? 'noClick' : ''} ${
             hasWin ? `${game.getGridClassNameWin()}` : ''

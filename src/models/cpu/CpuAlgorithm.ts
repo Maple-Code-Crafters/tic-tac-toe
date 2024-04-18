@@ -1,5 +1,5 @@
 import type { Game, Index } from '../Game';
 
-export interface Bot {
+export interface CpuAlgorithm {
   chooseMove(game: Game): Index | undefined;
 }
