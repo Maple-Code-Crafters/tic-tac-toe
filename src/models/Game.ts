@@ -37,12 +37,12 @@ export class Game {
   private _turn: Value;
   public winValue: Value | undefined;
 
-  constructor(player1: Player, player2: Player, numberOfPlayers: NumberOfPlayers, level: Level) {
+  constructor(player1: Player, player2: Player, numberOfPlayers: NumberOfPlayers, level: Level, turn?: Value) {
     this._player1 = player1;
     this._player2 = player2;
     this._numberOfPlayers = numberOfPlayers;
     this._level = level;
-    this._turn = player1.value;
+    this._turn = turn ?? player1.value;
     this._cells = [
       new Cell(0),
       new Cell(1),
@@ -179,15 +179,12 @@ export class Game {
 
   public clone(): Game {
     const game = new Game(this._player1, this._player2, this._numberOfPlayers, this._level);
-    this._cells.forEach((c,i) => {
+    this._cells.forEach((c, i) => {
       game._cells[i] = c.clone();
     });
     game._gridClassNameWin = this._gridClassNameWin;
     game.winValue = this.winValue;
     game._turn = this._turn;
-    // console.log('this._cells', this._cells);
-    // console.log('game._cells', game._cells);
-
     return game;
   }
 

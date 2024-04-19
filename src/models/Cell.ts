@@ -42,8 +42,6 @@ export class Cell {
     const cell = new Cell(this._index);
     cell._value = this._value;
     cell.className = this.className;
-    // console.log('this', this);
-    // console.log('cell', cell);
     return cell;
   }
 }

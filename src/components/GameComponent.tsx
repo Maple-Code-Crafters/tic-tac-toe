@@ -45,6 +45,7 @@ export const GameComponent = ({
   const hasWin = game.hasWin();
   const finished = game.finished();
   const [cpu, setCpu] = useState<Cpu>();
+  const [initialTurn, setInitialTurn] = useState(game.getTurn());
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
@@ -88,14 +89,22 @@ export const GameComponent = ({
 
   const handlePlayAgain = () => {
     if (!isStoredGame) {
-      setGame(
-        new Game(
-          new Player(game.player1.name, game.player1.value),
-          new Player(game.player2.name, game.player2.value),
-          game.numberOfPlayers,
-          game.level,
-        ),
+      const newTurn = initialTurn === 'X' ? 'O' : 'X';
+      game = new Game(
+        new Player(game.player1.name, game.player1.value),
+        new Player(game.player2.name, game.player2.value),
+        game.numberOfPlayers,
+        game.level,
+        newTurn,
       );
+      setGame(game);
+      setInitialTurn(newTurn);
+      console.log('initialTurn', initialTurn);
+      console.log('newTurn', newTurn);
+
+      if (game.isSinglePlayerMode() && newTurn === game.player2.value) {
+        cpuMove();
+      }
     } else {
       setGame(undefined);
       history.push(
