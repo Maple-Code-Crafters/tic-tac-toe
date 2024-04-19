@@ -1,7 +1,7 @@
 import { Preferences } from '@capacitor/preferences';
 
 import { DEFAULT } from '../constants';
-import type { ArchivedGame, NumberOfPlayers } from '../models/Game';
+import type { ArchivedGame, Level, NumberOfPlayers } from '../models/Game';
 import { Game } from '../models/Game';
 
 export type Symbols = {
@@ -26,6 +26,7 @@ export type Default = {
   player2Name: string;
   symbols: Symbols;
   numberOfPlayers: NumberOfPlayers;
+  level: Level;
 };
 
 export const GameStorage = {

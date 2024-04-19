@@ -99,7 +99,7 @@ export const GameComponent = ({
       );
       setGame(game);
       setInitialTurn(newTurn);
-      console.log('initialTurn', initialTurn);
+      console.log('game.getCurrentPlayer()', game.getCurrentPlayer());
       console.log('newTurn', newTurn);
 
       if (game.isSinglePlayerMode() && newTurn === game.player2.value) {

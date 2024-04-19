@@ -4,6 +4,11 @@ import { Minimax } from './Minimax';
 import { RandomMove } from './RandomMove';
 
 export class Cpu {
+  // % chance of using Minimax
+  EASY_LEVEL_THRESHOLD = 0.2;
+  MEDIUM_LEVEL_THRESHOLD = 0.6;
+  HARD_LEVEL_THRESHOLD = 0.85;
+
   private _level: Level;
 
   public constructor(level: Level) {
@@ -11,23 +16,20 @@ export class Cpu {
   }
 
   public chooseMove(game: Game): Index | undefined {
-    const randomValue = Math.random();
+    const algorithmProbability = Math.random();
     let cpuAlgorithm: CpuAlgorithm;
 
     switch (this._level) {
       case Level.Easy:
-        // 20% chance of using Minimax
-        cpuAlgorithm = this.getAlgorithm(randomValue, 0.2);
+        cpuAlgorithm = this.getAlgorithm(algorithmProbability, this.EASY_LEVEL_THRESHOLD);
         break;
 
       case Level.Medium:
-        // 60% chance of using Minimax
-        cpuAlgorithm = this.getAlgorithm(randomValue, 0.6);
+        cpuAlgorithm = this.getAlgorithm(algorithmProbability, this.MEDIUM_LEVEL_THRESHOLD);
         break;
 
       case Level.Hard:
-        // 85% chance of using Minimax
-        cpuAlgorithm = this.getAlgorithm(randomValue, 0.85);
+        cpuAlgorithm = this.getAlgorithm(algorithmProbability, this.HARD_LEVEL_THRESHOLD);
         break;
 
       default:

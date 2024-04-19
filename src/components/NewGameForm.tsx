@@ -45,8 +45,8 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
 
   useEffect(() => {
     if (restored) {
-      const { player1Name, player2Name } = storedDefault;
-      setState((s) => ({ ...s, player1Name, player2Name }));
+      const { player1Name, player2Name, numberOfPlayers, level } = storedDefault;
+      setState((s) => ({ ...s, player1Name, player2Name, numberOfPlayers, level }));
     }
   }, [restored, storedDefault]);
 
