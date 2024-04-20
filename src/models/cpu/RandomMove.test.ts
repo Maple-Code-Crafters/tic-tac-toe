@@ -18,19 +18,19 @@ describe('Bot', () => {
     expect(move).toBeGreaterThanOrEqual(0);
   });
 
-  test('should return -1 if game is finished', () => {
+  test('should return undefined if game is finished', () => {
     game.finished = () => true;
     const move = randomMove.chooseMove(game);
     expect(move).toBeUndefined();
   });
 
-  test('should return -1 if game has a win', () => {
+  test('should return undefined if game has a win', () => {
     game.hasWin = () => true;
     const move = randomMove.chooseMove(game);
     expect(move).toBeUndefined();
   });
 
-  test('should return -1 if no available cells', () => {
+  test('should return undefined if no available cells', () => {
     game.getAvailableCells = () => [];
     const move = randomMove.chooseMove(game);
     expect(move).toBeUndefined();

@@ -1,4 +1,3 @@
-import { i } from 'vitest/dist/reporters-P7C2ytIv';
 import type { ArchivedCell, Value } from './Cell';
 import { Cell } from './Cell';
 import type { ArchivedPlayer } from './Player';

@@ -79,7 +79,7 @@ export const GameComponent = ({
     setCpuThinking(true);
     // add a sleep to simulate the cpu thinking
     setTimeout(() => {
-      let index = cpu?.chooseMove(game);
+      const index = cpu?.chooseMove(game);
       if (index !== undefined) {
         game.makeMove(index);
       }
@@ -99,9 +99,8 @@ export const GameComponent = ({
       );
       setGame(game);
       setInitialTurn(newTurn);
-      console.log('game.getCurrentPlayer()', game.getCurrentPlayer());
-      console.log('newTurn', newTurn);
 
+      // if it's single player mode and it's the cpu turn, then the cpu should play
       if (game.isSinglePlayerMode() && newTurn === game.player2.value) {
         cpuMove();
       }

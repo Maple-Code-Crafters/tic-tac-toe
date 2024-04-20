@@ -16,17 +16,17 @@ export class Minimax implements CpuAlgorithm {
     let bestScore = -Infinity;
     let move: Index | undefined;
 
-    availableCells.forEach((c, index) => {
+    for (const cell of availableCells) {
       gameCopy = readOnlygame.clone();
 
-      gameCopy.makeMove(availableCells[index]);
+      gameCopy.makeMove(cell);
       let score = this.minimax(gameCopy.clone(), 0, false, cpuTurn);
 
       if (score > bestScore) {
         bestScore = score;
-        move = availableCells[index];
+        move = cell;
       }
-    });
+    }
 
     return move;
   }
