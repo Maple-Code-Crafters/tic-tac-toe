@@ -103,16 +103,6 @@ export class Game {
     this._turn = this._turn === 'O' ? 'X' : 'O';
   }
 
-  public undoMove(index: Index) {
-    if (this._cells[index].value === undefined) {
-      return;
-    }
-    let className = this._cells[index].className;
-    this._cells[index] = new Cell(index);
-    this._cells[index].className = className;
-    this._turn = this._turn === 'O' ? 'X' : 'O';
-  }
-
   public isSinglePlayerMode() {
     return this._numberOfPlayers === NumberOfPlayers.OnePlayer;
   }
