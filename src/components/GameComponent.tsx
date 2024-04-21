@@ -36,17 +36,17 @@ export const GameComponent = ({
   isStoredGame: boolean;
 }) => {
   const history = useHistory();
-  const height = (window.screen.availWidth * 0.86675) / 3;
   const [_symbols] = useState<Symbols>(symbols);
   const [, setStateChange] = useState({});
   const [saved, setSaved] = useState(isStoredGame);
   const [cpuThinking, setCpuThinking] = useState(false);
   const { animatedCellIndex } = useCpuCellAnimation({ cpuThinking, game });
-  const hasWin = game.hasWin();
-  const finished = game.finished();
   const [cpu, setCpu] = useState<Cpu>();
   const [initialTurn, setInitialTurn] = useState(game.getTurn());
   const [cpuStartingGame, setCpuStartingGame] = useState(false);
+  const height = (window.screen.availWidth * 0.86675) / 3;
+  const hasWin = game.hasWin();
+  const finished = game.finished();
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
