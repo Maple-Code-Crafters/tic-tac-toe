@@ -90,18 +90,18 @@ export const GameComponent = ({
   const handlePlayAgain = () => {
     if (!isStoredGame) {
       const newTurn = initialTurn === 'X' ? 'O' : 'X';
-      game = new Game(
+      const newGame = new Game(
         new Player(game.player1.name, game.player1.value),
         new Player(game.player2.name, game.player2.value),
         game.numberOfPlayers,
         game.level,
         newTurn,
       );
-      setGame(game);
+      setGame(newGame);
       setInitialTurn(newTurn);
 
       // if it's single player mode and it's the cpu turn, then the cpu should play
-      if (game.isSinglePlayerMode() && newTurn === game.player2.value) {
+      if (newGame.isSinglePlayerMode() && newTurn === newGame.player2.value) {
         cpuMove();
       }
     } else {
