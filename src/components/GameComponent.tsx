@@ -53,15 +53,19 @@ export const GameComponent = ({
       GameStorage.saveGame({ date: new Date(), game, symbols: _symbols });
       setSaved(true);
     }
+  }, [finished, game, hasWin, saved, _symbols]);
+
+  useEffect(() => {
     if (game.isSinglePlayerMode() && !cpu) {
       setCpu(new Cpu(game.level));
     }
-  }, [finished, game, hasWin, saved, _symbols, cpu]);
+  }, [cpu, game]);
 
   const cpuMove = useCallback(() => {
     if (finished || hasWin) {
       return;
     }
+
     setCpuThinking(true);
     // add a sleep to simulate the cpu thinking
     setTimeout(() => {
