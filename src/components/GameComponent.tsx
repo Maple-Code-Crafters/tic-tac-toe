@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 
 import {
@@ -46,6 +46,7 @@ export const GameComponent = ({
   const finished = game.finished();
   const [cpu, setCpu] = useState<Cpu>();
   const [initialTurn, setInitialTurn] = useState(game.getTurn());
+  const [cpuStartingGame, setCpuStartingGame] = useState(false);
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
@@ -56,6 +57,28 @@ export const GameComponent = ({
       setCpu(new Cpu(game.level));
     }
   }, [finished, game, hasWin, saved, _symbols, cpu]);
+
+  const cpuMove = useCallback(() => {
+    if (finished || hasWin) {
+      return;
+    }
+    setCpuThinking(true);
+    // add a sleep to simulate the cpu thinking
+    setTimeout(() => {
+      const index = cpu?.chooseMove(game);
+      if (index !== undefined) {
+        game.makeMove(index);
+      }
+      setCpuThinking(false);
+    }, CPU_THINKING_TIME);
+  }, [cpu, finished, game, hasWin]);
+
+  useEffect(() => {
+    if (cpuStartingGame) {
+      cpuMove();
+      setCpuStartingGame(false);
+    }
+  }, [cpuMove, cpuStartingGame]);
 
   const handleCellClick = (index: Index) => {
     if (game.getCell(index).value !== undefined || finished || hasWin) {
@@ -72,21 +95,6 @@ export const GameComponent = ({
     }
   };
 
-  const cpuMove = () => {
-    if (game.finished() || game.hasWin()) {
-      return;
-    }
-    setCpuThinking(true);
-    // add a sleep to simulate the cpu thinking
-    setTimeout(() => {
-      const index = cpu?.chooseMove(game);
-      if (index !== undefined) {
-        game.makeMove(index);
-      }
-      setCpuThinking(false);
-    }, CPU_THINKING_TIME);
-  };
-
   const handlePlayAgain = () => {
     if (!isStoredGame) {
       const newTurn = initialTurn === 'X' ? 'O' : 'X';
@@ -99,10 +107,11 @@ export const GameComponent = ({
       );
       setGame(newGame);
       setInitialTurn(newTurn);
+      setSaved(false);
 
       // if it's single player mode and it's the cpu turn, then the cpu should play
       if (newGame.isSinglePlayerMode() && newTurn === newGame.player2.value) {
-        cpuMove();
+        setCpuStartingGame(true);
       }
     } else {
       setGame(undefined);
