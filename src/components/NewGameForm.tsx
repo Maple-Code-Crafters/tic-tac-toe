@@ -101,7 +101,7 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
                     <IonLabel>Hard</IonLabel>
                   </IonSegmentButton>
                 </IonSegment>
-              </IonItem>{' '}
+              </IonItem>
             </div>
           ) : null}
           {/* Select the player 1 symbol */}

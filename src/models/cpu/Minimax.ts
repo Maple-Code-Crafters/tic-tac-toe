@@ -11,6 +11,11 @@ export class Minimax implements CpuAlgorithm {
       return;
     }
 
+    // if the game is in the first turn, choose the left top corner, otherwise MInimax takes 2s to come to the same conclusion
+    if (availableCells.length === 9) {
+      return 0;
+    }
+
     const cpuTurn: Value = gameCopy.getTurn();
 
     let bestScore = -Infinity;

@@ -26,7 +26,7 @@ describe('Cpu', () => {
   });
 
   test('should choose a move correctly', () => {
-    cpu['EASY_LEVEL_THRESHOLD'] = 0;
+    cpu.EASY_LEVEL_THRESHOLD = 0;
     const move: Index | undefined = cpu.chooseMove(game);
     expect(game.getAvailableCells()).toContain(move);
   });

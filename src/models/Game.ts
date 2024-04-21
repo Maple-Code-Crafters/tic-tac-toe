@@ -87,10 +87,6 @@ export class Game {
     return this._turn;
   }
 
-  public getCells() {
-    return this._cells;
-  }
-
   public getCurrentPlayer() {
     return this.getPlayer(this._turn);
   }

@@ -6,8 +6,8 @@ import { RandomMove } from './RandomMove';
 export class Cpu {
   // % chance of using Minimax
   EASY_LEVEL_THRESHOLD = 0.2;
-  MEDIUM_LEVEL_THRESHOLD = 0.6;
-  HARD_LEVEL_THRESHOLD = 0.85;
+  MEDIUM_LEVEL_THRESHOLD = 0.5;
+  HARD_LEVEL_THRESHOLD = 0.9;
 
   private _level: Level;
 
