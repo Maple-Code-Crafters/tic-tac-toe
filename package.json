@@ -11,7 +11,7 @@
     "test.e2e": "cypress run",
     "test.e2e:debug": "cypress run --headed --no-exit",
     "test.unit": "vitest",
-    "lint": "npx eslint . --ext .tsx,.ts --fix",
+    "lint": "npx eslint . --fix",
     "p": "npm run lint && npx prettier --log-level=warn --write .",
     "prepare": "husky",
     "generate": "npx @capacitor/assets generate --ios --android --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'"
@@ -41,6 +41,7 @@
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "5.7.4",
+    "@eslint/js": "^9.1.1",
     "@testing-library/dom": ">=10.0.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^15.0.4",
@@ -52,9 +53,10 @@
     "cypress": "^13.8.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-jest-dom": "^5.4.0",
+    "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-simple-import-sort": "^12.1.0",
+    "globals": "^15.0.0",
     "husky": "^9.0.11",
     "jsdom": "^24.0.0",
     "prettier": "^3.2.5",

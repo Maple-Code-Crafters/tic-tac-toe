@@ -25,7 +25,7 @@ export class Minimax implements CpuAlgorithm {
       gameCopy = readOnlygame.clone();
 
       gameCopy.makeMove(cell);
-      let score = this.minimax(gameCopy.clone(), 0, false, cpuTurn);
+      const score = this.minimax(gameCopy.clone(), 0, false, cpuTurn);
 
       if (score > bestScore) {
         bestScore = score;
@@ -47,9 +47,9 @@ export class Minimax implements CpuAlgorithm {
       let bestScore = -Infinity;
       const availableCells = game.getAvailableCells();
       for (const cell of availableCells) {
-        let gameCopy = game.clone();
+        const gameCopy = game.clone();
         gameCopy.makeMove(cell);
-        let score = this.minimax(gameCopy, depth + 1, false, cpuTurn);
+        const score = this.minimax(gameCopy, depth + 1, false, cpuTurn);
         bestScore = Math.max(score, bestScore);
       }
       return bestScore;
@@ -57,9 +57,9 @@ export class Minimax implements CpuAlgorithm {
       let bestScore = Infinity;
       const availableCells = game.getAvailableCells();
       for (const cell of availableCells) {
-        let gameCopy = game.clone();
+        const gameCopy = game.clone();
         gameCopy.makeMove(cell);
-        let score = this.minimax(gameCopy, depth + 1, true, cpuTurn);
+        const score = this.minimax(gameCopy, depth + 1, true, cpuTurn);
         bestScore = Math.min(score, bestScore);
       }
       return bestScore;
