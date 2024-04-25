@@ -10,6 +10,12 @@ export enum NumberOfPlayers {
   TwoPlayers = 2,
 }
 
+export enum Level {
+  Easy = 'Easy',
+  Medium = 'Medium',
+  Hard = 'Hard',
+}
+
 export type ArchivedGame = {
   player1: ArchivedPlayer;
   player2: ArchivedPlayer;
@@ -17,22 +23,25 @@ export type ArchivedGame = {
   gridClassNameWin: string;
   winValue: Value | undefined;
   numberOfPlayers: NumberOfPlayers;
+  level: Level;
 };
 
 export class Game {
   private _player1: Player;
   private _player2: Player;
   private _numberOfPlayers: NumberOfPlayers;
+  private _level: Level;
   private _cells: [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
   private _gridClassNameWin!: string;
   private _turn: Value;
   public winValue: Value | undefined;
 
-  constructor(player1: Player, player2: Player, numberOfPlayers: NumberOfPlayers) {
+  constructor(player1: Player, player2: Player, numberOfPlayers: NumberOfPlayers, level: Level, turn?: Value) {
     this._player1 = player1;
     this._player2 = player2;
     this._numberOfPlayers = numberOfPlayers;
-    this._turn = player1.value;
+    this._level = level;
+    this._turn = turn ?? player1.value;
     this._cells = [
       new Cell(0),
       new Cell(1),
@@ -56,6 +65,10 @@ export class Game {
 
   public get numberOfPlayers() {
     return this._numberOfPlayers;
+  }
+
+  public get level() {
+    return this._level;
   }
 
   public getPlayer(v: Value | undefined) {
@@ -149,6 +162,17 @@ export class Game {
     return this._gridClassNameWin;
   }
 
+  public clone(): Game {
+    const game = new Game(this._player1, this._player2, this._numberOfPlayers, this._level);
+    this._cells.forEach((c, i) => {
+      game._cells[i] = c.clone();
+    });
+    game._gridClassNameWin = this._gridClassNameWin;
+    game.winValue = this.winValue;
+    game._turn = this._turn;
+    return game;
+  }
+
   public toArchived(): ArchivedGame {
     return {
       player1: this._player1.toArchived(),
@@ -157,6 +181,7 @@ export class Game {
       gridClassNameWin: this._gridClassNameWin,
       winValue: this.winValue,
       numberOfPlayers: this._numberOfPlayers,
+      level: this._level,
     };
   }
 
@@ -165,6 +190,7 @@ export class Game {
       Player.fromArchived(archivedGame.player1),
       Player.fromArchived(archivedGame.player2),
       archivedGame.numberOfPlayers,
+      archivedGame.level,
     );
 
     archivedGame.cells.forEach((c, i) => {

@@ -1,11 +1,11 @@
-import { Bot } from './Bot';
+import { RandomMove } from './RandomMove';
 
 describe('Bot', () => {
-  let bot: Bot;
+  let randomMove: RandomMove;
   let game: any;
 
   beforeEach(() => {
-    bot = new Bot();
+    randomMove = new RandomMove();
     game = {
       finished: () => false,
       hasWin: () => false,
@@ -14,25 +14,25 @@ describe('Bot', () => {
   });
 
   test('should make a move', () => {
-    const move = bot.chooseMove(game);
+    const move = randomMove.chooseMove(game);
     expect(move).toBeGreaterThanOrEqual(0);
   });
 
-  test('should return -1 if game is finished', () => {
+  test('should return undefined if game is finished', () => {
     game.finished = () => true;
-    const move = bot.chooseMove(game);
+    const move = randomMove.chooseMove(game);
     expect(move).toBeUndefined();
   });
 
-  test('should return -1 if game has a win', () => {
+  test('should return undefined if game has a win', () => {
     game.hasWin = () => true;
-    const move = bot.chooseMove(game);
+    const move = randomMove.chooseMove(game);
     expect(move).toBeUndefined();
   });
 
-  test('should return -1 if no available cells', () => {
+  test('should return undefined if no available cells', () => {
     game.getAvailableCells = () => [];
-    const move = bot.chooseMove(game);
+    const move = randomMove.chooseMove(game);
     expect(move).toBeUndefined();
   });
 });

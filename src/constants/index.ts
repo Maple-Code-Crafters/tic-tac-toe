@@ -1,5 +1,5 @@
 import type { Default } from '../helpers/storage.helper';
-import { NumberOfPlayers } from '../models/Game';
+import { Level, NumberOfPlayers } from '../models/Game';
 
 export const APP_VERSION = '0.0.0';
 export const APP_NAME = 'tic-tac-toe';
@@ -11,5 +11,6 @@ export const DEFAULT: Default = {
     X: 'X',
   },
   numberOfPlayers: NumberOfPlayers.OnePlayer,
+  level: Level.Easy,
 };
-export const BOT_THINKING_TIME = 1000;
+export const CPU_THINKING_TIME = 1000;

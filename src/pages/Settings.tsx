@@ -16,6 +16,8 @@ import {
   IonLabel,
   IonList,
   IonPage,
+  IonSegment,
+  IonSegmentButton,
   IonTitle,
   IonToolbar,
   useIonToast,
@@ -26,6 +28,7 @@ import './Settings.css';
 import { APP_NAME, APP_VERSION } from '../constants';
 import type { Default } from '../helpers/storage.helper';
 import { useStoredDefault } from '../hooks';
+import { Level, NumberOfPlayers } from '../models/Game';
 
 interface InputChangeEventDetail {
   value?: string | undefined | null;
@@ -144,6 +147,49 @@ const SettingsPage: React.FC = () => {
               ></IonInput>
             </IonItem>
           </IonItemGroup>
+          <IonItemGroup>
+            <IonItemDivider>
+              <IonLabel>Number of Players</IonLabel>
+            </IonItemDivider>
+            <IonItem lines="none">
+              <IonSegment
+                scrollable={true}
+                value={newDefault.numberOfPlayers}
+                onIonChange={(e) =>
+                  setNewDefault((prev) => ({ ...prev, numberOfPlayers: e.detail.value as NumberOfPlayers }))
+                }
+              >
+                <IonSegmentButton value={NumberOfPlayers.OnePlayer}>
+                  <IonLabel>One Player</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value={NumberOfPlayers.TwoPlayers}>
+                  <IonLabel>Two Players</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
+            </IonItem>
+          </IonItemGroup>
+          <IonItemGroup>
+            <IonItemDivider>
+              <IonLabel>Level</IonLabel>
+            </IonItemDivider>
+            <IonItem lines="none">
+              <IonSegment
+                scrollable={true}
+                value={newDefault.level}
+                onIonChange={(e) => setNewDefault((prev) => ({ ...prev, level: e.detail.value as Level }))}
+              >
+                <IonSegmentButton value={Level.Easy}>
+                  <IonLabel>Easy</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value={Level.Medium}>
+                  <IonLabel>Medium</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value={Level.Hard}>
+                  <IonLabel>Hard</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
+            </IonItem>
+          </IonItemGroup>
         </IonList>
         <IonCard>
           <IonButton
@@ -154,7 +200,9 @@ const SettingsPage: React.FC = () => {
               !newDefault.player2Name ||
               !newDefault.symbols.O ||
               !newDefault.symbols.X ||
-              (newDefault.player1Name === storedDefault.player1Name &&
+              (newDefault.numberOfPlayers === storedDefault.numberOfPlayers &&
+                newDefault.level === storedDefault.level &&
+                newDefault.player1Name === storedDefault.player1Name &&
                 newDefault.player2Name === storedDefault.player2Name &&
                 newDefault.symbols.O === storedDefault.symbols.O &&
                 newDefault.symbols.X === storedDefault.symbols.X)

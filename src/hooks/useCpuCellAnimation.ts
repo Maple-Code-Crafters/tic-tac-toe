@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { BOT_THINKING_TIME } from '../constants';
+import { CPU_THINKING_TIME } from '../constants';
 import type { Game, Index } from '../models/Game';
 
-export const useBotCellAnimation = ({ botThinking, game }: { botThinking: boolean; game: Game }) => {
+export const useCpuCellAnimation = ({ cpuThinking, game }: { cpuThinking: boolean; game: Game }) => {
   const [animatedCellIndex, setAnimatedCellIndex] = useState<Index>();
 
   const setNextAnimatedCell = useCallback(() => {
@@ -18,8 +18,8 @@ export const useBotCellAnimation = ({ botThinking, game }: { botThinking: boolea
 
   useEffect(() => {
     let setIntervalId: NodeJS.Timeout | undefined = undefined;
-    if (botThinking) {
-      setIntervalId = setInterval(setNextAnimatedCell, BOT_THINKING_TIME / 10);
+    if (cpuThinking) {
+      setIntervalId = setInterval(setNextAnimatedCell, CPU_THINKING_TIME / 10);
     } else {
       setAnimatedCellIndex(undefined);
       clearInterval(setIntervalId);
@@ -28,7 +28,7 @@ export const useBotCellAnimation = ({ botThinking, game }: { botThinking: boolea
     return () => {
       clearInterval(setIntervalId);
     };
-  }, [setNextAnimatedCell, botThinking]);
+  }, [setNextAnimatedCell, cpuThinking]);
 
   return { animatedCellIndex } as const;
 };

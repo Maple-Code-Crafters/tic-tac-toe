@@ -19,8 +19,7 @@ import './NewGameForm.css';
 
 import { useStoredDefault } from '../hooks';
 import type { Value } from '../models/Cell';
-import { NumberOfPlayers } from '../models/Game';
-import { Game } from '../models/Game';
+import { Game, Level, NumberOfPlayers } from '../models/Game';
 import { Player } from '../models/Player';
 
 type PlayersState = {
@@ -29,6 +28,7 @@ type PlayersState = {
   player2Name: string;
   player2Value: Value;
   numberOfPlayers: NumberOfPlayers;
+  level: Level;
 };
 
 export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.SetStateAction<Game | undefined>> }) => {
@@ -40,12 +40,13 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
     player2Name: '',
     player2Value: 'X',
     numberOfPlayers: NumberOfPlayers.OnePlayer,
+    level: Level.Easy,
   });
 
   useEffect(() => {
     if (restored) {
-      const { player1Name, player2Name } = storedDefault;
-      setState((s) => ({ ...s, player1Name, player2Name }));
+      const { player1Name, player2Name, numberOfPlayers, level } = storedDefault;
+      setState((s) => ({ ...s, player1Name, player2Name, numberOfPlayers, level }));
     }
   }, [restored, storedDefault]);
 
@@ -56,6 +57,7 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
       </IonCardHeader>
       <IonCardContent>
         <IonItemGroup>
+          {/* Select the number of players */}
           <IonItem lines="none">
             <IonSegment
               scrollable={true}
@@ -75,6 +77,34 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               </IonSegmentButton>
             </IonSegment>
           </IonItem>
+          {/* Select the level */}
+          {state.numberOfPlayers === NumberOfPlayers.OnePlayer ? (
+            <div>
+              <IonItem lines="none">
+                <IonSegment
+                  scrollable={true}
+                  value={state.level}
+                  onIonChange={(e) => {
+                    setState((s) => ({
+                      ...s,
+                      level: e.detail.value as Level,
+                    }));
+                  }}
+                >
+                  <IonSegmentButton value={Level.Easy}>
+                    <IonLabel>Easy</IonLabel>
+                  </IonSegmentButton>
+                  <IonSegmentButton value={Level.Medium}>
+                    <IonLabel>Medium</IonLabel>
+                  </IonSegmentButton>
+                  <IonSegmentButton value={Level.Hard}>
+                    <IonLabel>Hard</IonLabel>
+                  </IonSegmentButton>
+                </IonSegment>
+              </IonItem>
+            </div>
+          ) : null}
+          {/* Select the player 1 symbol */}
           <IonItem lines="none">
             <IonSegment
               slot="end"
@@ -96,6 +126,7 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               </IonSegmentButton>
             </IonSegment>
           </IonItem>
+          {/* Select the player 1 name */}
           <IonItem>
             <IonInput
               placeholder="Enter player 1 name"
@@ -172,10 +203,11 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
                 new Game(
                   new Player(state.player1Name, state.player1Value),
                   new Player(
-                    state.numberOfPlayers === NumberOfPlayers.OnePlayer ? 'CPU' : state.player2Name,
+                    state.numberOfPlayers === NumberOfPlayers.OnePlayer ? `CPU (${state.level})` : state.player2Name,
                     state.player2Value,
                   ),
                   state.numberOfPlayers,
+                  state.level,
                 ),
               );
             }

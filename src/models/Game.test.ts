@@ -1,6 +1,6 @@
 import { Cell } from './Cell';
 import type { ArchivedGame } from './Game';
-import { Game, NumberOfPlayers } from './Game';
+import { Game, Level, NumberOfPlayers } from './Game';
 import { Player } from './Player';
 
 describe('Game', () => {
@@ -12,7 +12,7 @@ describe('Game', () => {
   beforeEach(() => {
     player1 = new Player('Player 1', 'X');
     player2 = new Player('Player 2', 'O');
-    game = new Game(player1, player2, numberOfPlayers);
+    game = new Game(player1, player2, numberOfPlayers, Level.Easy);
   });
 
   test('should initialize with correct players', () => {
@@ -99,6 +99,7 @@ describe('Game', () => {
       ],
       gridClassNameWin: 'grid-horizontal-top',
       winValue: 'X',
+      level: Level.Easy,
     };
 
     const newGame = Game.fromArchived(archivedGame);
