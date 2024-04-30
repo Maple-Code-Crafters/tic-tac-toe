@@ -1,6 +1,7 @@
 import eslintConfigPrettier from 'eslint-config-prettier';
 import jestDom from 'eslint-plugin-jest-dom';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
+import hooksPlugin from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -20,6 +21,12 @@ export default tseslint.config(
     },
   },
   reactRecommended,
+  {
+    plugins: {
+      'react-hooks': hooksPlugin,
+    },
+    rules: hooksPlugin.configs.recommended.rules,
+  },
   eslintConfigPrettier,
   jestDom.configs['flat/recommended'],
   {
