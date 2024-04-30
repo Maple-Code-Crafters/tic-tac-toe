@@ -1,18 +1,18 @@
 import type { Game, Index } from '../Game';
 import { Level } from '../Game';
-import { Cpu } from './Cpu';
+import { CPU } from './Cpu';
 import type { CpuAlgorithm } from './CpuAlgorithm';
 import { Minimax } from './Minimax';
 import { RandomMove } from './RandomMove';
 
 describe('Cpu', () => {
-  let cpu: Cpu;
+  let cpu: CPU;
   let game: Game;
   let level: Level;
 
   beforeEach(() => {
     level = Level.Easy;
-    cpu = new Cpu(level);
+    cpu = new CPU(level);
     game = {
       finished: () => false,
       hasWin: () => false,
@@ -46,7 +46,7 @@ describe('Cpu', () => {
   });
 
   test('should throw an error if an invalid level is passed', () => {
-    const cpu = new Cpu('' as Level);
+    const cpu = new CPU('' as Level);
     expect(() => cpu.chooseMove(game)).toThrowError('Invalid level');
   });
 });

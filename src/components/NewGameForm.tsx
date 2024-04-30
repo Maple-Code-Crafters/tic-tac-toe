@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import {
   IonButton,
@@ -21,6 +22,7 @@ import { useStoredDefault } from '../hooks';
 import type { Value } from '../models/Cell';
 import { Game, Level, NumberOfPlayers } from '../models/Game';
 import { Player } from '../models/Player';
+import { setCurrentGame } from '../slices/gameSlice';
 
 type PlayersState = {
   player1Name: string;
@@ -31,7 +33,8 @@ type PlayersState = {
   level: Level;
 };
 
-export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.SetStateAction<Game | undefined>> }) => {
+export const NewGameForm = () => {
+  const dispatch = useDispatch();
   const [present] = useIonAlert();
   const { restored, storedDefault } = useStoredDefault();
   const [state, setState] = useState<PlayersState>({
@@ -199,17 +202,16 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
                 buttons: ['Ok'],
               });
             } else {
-              startGame(
-                new Game(
-                  new Player(state.player1Name, state.player1Value),
-                  new Player(
-                    state.numberOfPlayers === NumberOfPlayers.OnePlayer ? `CPU (${state.level})` : state.player2Name,
-                    state.player2Value,
-                  ),
-                  state.numberOfPlayers,
-                  state.level,
+              const game = new Game(
+                new Player(state.player1Name, state.player1Value),
+                new Player(
+                  state.numberOfPlayers === NumberOfPlayers.OnePlayer ? `CPU (${state.level})` : state.player2Name,
+                  state.player2Value,
                 ),
+                state.numberOfPlayers,
+                state.level,
               );
+              dispatch(setCurrentGame(game));
             }
           }}
         >

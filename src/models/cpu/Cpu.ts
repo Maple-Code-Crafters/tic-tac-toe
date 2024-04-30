@@ -3,7 +3,7 @@ import type { CpuAlgorithm } from './CpuAlgorithm';
 import { Minimax } from './Minimax';
 import { RandomMove } from './RandomMove';
 
-export class Cpu {
+export class CPU {
   // % chance of using Minimax
   EASY_LEVEL_THRESHOLD = 0.2;
   MEDIUM_LEVEL_THRESHOLD = 0.5;
