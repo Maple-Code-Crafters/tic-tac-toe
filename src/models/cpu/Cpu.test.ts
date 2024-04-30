@@ -1,4 +1,4 @@
-import type { Index } from '../Game';
+import type { Game, Index } from '../Game';
 import { Level } from '../Game';
 import { Cpu } from './Cpu';
 import type { CpuAlgorithm } from './CpuAlgorithm';
@@ -7,7 +7,7 @@ import { RandomMove } from './RandomMove';
 
 describe('Cpu', () => {
   let cpu: Cpu;
-  let game: any;
+  let game: Game;
   let level: Level;
 
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('Cpu', () => {
       hasWin: () => false,
       clone: () => game,
       getAvailableCells: () => [0, 1, 2, 3, 4, 5, 6, 7, 8],
-    };
+    } as Game;
   });
 
   test('should initialize correctly', () => {

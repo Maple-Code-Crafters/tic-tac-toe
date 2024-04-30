@@ -6,7 +6,7 @@ import { Player } from './Player';
 describe('Game', () => {
   let player1: Player;
   let player2: Player;
-  let numberOfPlayers: NumberOfPlayers = NumberOfPlayers.OnePlayer;
+  const numberOfPlayers: NumberOfPlayers = NumberOfPlayers.OnePlayer;
   let game: Game;
 
   beforeEach(() => {
