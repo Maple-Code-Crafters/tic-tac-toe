@@ -38,10 +38,15 @@ export class Cell {
     };
   }
 
-  public clone() {
-    const cell = new Cell(this._index);
-    cell._value = this._value;
-    cell.className = this.className;
-    return cell;
+  // public clone() {
+  //   const cell = new Cell(this._index);
+  //   cell._value = this._value;
+  //   cell.className = this.className;
+  //   return cell;
+  // }
+
+  public clear() {
+    this._value = undefined;
+    this.className = '';
   }
 }

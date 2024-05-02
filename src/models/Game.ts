@@ -99,6 +99,11 @@ export class Game {
     this._turn = this._turn === 'O' ? 'X' : 'O';
   }
 
+  public undoMove(index: Index) {
+    this._cells[index].clear();
+    this._turn = this._turn === 'O' ? 'X' : 'O';
+  }
+
   public isSinglePlayerMode() {
     return this._numberOfPlayers === NumberOfPlayers.OnePlayer;
   }
@@ -162,16 +167,16 @@ export class Game {
     return this._gridClassNameWin;
   }
 
-  public clone(): Game {
-    const game = new Game(this._player1, this._player2, this._numberOfPlayers, this._level);
-    this._cells.forEach((c, i) => {
-      game._cells[i] = c.clone();
-    });
-    game._gridClassNameWin = this._gridClassNameWin;
-    game.winValue = this.winValue;
-    game._turn = this._turn;
-    return game;
-  }
+  // public clone(): Game {
+  //   const game = new Game(this._player1, this._player2, this._numberOfPlayers, this._level);
+  //   this._cells.forEach((c, i) => {
+  //     game._cells[i] = c.clone();
+  //   });
+  //   game._gridClassNameWin = this._gridClassNameWin;
+  //   game.winValue = this.winValue;
+  //   game._turn = this._turn;
+  //   return game;
+  // }
 
   public toArchived(): ArchivedGame {
     return {
