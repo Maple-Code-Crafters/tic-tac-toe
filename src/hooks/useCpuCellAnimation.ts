@@ -7,7 +7,7 @@ export const useCpuCellAnimation = (game: Game, cpuThinking: boolean) => {
   const [animatedCellIndex, setAnimatedCellIndex] = useState<Index>();
 
   const setNextAnimatedCell = useCallback(() => {
-    const availableCells = game?.getAvailableCells() ?? [];
+    const availableCells = game.getAvailableCells();
     if (animatedCellIndex === undefined) {
       setAnimatedCellIndex(availableCells[0]);
     } else {
