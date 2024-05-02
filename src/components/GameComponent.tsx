@@ -77,14 +77,6 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
     }
   };
 
-  const handleNewGame = () => {
-    dispatch(setCurrentGame(undefined));
-  };
-
-  const handleCancel = () => {
-    dispatch(setCurrentGame(undefined));
-  };
-
   return (
     <>
       <IonCard>
@@ -204,14 +196,14 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
             Play Again
           </IonButton>
           {!storedGame && (
-            <IonButton className="ion-margin" expand="block" onClick={() => handleNewGame()}>
+            <IonButton className="ion-margin" expand="block" onClick={() => dispatch(setCurrentGame(undefined))}>
               New Game
             </IonButton>
           )}
         </IonCard>
       ) : (
         <IonCard>
-          <IonButton className="ion-margin" expand="block" onClick={() => handleCancel()}>
+          <IonButton className="ion-margin" expand="block" onClick={() => dispatch(setCurrentGame(undefined))}>
             Cancel
           </IonButton>
         </IonCard>
