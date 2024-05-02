@@ -118,11 +118,10 @@ export class Game {
   }
 
   public makeMove(index: Index) {
-    if (this._cells[index].value !== undefined || this.finished() || this.hasWin()) {
-      return;
-    }
     this._cells[index].value = this._turn;
-    this._turn = this._turn === 'O' ? 'X' : 'O';
+    const newTurn = this._turn === 'O' ? 'X' : 'O';
+    this._turn = newTurn;
+    return newTurn;
   }
 
   public undoMove(index: Index) {

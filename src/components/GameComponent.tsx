@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -20,26 +19,26 @@ import './GameComponent.css';
 import { CPU_THINKING_TIME } from '../constants';
 import { GameStorage } from '../helpers/storage.helper';
 import { useAppSelector, useCpuCellAnimation } from '../hooks';
+import type { Value } from '../models/Cell';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
 import { setCpuThinking } from '../slices/cpuSlice';
 import { setCurrentGame } from '../slices/gameSlice';
 
 export const GameComponent = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
   const currentGame = useAppSelector((state) => state.game.current!);
+  const [game] = useState(Game.fromSerializable(currentGame));
+  const [, setTurn] = useState<Value>(currentGame.turn);
   const isStoredGame = useAppSelector((state) => state.game.isStoredGame);
   const cpu = useAppSelector((state) => state.cpu.current);
   const cpuThinking = useAppSelector((state) => state.cpu.thinking);
   const symbols = useAppSelector((state) => state.game.symbols);
-  const [game] = useState(Game.fromSerializable(currentGame));
   const height = (window.screen.availWidth * 0.86675) / 3;
   const [saved, setSaved] = useState(isStoredGame);
   const { animatedCellIndex } = useCpuCellAnimation(game);
   const hasWin = game?.hasWin();
   const finished = game?.finished();
-  // const [initialTurn] = useState(game.turn);
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
@@ -49,11 +48,7 @@ export const GameComponent = () => {
   }, [finished, game, hasWin, saved, symbols]);
 
   const handleCellClick = (index: Index) => {
-    if (game.getCell(index).value !== undefined || finished || hasWin) {
-      return;
-    }
-
-    game.makeMove(index);
+    setTurn(game.makeMove(index));
 
     if (game.isSinglePlayerMode()) {
       cpuMove();
@@ -61,52 +56,31 @@ export const GameComponent = () => {
   };
 
   const cpuMove = () => {
-    if (game.finished() || game.hasWin()) {
-      return;
-    }
     dispatch(setCpuThinking(true));
     // add a sleep to simulate the cpu thinking
     setTimeout(() => {
       const index = cpu?.chooseMove(game);
       if (index !== undefined) {
-        game.makeMove(index);
+        setTurn(game.makeMove(index));
       }
       dispatch(setCpuThinking(false));
     }, CPU_THINKING_TIME);
   };
 
   const handlePlayAgain = () => {
-    // const newTurn = initialTurn === 'X' ? 'O' : 'X';
     const newGame = game.toSerializable();
     newGame.id = uuidv4();
     dispatch(setCurrentGame(newGame));
-
-    // if (!isStoredGame) {
-    //   dispatch(setGame(newGame));
-    //   setInitialTurn(newTurn);
-
-    //   // if it's single player mode and it's the cpu turn, then the cpu should play
-    //   if (game.isSinglePlayerMode() && newTurn === game.player2.value) {
-    //     cpuMove();
-    //   }
-    // } else {
-    //   setGame(undefined);
-    //   history.push(
-    //     `/play?player1Name=${game.player1.name}&player1Value=${game.player1.value}&player2Name=${game.player2.name}&player2Value=${game.player2.value}&X=${symbols.X}&O=${symbols.O}&numberOfPlayers=${game.numberOfPlayers}&level=${game.level}`,
-    //   );
-    // }
-    // setSaved(false);
+    setSaved(false);
   };
 
   const handleNewGame = () => {
-    setCurrentGame(undefined);
-    history.replace('/play');
+    dispatch(setCurrentGame(undefined));
     setSaved(false);
   };
 
   const handleCancel = () => {
     dispatch(setCurrentGame(undefined));
-    history.push('/play');
   };
 
   return (
