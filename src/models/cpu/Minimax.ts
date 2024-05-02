@@ -3,7 +3,10 @@ import type { Game, Index } from '../Game';
 import type { CpuAlgorithm } from './CpuAlgorithm';
 
 export class Minimax implements CpuAlgorithm {
+  static readonly MAX_CELLS = 9;
+
   public chooseMove(game: Game): Index | undefined {
+    //console.log('Minimax');
     const availableCells = game.getAvailableCells();
 
     if (game.finished() || game.hasWin() || !availableCells.length) {
@@ -11,7 +14,7 @@ export class Minimax implements CpuAlgorithm {
     }
 
     // if the game is in the first turn, choose the left top corner, otherwise Minimax takes almost 2s to come to the same conclusion
-    if (availableCells.length === 9) {
+    if (availableCells.length === Minimax.MAX_CELLS) {
       return 0;
     }
 
@@ -22,7 +25,7 @@ export class Minimax implements CpuAlgorithm {
 
     for (const cell of availableCells) {
       game.makeMove(cell);
-      const score = this.minimax(game, 0, false, cpuTurn);
+      const score = this.minimax(game, cpuTurn);
       game.undoMove(cell);
 
       if (score > bestScore) {
@@ -34,7 +37,7 @@ export class Minimax implements CpuAlgorithm {
     return move;
   }
 
-  private minimax(game: Game, depth: number, isMaximizing: boolean, cpuTurn: Value): number {
+  private minimax(game: Game, cpuTurn: Value): number {
     const availableCells = game.getAvailableCells();
 
     if (game.hasWin()) {
@@ -43,11 +46,11 @@ export class Minimax implements CpuAlgorithm {
       return 0;
     }
 
-    if (isMaximizing) {
+    if (cpuTurn === game.getTurn()) {
       let bestScore = -Infinity;
       for (const cell of availableCells) {
         game.makeMove(cell);
-        const score = this.minimax(game, depth + 1, false, cpuTurn);
+        const score = this.minimax(game, cpuTurn);
         game.undoMove(cell);
         bestScore = Math.max(score, bestScore);
       }
@@ -56,7 +59,7 @@ export class Minimax implements CpuAlgorithm {
       let bestScore = Infinity;
       for (const cell of availableCells) {
         game.makeMove(cell);
-        const score = this.minimax(game, depth + 1, true, cpuTurn);
+        const score = this.minimax(game, cpuTurn);
         game.undoMove(cell);
         bestScore = Math.min(score, bestScore);
       }
