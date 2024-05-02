@@ -19,13 +19,11 @@ export type SerializableGame = {
 type GameSlice = {
   current: SerializableGame | undefined;
   symbols: Symbols;
-  isStoredGame: boolean;
 };
 
 const initialState: GameSlice = {
   current: undefined,
   symbols: { X: 'X', O: 'O' },
-  isStoredGame: false,
 };
 
 export const gameSlice = createSlice({
