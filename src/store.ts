@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { cpuSlice } from './slices/cpuSlice';
 import { gameSlice } from './slices/gameSlice';
 
 export const store = configureStore({
   reducer: {
     game: gameSlice.reducer,
-    cpu: cpuSlice.reducer,
   },
 });
 

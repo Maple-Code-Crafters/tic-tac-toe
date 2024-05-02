@@ -20,23 +20,23 @@ import { CPU_THINKING_TIME } from '../constants';
 import { GameStorage } from '../helpers/storage.helper';
 import { useAppSelector, useCpuCellAnimation } from '../hooks';
 import type { Value } from '../models/Cell';
+import { CPU } from '../models/cpu/Cpu';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
-import { setCpuThinking } from '../slices/cpuSlice';
 import { setCurrentGame } from '../slices/gameSlice';
 
 export const GameComponent = () => {
   const dispatch = useDispatch();
   const currentGame = useAppSelector((state) => state.game.current!);
   const [game] = useState(Game.fromSerializable(currentGame));
+  const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
+  const [cpuThinking, setCpuThinking] = useState(false);
   const [, setTurn] = useState<Value>(currentGame.turn);
   const isStoredGame = useAppSelector((state) => state.game.isStoredGame);
-  const cpu = useAppSelector((state) => state.cpu.current);
-  const cpuThinking = useAppSelector((state) => state.cpu.thinking);
   const symbols = useAppSelector((state) => state.game.symbols);
   const height = (window.screen.availWidth * 0.86675) / 3;
   const [saved, setSaved] = useState(isStoredGame);
-  const { animatedCellIndex } = useCpuCellAnimation(game);
+  const { animatedCellIndex } = useCpuCellAnimation(game, cpuThinking);
   const hasWin = game?.hasWin();
   const finished = game?.finished();
 
@@ -56,14 +56,14 @@ export const GameComponent = () => {
   };
 
   const cpuMove = () => {
-    dispatch(setCpuThinking(true));
+    setCpuThinking(true);
     // add a sleep to simulate the cpu thinking
     setTimeout(() => {
       const index = cpu?.chooseMove(game);
       if (index !== undefined) {
         setTurn(game.makeMove(index));
       }
-      dispatch(setCpuThinking(false));
+      setCpuThinking(false);
     }, CPU_THINKING_TIME);
   };
 
