@@ -4,9 +4,6 @@ import type { CpuAlgorithm } from './CpuAlgorithm';
 
 export class Minimax implements CpuAlgorithm {
   public chooseMove(readOnlygame: Game): Index | undefined {
-    const startTimestamp = Date.now();
-
-    //let gameCopy = readOnlygame.clone();
     let gameCopy = readOnlygame;
     const availableCells = readOnlygame.getAvailableCells();
 
@@ -25,8 +22,6 @@ export class Minimax implements CpuAlgorithm {
     let move: Index | undefined;
 
     for (const cell of availableCells) {
-      //gameCopy = readOnlygame.clone();
-
       gameCopy.makeMove(cell);
       const score = this.minimax(gameCopy, 0, false, cpuTurn);
       gameCopy.undoMove(cell);
@@ -36,7 +31,6 @@ export class Minimax implements CpuAlgorithm {
         move = cell;
       }
     }
-    console.log('Time to choose move: ', Date.now() - startTimestamp);
 
     return move;
   }
@@ -52,7 +46,6 @@ export class Minimax implements CpuAlgorithm {
       let bestScore = -Infinity;
       const availableCells = game.getAvailableCells();
       for (const cell of availableCells) {
-        //const gameCopy = game.clone();
         const gameCopy = game;
         gameCopy.makeMove(cell);
         const score = this.minimax(gameCopy, depth + 1, false, cpuTurn);
@@ -64,7 +57,6 @@ export class Minimax implements CpuAlgorithm {
       let bestScore = Infinity;
       const availableCells = game.getAvailableCells();
       for (const cell of availableCells) {
-        //const gameCopy = game.clone();
         const gameCopy = game;
         gameCopy.makeMove(cell);
         const score = this.minimax(gameCopy, depth + 1, true, cpuTurn);

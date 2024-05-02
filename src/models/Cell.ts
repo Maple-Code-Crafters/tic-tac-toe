@@ -45,8 +45,8 @@ export class Cell {
   //   return cell;
   // }
 
-  public clear() {
-    this._value = undefined;
-    this.className = '';
-  }
+  // public clear() {
+  //   this._value = undefined;
+  //   this.className = undefined;
+  // }
 }
