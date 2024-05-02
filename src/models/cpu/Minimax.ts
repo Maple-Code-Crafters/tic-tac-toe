@@ -35,15 +35,16 @@ export class Minimax implements CpuAlgorithm {
   }
 
   private minimax(game: Game, depth: number, isMaximizing: boolean, cpuTurn: Value): number {
+    const availableCells = game.getAvailableCells();
+
     if (game.hasWin()) {
-      return game.winValue === cpuTurn ? 1 : -1;
+      return game.winValue === cpuTurn ? 1 * availableCells.length : -1 * availableCells.length;
     } else if (game.finished()) {
       return 0;
     }
 
     if (isMaximizing) {
       let bestScore = -Infinity;
-      const availableCells = game.getAvailableCells();
       for (const cell of availableCells) {
         game.makeMove(cell);
         const score = this.minimax(game, depth + 1, false, cpuTurn);
@@ -53,7 +54,6 @@ export class Minimax implements CpuAlgorithm {
       return bestScore;
     } else {
       let bestScore = Infinity;
-      const availableCells = game.getAvailableCells();
       for (const cell of availableCells) {
         game.makeMove(cell);
         const score = this.minimax(game, depth + 1, true, cpuTurn);
