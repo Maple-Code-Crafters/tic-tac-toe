@@ -27,6 +27,17 @@ export type ArchivedGame = {
 };
 
 export class Game {
+  classNameCombs: [string, string][] = [
+    ['grid-horizontal-top', 'horizontal'],
+    ['grid-horizontal-middle', 'horizontal'],
+    ['grid-horizontal-bottom', 'horizontal'],
+    ['grid-vertical-left', 'vertical'],
+    ['grid-vertical-middle', 'vertical'],
+    ['grid-vertical-right', 'vertical'],
+    ['top-left-to-bottom-right', 'top-left-to-bottom-right'],
+    ['top-right-to-bottom-left', 'top-right-to-bottom-left'],
+  ];
+
   private _player1: Player;
   private _player2: Player;
   private _numberOfPlayers: NumberOfPlayers;
@@ -99,6 +110,16 @@ export class Game {
     this._turn = this._turn === 'O' ? 'X' : 'O';
   }
 
+  public undoMove(index: Index) {
+    this._cells[index] = new Cell(index);
+    this._cells.forEach((c) => {
+      c.className = '';
+    });
+    this._gridClassNameWin = '';
+    this.winValue = undefined;
+    this._turn = this._turn === 'O' ? 'X' : 'O';
+  }
+
   public isSinglePlayerMode() {
     return this._numberOfPlayers === NumberOfPlayers.OnePlayer;
   }
@@ -127,22 +148,12 @@ export class Game {
       [this._cells[0], this._cells[4], this._cells[8]],
       [this._cells[2], this._cells[4], this._cells[6]],
     ];
-    const classNameCombs: [string, string][] = [
-      ['grid-horizontal-top', 'horizontal'],
-      ['grid-horizontal-middle', 'horizontal'],
-      ['grid-horizontal-bottom', 'horizontal'],
-      ['grid-vertical-left', 'vertical'],
-      ['grid-vertical-middle', 'vertical'],
-      ['grid-vertical-right', 'vertical'],
-      ['top-left-to-bottom-right', 'top-left-to-bottom-right'],
-      ['top-right-to-bottom-left', 'top-right-to-bottom-left'],
-    ];
 
     for (let i = 0; i < combs.length; i++) {
       const comb = combs[i];
       const result = comb.join('');
       if (result === 'OOO' || result === 'XXX') {
-        const [gridClass, cellClass] = classNameCombs[i];
+        const [gridClass, cellClass] = this.classNameCombs[i];
         this._gridClassNameWin = gridClass;
         this.winValue = result[0] as Value;
         for (const cell of comb) {
@@ -160,17 +171,6 @@ export class Game {
 
   public getGridClassNameWin() {
     return this._gridClassNameWin;
-  }
-
-  public clone(): Game {
-    const game = new Game(this._player1, this._player2, this._numberOfPlayers, this._level);
-    this._cells.forEach((c, i) => {
-      game._cells[i] = c.clone();
-    });
-    game._gridClassNameWin = this._gridClassNameWin;
-    game.winValue = this.winValue;
-    game._turn = this._turn;
-    return game;
   }
 
   public toArchived(): ArchivedGame {
