@@ -16,7 +16,6 @@ describe('Cpu', () => {
     game = {
       finished: () => false,
       hasWin: () => false,
-      clone: () => game,
       getAvailableCells: () => [0, 1, 2, 3, 4, 5, 6, 7, 8],
     } as Game;
   });
