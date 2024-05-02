@@ -37,16 +37,4 @@ export class Cell {
       className: this.className,
     };
   }
-
-  // public clone() {
-  //   const cell = new Cell(this._index);
-  //   cell._value = this._value;
-  //   cell.className = this.className;
-  //   return cell;
-  // }
-
-  // public clear() {
-  //   this._value = undefined;
-  //   this.className = undefined;
-  // }
 }

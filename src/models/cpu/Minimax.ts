@@ -3,11 +3,10 @@ import type { Game, Index } from '../Game';
 import type { CpuAlgorithm } from './CpuAlgorithm';
 
 export class Minimax implements CpuAlgorithm {
-  public chooseMove(readOnlygame: Game): Index | undefined {
-    let gameCopy = readOnlygame;
-    const availableCells = readOnlygame.getAvailableCells();
+  public chooseMove(game: Game): Index | undefined {
+    const availableCells = game.getAvailableCells();
 
-    if (gameCopy.finished() || gameCopy.hasWin() || !availableCells.length) {
+    if (game.finished() || game.hasWin() || !availableCells.length) {
       return;
     }
 
@@ -16,15 +15,15 @@ export class Minimax implements CpuAlgorithm {
       return 0;
     }
 
-    const cpuTurn: Value = gameCopy.getTurn();
+    const cpuTurn: Value = game.getTurn();
 
     let bestScore = -Infinity;
     let move: Index | undefined;
 
     for (const cell of availableCells) {
-      gameCopy.makeMove(cell);
-      const score = this.minimax(gameCopy, 0, false, cpuTurn);
-      gameCopy.undoMove(cell);
+      game.makeMove(cell);
+      const score = this.minimax(game, 0, false, cpuTurn);
+      game.undoMove(cell);
 
       if (score > bestScore) {
         bestScore = score;
@@ -46,10 +45,9 @@ export class Minimax implements CpuAlgorithm {
       let bestScore = -Infinity;
       const availableCells = game.getAvailableCells();
       for (const cell of availableCells) {
-        const gameCopy = game;
-        gameCopy.makeMove(cell);
-        const score = this.minimax(gameCopy, depth + 1, false, cpuTurn);
-        gameCopy.undoMove(cell);
+        game.makeMove(cell);
+        const score = this.minimax(game, depth + 1, false, cpuTurn);
+        game.undoMove(cell);
         bestScore = Math.max(score, bestScore);
       }
       return bestScore;
@@ -57,10 +55,9 @@ export class Minimax implements CpuAlgorithm {
       let bestScore = Infinity;
       const availableCells = game.getAvailableCells();
       for (const cell of availableCells) {
-        const gameCopy = game;
-        gameCopy.makeMove(cell);
-        const score = this.minimax(gameCopy, depth + 1, true, cpuTurn);
-        gameCopy.undoMove(cell);
+        game.makeMove(cell);
+        const score = this.minimax(game, depth + 1, true, cpuTurn);
+        game.undoMove(cell);
         bestScore = Math.min(score, bestScore);
       }
       return bestScore;

@@ -173,17 +173,6 @@ export class Game {
     return this._gridClassNameWin;
   }
 
-  // public clone(): Game {
-  //   const game = new Game(this._player1, this._player2, this._numberOfPlayers, this._level);
-  //   this._cells.forEach((c, i) => {
-  //     game._cells[i] = c.clone();
-  //   });
-  //   game._gridClassNameWin = this._gridClassNameWin;
-  //   game.winValue = this.winValue;
-  //   game._turn = this._turn;
-  //   return game;
-  // }
-
   public toArchived(): ArchivedGame {
     return {
       player1: this._player1.toArchived(),
