@@ -38,8 +38,8 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const height = (window.screen.availWidth * 0.86675) / 3;
   const [saved, setSaved] = useState(Boolean(storedGame));
   const { animatedCellIndex } = useCpuCellAnimation(game, cpuThinking);
-  const hasWin = game?.hasWin();
-  const finished = game?.finished();
+  const hasWin = game.hasWin();
+  const finished = game.finished();
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
@@ -94,9 +94,9 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
               <IonCardSubtitle>{hasWin ? 'Winner' : 'Player turn'}</IonCardSubtitle>
               <IonCardTitle>
                 <IonLabel className="turnLabel ion-margin-end o-x-value" color="medium">
-                  {symbols?.[hasWin && game.winValue ? game.winValue : game.turn]}
+                  {symbols[hasWin && game.winValue ? game.winValue : game.turn]}
                 </IonLabel>
-                {hasWin ? game?.getPlayer(game.winValue)?.name : game?.getCurrentPlayer()?.name}
+                {hasWin ? game.getPlayer(game.winValue)?.name : game.getCurrentPlayer()?.name}
               </IonCardTitle>
             </>
           )}
@@ -106,17 +106,17 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
       <div id="board" className={`main ${cpuThinking ? 'non-clickable-board' : ''}`}>
         <IonGrid
           className={`ion-margin ${finished || hasWin ? 'noClick' : ''} ${
-            hasWin ? `${game?.getGridClassNameWin()}` : ''
+            hasWin ? `${game.getGridClassNameWin()}` : ''
           }`}
         >
           <IonRow>
             <IonCol className="cell cell-1 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game?.getCell(0).className : `${animatedCellIndex === 0 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(0).className : `${animatedCellIndex === 0 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(0)}
               >
-                {symbols[game?.getCell(0).value]}
+                {symbols[game.getCell(0).value]}
               </div>
             </IonCol>
             <IonCol className="cell cell-2 o-x-value">
