@@ -5,7 +5,7 @@ import { NewGameForm } from '../components/NewGameForm';
 import { useAppSelector } from '../hooks';
 
 const PlayPage: React.FC = () => {
-  const game = useAppSelector((state) => state.game);
+  const game = useAppSelector((state) => state.game.current);
 
   return (
     <IonPage>
@@ -15,7 +15,7 @@ const PlayPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent>{game ? <GameComponent /> : <NewGameForm />}</IonContent>
+      <IonContent>{game ? <GameComponent key={game.id} /> : <NewGameForm />}</IonContent>
     </IonPage>
   );
 };

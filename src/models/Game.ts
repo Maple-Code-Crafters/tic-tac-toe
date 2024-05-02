@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import type { ArchivedCell, Value } from './Cell';
 import { Cell } from './Cell';
 import type { ArchivedPlayer } from './Player';
@@ -27,6 +29,7 @@ export type ArchivedGame = {
 };
 
 export class Game {
+  private _id: string;
   private _player1: Player;
   private _player2: Player;
   private _numberOfPlayers: NumberOfPlayers;
@@ -37,6 +40,7 @@ export class Game {
   public winValue: Value | undefined;
 
   constructor(player1: Player, player2: Player, numberOfPlayers: NumberOfPlayers, level: Level, turn?: Value) {
+    this._id = uuidv4();
     this._player1 = player1;
     this._player2 = player2;
     this._numberOfPlayers = numberOfPlayers;
@@ -53,6 +57,10 @@ export class Game {
       new Cell(7),
       new Cell(8),
     ];
+  }
+
+  public get id() {
+    return this._id;
   }
 
   public get player1() {
