@@ -1,10 +1,14 @@
+import { act } from 'react';
 import { createMemoryHistory } from 'history';
 import type { ReactElement, ReactNode } from 'react';
+import { Provider } from 'react-redux';
 
 import { getConfig, IonApp } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import type { RenderOptions } from '@testing-library/react';
-import { act, configure, render as rtlRender } from '@testing-library/react';
+import { configure, render as rtlRender } from '@testing-library/react';
+
+import { store } from './store';
 
 configure({
   ...getConfig(),
@@ -14,9 +18,11 @@ configure({
 const render = (ui: ReactElement, customHistory = createMemoryHistory(), renderOptions?: RenderOptions) => {
   const Wrapper = ({ children }: { children: ReactNode }) => {
     return (
-      <IonApp>
-        <IonReactRouter history={customHistory}>{children}</IonReactRouter>
-      </IonApp>
+      <Provider store={store}>
+        <IonApp>
+          <IonReactRouter history={customHistory}>{children}</IonReactRouter>
+        </IonApp>
+      </Provider>
     );
   };
 
