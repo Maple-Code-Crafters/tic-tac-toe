@@ -16,7 +16,7 @@ export class Minimax implements CpuAlgorithm {
       return 0;
     }
 
-    const cpuTurn: Value = gameCopy.getTurn();
+    const cpuTurn: Value = gameCopy.turn;
 
     let bestScore = -Infinity;
     let move: Index | undefined;

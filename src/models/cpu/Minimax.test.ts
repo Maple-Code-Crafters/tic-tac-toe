@@ -8,7 +8,13 @@ describe('Minimax', () => {
   let game: Game;
 
   beforeEach(() => {
-    game = new Game(new Player('Player 1', 'X'), new Player('Player 2', 'O'), NumberOfPlayers.OnePlayer, Level.Hard);
+    game = new Game(
+      'fakeId',
+      new Player('Player 1', 'X'),
+      new Player('Player 2', 'O'),
+      NumberOfPlayers.OnePlayer,
+      Level.Hard,
+    );
   });
 
   test('should choose to win the game', () => {

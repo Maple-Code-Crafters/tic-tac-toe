@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   IonButton,
@@ -21,24 +22,24 @@ import { GameStorage } from '../helpers/storage.helper';
 import { useAppSelector, useCpuCellAnimation } from '../hooks';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
-import { Player } from '../models/Player';
 import { setCpuThinking } from '../slices/cpuSlice';
 import { setCurrentGame } from '../slices/gameSlice';
 
 export const GameComponent = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const game = useAppSelector((state) => state.game.current!);
+  const currentGame = useAppSelector((state) => state.game.current!);
   const isStoredGame = useAppSelector((state) => state.game.isStoredGame);
   const cpu = useAppSelector((state) => state.cpu.current);
   const cpuThinking = useAppSelector((state) => state.cpu.thinking);
   const symbols = useAppSelector((state) => state.game.symbols);
+  const [game] = useState(Game.fromSerializable(currentGame));
   const height = (window.screen.availWidth * 0.86675) / 3;
   const [saved, setSaved] = useState(isStoredGame);
-  const { animatedCellIndex } = useCpuCellAnimation();
+  const { animatedCellIndex } = useCpuCellAnimation(game);
   const hasWin = game?.hasWin();
   const finished = game?.finished();
-  const [initialTurn] = useState(game?.getTurn());
+  // const [initialTurn] = useState(game.turn);
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
@@ -75,15 +76,9 @@ export const GameComponent = () => {
   };
 
   const handlePlayAgain = () => {
-    const newTurn = initialTurn === 'X' ? 'O' : 'X';
-    const newGame = new Game(
-      new Player(game.player1.name, game.player1.value),
-      new Player(game.player2.name, game.player2.value),
-      game.numberOfPlayers,
-      game.level,
-      newTurn,
-    );
-
+    // const newTurn = initialTurn === 'X' ? 'O' : 'X';
+    const newGame = game.toSerializable();
+    newGame.id = uuidv4();
     dispatch(setCurrentGame(newGame));
 
     // if (!isStoredGame) {
@@ -123,7 +118,7 @@ export const GameComponent = () => {
               <IonCardSubtitle>{hasWin ? 'Winner' : 'Player turn'}</IonCardSubtitle>
               <IonCardTitle>
                 <IonLabel className="turnLabel ion-margin-end o-x-value" color="medium">
-                  {symbols?.[hasWin && game.winValue ? game.winValue : game.getTurn()]}
+                  {symbols?.[hasWin && game.winValue ? game.winValue : game.turn]}
                 </IonLabel>
                 {hasWin ? game?.getPlayer(game.winValue)?.name : game?.getCurrentPlayer()?.name}
               </IonCardTitle>

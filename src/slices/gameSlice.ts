@@ -1,12 +1,23 @@
-// import type { PayloadAction } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { Symbols } from '../helpers/storage.helper';
-import type { Game } from '../models/Game';
+import type { Value } from '../models/Cell';
+import type { Level, NumberOfPlayers } from '../models/Game';
+
+export type SerializableGame = {
+  id: string;
+  player1Name: string;
+  player1Value: Value;
+  player2Name: string;
+  player2Value: Value;
+  numberOfPlayers: NumberOfPlayers;
+  level: Level;
+  turn: Value;
+};
 
 type GameSlice = {
-  current: Game | undefined;
+  current: SerializableGame | undefined;
   symbols: Symbols;
   isStoredGame: boolean;
 };
@@ -21,7 +32,7 @@ export const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
-    setCurrentGame: (state, action: PayloadAction<Game | undefined>) => {
+    setCurrentGame: (state, action: PayloadAction<SerializableGame | undefined>) => {
       state.current = action.payload;
     },
     setSymbols: (state, action: PayloadAction<Symbols>) => {
@@ -34,6 +45,3 @@ export const gameSlice = createSlice({
 });
 
 export const { setCurrentGame, setIsStoredGame, setSymbols } = gameSlice.actions;
-
-// Other code such as selectors can use the imported `RootState` type
-// export const selectCount = (state: RootState) => state.counter.value;

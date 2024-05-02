@@ -12,7 +12,7 @@ describe('Game', () => {
   beforeEach(() => {
     player1 = new Player('Player 1', 'X');
     player2 = new Player('Player 2', 'O');
-    game = new Game(player1, player2, numberOfPlayers, Level.Easy);
+    game = new Game('fakeId', player1, player2, numberOfPlayers, Level.Easy);
   });
 
   test('should initialize with correct players', () => {
@@ -83,6 +83,7 @@ describe('Game', () => {
 
   test('should create game from archived format correctly', () => {
     const archivedGame: ArchivedGame = {
+      id: 'fakeId',
       player1: player1.toArchived(),
       player2: player2.toArchived(),
       numberOfPlayers: numberOfPlayers,

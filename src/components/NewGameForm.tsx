@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   IonButton,
@@ -20,36 +21,29 @@ import './NewGameForm.css';
 
 import { useStoredDefault } from '../hooks';
 import type { Value } from '../models/Cell';
-import { Game, Level, NumberOfPlayers } from '../models/Game';
-import { Player } from '../models/Player';
+import { Level, NumberOfPlayers } from '../models/Game';
+import type { SerializableGame } from '../slices/gameSlice';
 import { setCurrentGame } from '../slices/gameSlice';
-
-type PlayersState = {
-  player1Name: string;
-  player1Value: Value;
-  player2Name: string;
-  player2Value: Value;
-  numberOfPlayers: NumberOfPlayers;
-  level: Level;
-};
 
 export const NewGameForm = () => {
   const dispatch = useDispatch();
   const [present] = useIonAlert();
   const { restored, storedDefault } = useStoredDefault();
-  const [state, setState] = useState<PlayersState>({
+  const [newGame, setNewGame] = useState<SerializableGame>({
+    id: uuidv4(),
     player1Name: '',
     player1Value: 'O',
     player2Name: '',
     player2Value: 'X',
     numberOfPlayers: NumberOfPlayers.OnePlayer,
     level: Level.Easy,
+    turn: 'O',
   });
 
   useEffect(() => {
     if (restored) {
       const { player1Name, player2Name, numberOfPlayers, level } = storedDefault;
-      setState((s) => ({ ...s, player1Name, player2Name, numberOfPlayers, level }));
+      setNewGame((s) => ({ ...s, player1Name, player2Name, numberOfPlayers, level }));
     }
   }, [restored, storedDefault]);
 
@@ -64,9 +58,9 @@ export const NewGameForm = () => {
           <IonItem lines="none">
             <IonSegment
               scrollable={true}
-              value={state.numberOfPlayers}
+              value={newGame.numberOfPlayers}
               onIonChange={(e) => {
-                setState((s) => ({
+                setNewGame((s) => ({
                   ...s,
                   numberOfPlayers: e.detail.value as NumberOfPlayers,
                 }));
@@ -81,14 +75,14 @@ export const NewGameForm = () => {
             </IonSegment>
           </IonItem>
           {/* Select the level */}
-          {state.numberOfPlayers === NumberOfPlayers.OnePlayer ? (
+          {newGame.numberOfPlayers === NumberOfPlayers.OnePlayer ? (
             <div>
               <IonItem lines="none">
                 <IonSegment
                   scrollable={true}
-                  value={state.level}
+                  value={newGame.level}
                   onIonChange={(e) => {
-                    setState((s) => ({
+                    setNewGame((s) => ({
                       ...s,
                       level: e.detail.value as Level,
                     }));
@@ -112,9 +106,9 @@ export const NewGameForm = () => {
             <IonSegment
               slot="end"
               scrollable={true}
-              value={state.player1Value}
+              value={newGame.player1Value}
               onIonChange={(e) => {
-                setState((s) => ({
+                setNewGame((s) => ({
                   ...s,
                   player1Value: e.detail.value as Value,
                   player2Value: (e.detail.value as Value) === 'O' ? 'X' : 'O',
@@ -133,9 +127,9 @@ export const NewGameForm = () => {
           <IonItem>
             <IonInput
               placeholder="Enter player 1 name"
-              value={state.player1Name}
+              value={newGame.player1Name}
               onIonInput={(e) => {
-                setState((s) => ({
+                setNewGame((s) => ({
                   ...s,
                   player1Name: e.detail.value!,
                 }));
@@ -146,15 +140,15 @@ export const NewGameForm = () => {
               inputmode="text"
             ></IonInput>
           </IonItem>
-          {state.numberOfPlayers === NumberOfPlayers.TwoPlayers ? (
+          {newGame.numberOfPlayers === NumberOfPlayers.TwoPlayers ? (
             <div>
               <IonItem lines="none">
                 <IonSegment
                   slot="end"
                   scrollable={true}
-                  value={state.player2Value}
+                  value={newGame.player2Value}
                   onIonChange={(e) => {
-                    setState((s) => ({
+                    setNewGame((s) => ({
                       ...s,
                       player2Value: e.detail.value as Value,
                       player1Value: (e.detail.value as Value) === 'O' ? 'X' : 'O',
@@ -172,9 +166,9 @@ export const NewGameForm = () => {
               <IonItem>
                 <IonInput
                   placeholder="Enter player 2 name"
-                  value={state.player2Name}
+                  value={newGame.player2Name}
                   onIonInput={(e) => {
-                    setState((s) => ({
+                    setNewGame((s) => ({
                       ...s,
                       player2Name: e.detail.value!,
                     }));
@@ -191,27 +185,18 @@ export const NewGameForm = () => {
           className="ion-margin-top"
           expand="block"
           onClick={() => {
-            if (!state.player1Name) {
+            if (!newGame.player1Name) {
               present({
                 message: 'Please, enter player 1 name.',
                 buttons: ['Ok'],
               });
-            } else if (!state.player2Name) {
+            } else if (!newGame.player2Name) {
               present({
                 message: 'Please, enter player 2 name.',
                 buttons: ['Ok'],
               });
             } else {
-              const game = new Game(
-                new Player(state.player1Name, state.player1Value),
-                new Player(
-                  state.numberOfPlayers === NumberOfPlayers.OnePlayer ? `CPU (${state.level})` : state.player2Name,
-                  state.player2Value,
-                ),
-                state.numberOfPlayers,
-                state.level,
-              );
-              dispatch(setCurrentGame(game));
+              dispatch(setCurrentGame(newGame));
             }
           }}
         >

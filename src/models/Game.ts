@@ -1,5 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-
+import type { SerializableGame } from '../slices/gameSlice';
 import type { ArchivedCell, Value } from './Cell';
 import { Cell } from './Cell';
 import type { ArchivedPlayer } from './Player';
@@ -19,6 +18,7 @@ export enum Level {
 }
 
 export type ArchivedGame = {
+  id: string;
   player1: ArchivedPlayer;
   player2: ArchivedPlayer;
   cells: ArchivedCell[];
@@ -39,8 +39,15 @@ export class Game {
   private _turn: Value;
   public winValue: Value | undefined;
 
-  constructor(player1: Player, player2: Player, numberOfPlayers: NumberOfPlayers, level: Level, turn?: Value) {
-    this._id = uuidv4();
+  constructor(
+    id: string,
+    player1: Player,
+    player2: Player,
+    numberOfPlayers: NumberOfPlayers,
+    level: Level,
+    turn?: Value,
+  ) {
+    this._id = id;
     this._player1 = player1;
     this._player2 = player2;
     this._numberOfPlayers = numberOfPlayers;
@@ -79,6 +86,10 @@ export class Game {
     return this._level;
   }
 
+  public get turn() {
+    return this._turn;
+  }
+
   public getPlayer(v: Value | undefined) {
     if (!v) {
       return undefined;
@@ -89,10 +100,6 @@ export class Game {
     } else {
       return this._player2;
     }
-  }
-
-  public getTurn() {
-    return this._turn;
   }
 
   public getCurrentPlayer() {
@@ -171,7 +178,7 @@ export class Game {
   }
 
   public clone(): Game {
-    const game = new Game(this._player1, this._player2, this._numberOfPlayers, this._level);
+    const game = new Game(this.id, this._player1, this._player2, this._numberOfPlayers, this._level);
     this._cells.forEach((c, i) => {
       game._cells[i] = c.clone();
     });
@@ -183,6 +190,7 @@ export class Game {
 
   public toArchived(): ArchivedGame {
     return {
+      id: this.id,
       player1: this._player1.toArchived(),
       player2: this._player2.toArchived(),
       cells: this._cells.map((c) => c.toArchived()),
@@ -195,6 +203,7 @@ export class Game {
 
   static fromArchived(archivedGame: ArchivedGame): Game {
     const game = new Game(
+      archivedGame.id,
       Player.fromArchived(archivedGame.player1),
       Player.fromArchived(archivedGame.player2),
       archivedGame.numberOfPlayers,
@@ -209,6 +218,32 @@ export class Game {
 
     game._gridClassNameWin = archivedGame.gridClassNameWin;
     game.winValue = archivedGame.winValue;
+
+    return game;
+  }
+
+  public toSerializable(): SerializableGame {
+    return {
+      id: this.id,
+      player1Name: this.player1.name,
+      player1Value: this.player1.value,
+      player2Name: this.player2.name,
+      player2Value: this.player2.value,
+      numberOfPlayers: this.numberOfPlayers,
+      level: this.level,
+      turn: this.turn,
+    };
+  }
+
+  static fromSerializable(serializableGame: SerializableGame): Game {
+    const game = new Game(
+      serializableGame.id,
+      new Player(serializableGame.player1Name, serializableGame.player1Value),
+      new Player(serializableGame.player2Name, serializableGame.player2Value),
+      serializableGame.numberOfPlayers,
+      serializableGame.level,
+      serializableGame.turn,
+    );
 
     return game;
   }

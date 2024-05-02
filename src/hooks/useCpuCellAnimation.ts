@@ -3,10 +3,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAppSelector } from '.';
 
 import { CPU_THINKING_TIME } from '../constants';
-import type { Index } from '../models/Game';
+import type { Game, Index } from '../models/Game';
 
-export const useCpuCellAnimation = () => {
-  const game = useAppSelector((state) => state.game.current);
+export const useCpuCellAnimation = (game: Game) => {
   const cpuThinking = useAppSelector((state) => state.cpu.thinking);
   const [animatedCellIndex, setAnimatedCellIndex] = useState<Index>();
 
