@@ -102,7 +102,7 @@ const ResultsPage: React.FC = () => {
                 Delete
               </IonButton>
             </IonListHeader>
-            <GameComponent />
+            <GameComponent key={selectedPlayedGame.game.id} storedGame={selectedPlayedGame.game} />
           </>
         ) : playedGames.length > 0 ? (
           <IonList>

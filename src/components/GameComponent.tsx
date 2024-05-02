@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -25,17 +26,17 @@ import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
 import { setCurrentGame } from '../slices/gameSlice';
 
-export const GameComponent = () => {
+export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const currentGame = useAppSelector((state) => state.game.current!);
-  const [game] = useState(Game.fromSerializable(currentGame));
+  const [game] = useState(storedGame ? storedGame : Game.fromSerializable(currentGame));
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
   const [cpuThinking, setCpuThinking] = useState(false);
-  const [, setTurn] = useState<Value>(currentGame.turn);
-  const isStoredGame = useAppSelector((state) => state.game.isStoredGame);
+  const [, setTurn] = useState<Value>(game.turn);
   const symbols = useAppSelector((state) => state.game.symbols);
   const height = (window.screen.availWidth * 0.86675) / 3;
-  const [saved, setSaved] = useState(isStoredGame);
+  const [saved, setSaved] = useState(Boolean(storedGame));
   const { animatedCellIndex } = useCpuCellAnimation(game, cpuThinking);
   const hasWin = game?.hasWin();
   const finished = game?.finished();
@@ -71,12 +72,13 @@ export const GameComponent = () => {
     const newGame = game.toSerializable();
     newGame.id = uuidv4();
     dispatch(setCurrentGame(newGame));
-    setSaved(false);
+    if (storedGame) {
+      history.push('/play');
+    }
   };
 
   const handleNewGame = () => {
     dispatch(setCurrentGame(undefined));
-    setSaved(false);
   };
 
   const handleCancel = () => {
@@ -201,7 +203,7 @@ export const GameComponent = () => {
           <IonButton className="ion-margin" expand="block" onClick={() => handlePlayAgain()}>
             Play Again
           </IonButton>
-          {!isStoredGame && (
+          {!storedGame && (
             <IonButton className="ion-margin" expand="block" onClick={() => handleNewGame()}>
               New Game
             </IonButton>

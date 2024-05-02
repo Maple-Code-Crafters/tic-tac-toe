@@ -38,10 +38,7 @@ export const gameSlice = createSlice({
     setSymbols: (state, action: PayloadAction<Symbols>) => {
       state.symbols = action.payload;
     },
-    setIsStoredGame: (state, action: PayloadAction<boolean>) => {
-      state.isStoredGame = action.payload;
-    },
   },
 });
 
-export const { setCurrentGame, setIsStoredGame, setSymbols } = gameSlice.actions;
+export const { setCurrentGame, setSymbols } = gameSlice.actions;
