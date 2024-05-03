@@ -1,11 +1,12 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { Symbols } from '../helpers/storage.helper';
+import { DEFAULT } from '../constants';
+import type { Default, Symbols } from '../helpers/storage.helper';
 import type { Value } from '../models/Cell';
 import type { Level, NumberOfPlayers } from '../models/Game';
 
-export type SerializableGame = {
+export type GameConfig = {
   id: string;
   player1Name: string;
   player1Value: Value;
@@ -17,26 +18,31 @@ export type SerializableGame = {
 };
 
 type GameSlice = {
-  current: SerializableGame | undefined;
+  config: GameConfig | undefined;
+  default: Default;
   symbols: Symbols;
 };
 
 const initialState: GameSlice = {
-  current: undefined,
-  symbols: { X: 'X', O: 'O' },
+  config: undefined,
+  default: DEFAULT,
+  symbols: DEFAULT.symbols,
 };
 
 export const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
-    setCurrentGame: (state, action: PayloadAction<SerializableGame | undefined>) => {
-      state.current = action.payload;
+    setGameConfig: (state, action: PayloadAction<GameConfig | undefined>) => {
+      state.config = action.payload;
     },
-    setSymbols: (state, action: PayloadAction<Symbols>) => {
+    setGameDefault: (state, action: PayloadAction<Default>) => {
+      state.default = action.payload;
+    },
+    setGameSymbols: (state, action: PayloadAction<Symbols>) => {
       state.symbols = action.payload;
     },
   },
 });
 
-export const { setCurrentGame, setSymbols } = gameSlice.actions;
+export const { setGameConfig, setGameDefault, setGameSymbols } = gameSlice.actions;

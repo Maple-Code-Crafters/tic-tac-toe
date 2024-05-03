@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,33 +19,23 @@ import {
 
 import './NewGameForm.css';
 
-import { useStoredDefault } from '../hooks';
+import { useAppSelector } from '../hooks';
 import type { Value } from '../models/Cell';
 import { Level, NumberOfPlayers } from '../models/Game';
-import type { SerializableGame } from '../slices/gameSlice';
-import { setCurrentGame } from '../slices/gameSlice';
+import type { GameConfig } from '../slices/gameSlice';
+import { setGameConfig } from '../slices/gameSlice';
 
 export const NewGameForm = () => {
   const dispatch = useDispatch();
   const [present] = useIonAlert();
-  const { restored, storedDefault } = useStoredDefault();
-  const [newGame, setNewGame] = useState<SerializableGame>({
+  const gameDefault = useAppSelector((state) => state.game.default!);
+  const [newGame, setNewGame] = useState<GameConfig>({
     id: uuidv4(),
-    player1Name: '',
     player1Value: 'O',
-    player2Name: '',
     player2Value: 'X',
-    numberOfPlayers: NumberOfPlayers.OnePlayer,
-    level: Level.Easy,
     turn: 'O',
+    ...gameDefault,
   });
-
-  useEffect(() => {
-    if (restored) {
-      const { player1Name, player2Name, numberOfPlayers, level } = storedDefault;
-      setNewGame((s) => ({ ...s, player1Name, player2Name, numberOfPlayers, level }));
-    }
-  }, [restored, storedDefault]);
 
   return (
     <IonCard>
@@ -116,10 +106,10 @@ export const NewGameForm = () => {
               }}
             >
               <IonSegmentButton value="O">
-                <IonLabel className="o-x-value">{storedDefault.symbols.O}</IonLabel>
+                <IonLabel className="o-x-value">{gameDefault.symbols.O}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="X">
-                <IonLabel className="o-x-value">{storedDefault.symbols.X}</IonLabel>
+                <IonLabel className="o-x-value">{gameDefault.symbols.X}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
           </IonItem>
@@ -156,10 +146,10 @@ export const NewGameForm = () => {
                   }}
                 >
                   <IonSegmentButton value="O">
-                    <IonLabel className="o-x-value">{storedDefault.symbols.O}</IonLabel>
+                    <IonLabel className="o-x-value">{gameDefault.symbols.O}</IonLabel>
                   </IonSegmentButton>
                   <IonSegmentButton value="X">
-                    <IonLabel className="o-x-value">{storedDefault.symbols.X}</IonLabel>
+                    <IonLabel className="o-x-value">{gameDefault.symbols.X}</IonLabel>
                   </IonSegmentButton>
                 </IonSegment>
               </IonItem>
@@ -196,7 +186,7 @@ export const NewGameForm = () => {
                 buttons: ['Ok'],
               });
             } else {
-              dispatch(setCurrentGame(newGame));
+              dispatch(setGameConfig(newGame));
             }
           }}
         >

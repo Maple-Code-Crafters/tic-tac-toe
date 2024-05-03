@@ -1,4 +1,4 @@
-import type { SerializableGame } from '../slices/gameSlice';
+import type { GameConfig } from '../slices/gameSlice';
 import type { ArchivedCell, Value } from './Cell';
 import { Cell } from './Cell';
 import type { ArchivedPlayer } from './Player';
@@ -221,7 +221,7 @@ export class Game {
     return game;
   }
 
-  public toSerializable(): SerializableGame {
+  public toConfig(): GameConfig {
     return {
       id: this.id,
       player1Name: this.player1.name,
@@ -234,14 +234,14 @@ export class Game {
     };
   }
 
-  static fromSerializable(serializableGame: SerializableGame): Game {
+  static fromConfig(config: GameConfig): Game {
     const game = new Game(
-      serializableGame.id,
-      new Player(serializableGame.player1Name, serializableGame.player1Value),
-      new Player(serializableGame.player2Name, serializableGame.player2Value),
-      serializableGame.numberOfPlayers,
-      serializableGame.level,
-      serializableGame.turn,
+      config.id,
+      new Player(config.player1Name, config.player1Value),
+      new Player(config.player2Name, config.player2Value),
+      config.numberOfPlayers,
+      config.level,
+      config.turn,
     );
 
     return game;

@@ -24,13 +24,13 @@ import type { Value } from '../models/Cell';
 import { CPU } from '../models/cpu/Cpu';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
-import { setCurrentGame } from '../slices/gameSlice';
+import { setGameConfig } from '../slices/gameSlice';
 
 export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const currentGame = useAppSelector((state) => state.game.current!);
-  const [game] = useState(storedGame ? storedGame : Game.fromSerializable(currentGame));
+  const gameConfig = useAppSelector((state) => state.game.config!);
+  const [game] = useState(storedGame ? storedGame : Game.fromConfig(gameConfig));
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
   const [cpuThinking, setCpuThinking] = useState(false);
   const [, setTurn] = useState<Value>(game.turn);
@@ -69,9 +69,9 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   };
 
   const handlePlayAgain = () => {
-    const newGame = game.toSerializable();
-    newGame.id = uuidv4();
-    dispatch(setCurrentGame(newGame));
+    const config = game.toConfig();
+    config.id = uuidv4();
+    dispatch(setGameConfig(config));
     if (storedGame) {
       history.push('/play');
     }
@@ -196,14 +196,14 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
             Play Again
           </IonButton>
           {!storedGame && (
-            <IonButton className="ion-margin" expand="block" onClick={() => dispatch(setCurrentGame(undefined))}>
+            <IonButton className="ion-margin" expand="block" onClick={() => dispatch(setGameConfig(undefined))}>
               New Game
             </IonButton>
           )}
         </IonCard>
       ) : (
         <IonCard>
-          <IonButton className="ion-margin" expand="block" onClick={() => dispatch(setCurrentGame(undefined))}>
+          <IonButton className="ion-margin" expand="block" onClick={() => dispatch(setGameConfig(undefined))}>
             Cancel
           </IonButton>
         </IonCard>
