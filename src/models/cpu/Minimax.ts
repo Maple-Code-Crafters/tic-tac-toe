@@ -6,7 +6,6 @@ export class Minimax implements CpuAlgorithm {
   static readonly MAX_CELLS = 9;
 
   public chooseMove(game: Game): Index | undefined {
-    //console.log('Minimax');
     const availableCells = game.getAvailableCells();
 
     if (game.finished() || game.hasWin() || !availableCells.length) {
@@ -38,13 +37,13 @@ export class Minimax implements CpuAlgorithm {
   }
 
   private minimax(game: Game, cpuTurn: Value): number {
-    const availableCells = game.getAvailableCells();
-
     if (game.hasWin()) {
-      return game.winValue === cpuTurn ? 1 * availableCells.length : -1 * availableCells.length;
+      return this.calculateScore(game, cpuTurn);
     } else if (game.finished()) {
       return 0;
     }
+
+    const availableCells = game.getAvailableCells();
 
     if (cpuTurn === game.getTurn()) {
       let bestScore = -Infinity;
@@ -65,5 +64,30 @@ export class Minimax implements CpuAlgorithm {
       }
       return bestScore;
     }
+  }
+
+  /**
+   * The higher the score, the better the move
+   *
+   * The best winning move is the one that takes the least amount of moves
+   * For example:
+   * (1) The Bot wins when there are still 4 available cells to be played, the score is 1 * 4 = 4
+   * (2) The Bot wins when there are still 2 available cells to be played, the score is 1 * 2 = 2
+   * The best move is (1) since the bot can win faster
+   *
+   * The move that will make the bot loose faster is the one that takes least amount of moves
+   * For example:
+   * (1) The Bot loses when there are still 4 available cells to be played (5 played cells), the score is -1 * 5 = -5
+   * (2) The Bot loses when there are still 2 available cells to be played (7 played cells), the score is -1 * 7 = -7
+   * In the two cases the bot loses, but the Bot will loose faster in case (1), so it has to be a higher score. -5 is greater than -7.
+   *
+   * @param game
+   * @param cpuTurn tells if the CPU is the X or O
+   * @returns the score of the move
+   */
+  private calculateScore(game: Game, cpuTurn: Value): number {
+    const availableCells = game.getAvailableCells().length;
+    const playedCells = Minimax.MAX_CELLS - availableCells;
+    return game.winValue === cpuTurn ? 1 * availableCells : -1 * playedCells;
   }
 }
