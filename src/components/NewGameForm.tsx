@@ -22,7 +22,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import type { Value } from '../models/Cell';
 import { Level, NumberOfPlayers } from '../models/Game';
 import type { GameConfig } from '../slices/gameSlice';
-import { setGameConfig } from '../slices/gameSlice';
+import { setGameConfig, setGameSymbols } from '../slices/gameSlice';
 
 export const NewGameForm = () => {
   const dispatch = useAppDispatch();
@@ -198,6 +198,7 @@ export const NewGameForm = () => {
                 buttons: ['Ok'],
               });
             } else {
+              dispatch(setGameSymbols(gameDefault.symbols));
               dispatch(setGameConfig(newGame));
             }
           }}

@@ -2,7 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { DEFAULT } from '../constants';
-import type { Default } from '../helpers/storage.helper';
+import type { Default, Symbols } from '../helpers/storage.helper';
 import { DefaultStorage } from '../helpers/storage.helper';
 import type { Value } from '../models/Cell';
 import type { Level, NumberOfPlayers } from '../models/Game';
@@ -21,6 +21,7 @@ export type GameConfig = {
 type GameSlice = {
   config: GameConfig | undefined;
   default: Default;
+  symbols: Symbols;
 };
 
 export const retrieveDefaultAsync = createAsyncThunk('game/retrieveDefaultAsync', async () => {
@@ -36,6 +37,7 @@ export const saveDefaultAsync = createAsyncThunk<Default, Default>('game/saveDef
 const initialState: GameSlice = {
   config: undefined,
   default: DEFAULT,
+  symbols: DEFAULT.symbols,
 };
 
 export const gameSlice = createSlice({
@@ -47,6 +49,9 @@ export const gameSlice = createSlice({
     },
     setGameDefault: (state, action: PayloadAction<Default>) => {
       state.default = action.payload;
+    },
+    setGameSymbols: (state, action: PayloadAction<Symbols>) => {
+      state.symbols = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -60,4 +65,4 @@ export const gameSlice = createSlice({
   },
 });
 
-export const { setGameConfig, setGameDefault } = gameSlice.actions;
+export const { setGameConfig, setGameDefault, setGameSymbols } = gameSlice.actions;
