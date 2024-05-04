@@ -238,7 +238,10 @@ export class Game {
     const game = new Game(
       config.id,
       new Player(config.player1Name, config.player1Value),
-      new Player(config.player2Name, config.player2Value),
+      new Player(
+        config.numberOfPlayers === NumberOfPlayers.OnePlayer ? `CPU (${config.level})` : config.player2Name,
+        config.player2Value,
+      ),
       config.numberOfPlayers,
       config.level,
       config.turn,
