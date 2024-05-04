@@ -36,7 +36,7 @@ export const NewGameForm = () => {
     player2Name: gameDefault.player2Name,
     player1Value: 'O',
     player2Value: 'X',
-    turn: 'O',
+    initialTurn: 'O',
   });
 
   useEffect(() => {

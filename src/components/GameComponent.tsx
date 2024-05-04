@@ -74,7 +74,7 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const handlePlayAgain = () => {
     const config = game.toConfig();
     config.id = uuidv4();
-    config.turn = gameConfig.turn === 'X' ? 'O' : 'X';
+    config.initialTurn = gameConfig.initialTurn === 'X' ? 'O' : 'X';
     dispatch(setGameConfig(config));
     if (storedGame) {
       history.push('/play');

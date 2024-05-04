@@ -4,15 +4,13 @@ import { Game, Level, NumberOfPlayers } from './Game';
 import { Player } from './Player';
 
 describe('Game', () => {
-  let player1: Player;
-  let player2: Player;
+  const player1 = new Player('Player 1', 'X');
+  const player2 = new Player('Player 2', 'O');
   const numberOfPlayers: NumberOfPlayers = NumberOfPlayers.OnePlayer;
   let game: Game;
 
   beforeEach(() => {
-    player1 = new Player('Player 1', 'X');
-    player2 = new Player('Player 2', 'O');
-    game = new Game('fakeId', player1, player2, numberOfPlayers, Level.Easy);
+    game = new Game('fakeId', player1, player2, numberOfPlayers, Level.Easy, 'X');
   });
 
   test('should initialize with correct players', () => {
@@ -101,6 +99,7 @@ describe('Game', () => {
       gridClassNameWin: 'grid-horizontal-top',
       winValue: 'X',
       level: Level.Easy,
+      initialTurn: 'X',
     };
 
     const newGame = Game.fromArchived(archivedGame);

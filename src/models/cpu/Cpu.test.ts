@@ -1,23 +1,24 @@
-import type { Game, Index } from '../Game';
+import type { Index } from '../Game';
+import { Game, NumberOfPlayers } from '../Game';
 import { Level } from '../Game';
+import { Player } from '../Player';
 import { CPU } from './Cpu';
 import type { CpuAlgorithm } from './CpuAlgorithm';
 import { Minimax } from './Minimax';
 import { RandomMove } from './RandomMove';
 
 describe('Cpu', () => {
-  let cpu: CPU;
-  let game: Game;
   let level: Level;
+  let cpu: CPU;
+  const player1 = new Player('Player 1', 'X');
+  const player2 = new Player('Player 2', 'O');
+  const numberOfPlayers: NumberOfPlayers = NumberOfPlayers.OnePlayer;
+  let game: Game;
 
   beforeEach(() => {
     level = Level.Easy;
     cpu = new CPU(level);
-    game = {
-      finished: () => false,
-      hasWin: () => false,
-      getAvailableCells: () => [0, 1, 2, 3, 4, 5, 6, 7, 8],
-    } as Game;
+    game = new Game('fakeId', player1, player2, numberOfPlayers, level, 'X');
   });
 
   test('should initialize correctly', () => {

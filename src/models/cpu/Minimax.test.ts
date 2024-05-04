@@ -11,9 +11,10 @@ describe('Minimax', () => {
     game = new Game(
       'fakeId',
       new Player('Player 1', 'X'),
-      new Player('Player 2', 'O'),
+      new Player('CPU', 'O'),
       NumberOfPlayers.OnePlayer,
       Level.Hard,
+      'X',
     );
   });
 

@@ -26,6 +26,7 @@ export type ArchivedGame = {
   winValue: Value | undefined;
   numberOfPlayers: NumberOfPlayers;
   level: Level;
+  initialTurn: Value;
 };
 
 export class Game {
@@ -48,6 +49,7 @@ export class Game {
   private _cells: [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
   private _gridClassNameWin!: string;
   private _turn: Value;
+  private _initailTurn: Value;
   public winValue: Value | undefined;
 
   constructor(
@@ -56,14 +58,15 @@ export class Game {
     player2: Player,
     numberOfPlayers: NumberOfPlayers,
     level: Level,
-    turn?: Value,
+    initialTurn: Value,
   ) {
     this._id = id;
     this._player1 = player1;
     this._player2 = player2;
     this._numberOfPlayers = numberOfPlayers;
     this._level = level;
-    this._turn = turn ?? player1.value;
+    this._initailTurn = initialTurn;
+    this._turn = initialTurn;
     this._cells = [
       new Cell(0),
       new Cell(1),
@@ -122,10 +125,11 @@ export class Game {
   }
 
   public makeMove(index: Index) {
+    if (this._cells[index].value !== undefined || this.finished() || this.hasWin()) {
+      return;
+    }
     this._cells[index].value = this._turn;
-    const newTurn = this._turn === 'O' ? 'X' : 'O';
-    this._turn = newTurn;
-    return newTurn;
+    this._turn = this._turn === 'O' ? 'X' : 'O';
   }
 
   public undoMove(index: Index) {
@@ -201,6 +205,7 @@ export class Game {
       winValue: this.winValue,
       numberOfPlayers: this._numberOfPlayers,
       level: this._level,
+      initialTurn: this._turn,
     };
   }
 
@@ -211,6 +216,7 @@ export class Game {
       Player.fromArchived(archivedGame.player2),
       archivedGame.numberOfPlayers,
       archivedGame.level,
+      archivedGame.initialTurn,
     );
 
     archivedGame.cells.forEach((c, i) => {
@@ -234,7 +240,7 @@ export class Game {
       player2Value: this.player2.value,
       numberOfPlayers: this.numberOfPlayers,
       level: this.level,
-      turn: this.turn,
+      initialTurn: this._initailTurn,
     };
   }
 
@@ -248,7 +254,7 @@ export class Game {
       ),
       config.numberOfPlayers,
       config.level,
-      config.turn,
+      config.initialTurn,
     );
 
     return game;

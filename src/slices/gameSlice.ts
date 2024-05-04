@@ -15,7 +15,7 @@ export type GameConfig = {
   player2Value: Value;
   numberOfPlayers: NumberOfPlayers;
   level: Level;
-  turn: Value;
+  initialTurn: Value;
 };
 
 type GameSlice = {
