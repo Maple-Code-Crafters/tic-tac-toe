@@ -45,7 +45,7 @@ export class Minimax implements CpuAlgorithm {
 
     const availableCells = game.getAvailableCells();
 
-    if (cpuTurn === game.getTurn()) {
+    if (game.isCpuTurn()) {
       let bestScore = -Infinity;
       for (const cell of availableCells) {
         game.makeMove(cell);

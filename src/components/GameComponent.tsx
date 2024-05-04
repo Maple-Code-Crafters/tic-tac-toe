@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -35,27 +35,13 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
   const [cpuThinking, setCpuThinking] = useState(false);
   const [saved, setSaved] = useState(Boolean(storedGame));
-  const { animatedCellIndex } = useCpuCellAnimation(game, cpuThinking);
+  const { animatedCellIndex } = useCpuCellAnimation(game.getAvailableCells(), cpuThinking);
   const [, setTurn] = useState<Value>(game.turn);
+  const cpuTurn = game.isCpuTurn();
   const hasWin = game.hasWin();
   const finished = game.finished();
 
-  useEffect(() => {
-    if ((hasWin || finished) && !saved) {
-      GameStorage.saveGame({ date: new Date(), game, symbols });
-      setSaved(true);
-    }
-  }, [finished, game, hasWin, saved, symbols]);
-
-  const handleCellClick = (index: Index) => {
-    setTurn(game.makeMove(index));
-
-    if (game.isSinglePlayerMode()) {
-      cpuMove();
-    }
-  };
-
-  const cpuMove = () => {
+  const cpuMove = useCallback(() => {
     setCpuThinking(true);
     // add a sleep to simulate the cpu thinking
     setTimeout(() => {
@@ -65,11 +51,29 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
       }
       setCpuThinking(false);
     }, CPU_THINKING_TIME);
+  }, [cpu, game]);
+
+  useEffect(() => {
+    if ((hasWin || finished) && !saved) {
+      GameStorage.saveGame({ date: new Date(), game, symbols });
+      setSaved(true);
+    }
+  }, [finished, game, hasWin, saved, symbols]);
+
+  useEffect(() => {
+    if (cpuTurn) {
+      cpuMove();
+    }
+  }, [cpuMove, cpuTurn]);
+
+  const handleCellClick = (index: Index) => {
+    setTurn(game.makeMove(index));
   };
 
   const handlePlayAgain = () => {
     const config = game.toConfig();
     config.id = uuidv4();
+    config.turn = gameConfig.turn === 'X' ? 'O' : 'X';
     dispatch(setGameConfig(config));
     if (storedGame) {
       history.push('/play');

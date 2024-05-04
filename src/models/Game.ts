@@ -117,6 +117,10 @@ export class Game {
     return this.getPlayer(this._turn);
   }
 
+  public isCpuTurn() {
+    return this.getCurrentPlayer()?.name.includes('CPU') ?? false;
+  }
+
   public makeMove(index: Index) {
     this._cells[index].value = this._turn;
     const newTurn = this._turn === 'O' ? 'X' : 'O';
