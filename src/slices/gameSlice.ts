@@ -24,9 +24,14 @@ type GameSlice = {
   symbols: Symbols;
 };
 
-export const retriveAsyncDefault = createAsyncThunk('game/retriveAsyncDefault', async () => {
+export const retrieveDefaultAsync = createAsyncThunk('game/retrieveDefaultAsync', async () => {
   const storedDefault = await DefaultStorage.get();
   return storedDefault;
+});
+
+export const saveDefaultAsync = createAsyncThunk<Default, Default>('game/saveDefaultAsync', async (newDefault) => {
+  await DefaultStorage.save(newDefault);
+  return newDefault;
 });
 
 const initialState: GameSlice = {
@@ -50,9 +55,13 @@ export const gameSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(retriveAsyncDefault.fulfilled, (state, action) => {
-      state.default = action.payload;
-    });
+    builder
+      .addCase(retrieveDefaultAsync.fulfilled, (state, action) => {
+        state.default = action.payload;
+      })
+      .addCase(saveDefaultAsync.fulfilled, (state, action) => {
+        state.default = action.payload;
+      });
   },
 });
 

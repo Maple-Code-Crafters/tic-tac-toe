@@ -6,5 +6,4 @@ export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();
 
 export { useAppInit } from './useAppInit';
-export { useStoredDefault } from './useStoredDefault';
 export { useCpuCellAnimation } from './useCpuCellAnimation';

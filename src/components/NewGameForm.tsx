@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -27,14 +27,24 @@ import { setGameConfig } from '../slices/gameSlice';
 export const NewGameForm = () => {
   const dispatch = useAppDispatch();
   const [present] = useIonAlert();
-  const gameDefault = useAppSelector((state) => state.game.default!);
+  const gameDefault = useAppSelector((state) => state.game.default);
   const [newGame, setNewGame] = useState<GameConfig>({
     id: uuidv4(),
+    ...gameDefault,
     player1Value: 'O',
     player2Value: 'X',
     turn: 'O',
-    ...gameDefault,
   });
+
+  useEffect(() => {
+    setNewGame((prevState) => ({
+      ...prevState,
+      numberOfPlayers: gameDefault.numberOfPlayers,
+      level: gameDefault.level,
+      player1Name: gameDefault.player1Name,
+      player2Name: gameDefault.player2Name,
+    }));
+  }, [gameDefault.level, gameDefault.numberOfPlayers, gameDefault.player1Name, gameDefault.player2Name]);
 
   return (
     <IonCard>

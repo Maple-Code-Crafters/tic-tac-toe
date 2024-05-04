@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import {
   IonButton,
@@ -27,8 +27,9 @@ import './Settings.css';
 
 import { APP_NAME, APP_VERSION } from '../constants';
 import type { Default } from '../helpers/storage.helper';
-import { useStoredDefault } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { Level, NumberOfPlayers } from '../models/Game';
+import { saveDefaultAsync } from '../slices/gameSlice';
 
 interface InputChangeEventDetail {
   value?: string | undefined | null;
@@ -41,14 +42,9 @@ interface InputCustomEvent extends CustomEvent {
 
 const SettingsPage: React.FC = () => {
   const [present] = useIonToast();
-  const { restored, storedDefault, saveDefault } = useStoredDefault();
-  const [newDefault, setNewDefault] = useState<Default>(storedDefault);
-
-  useEffect(() => {
-    if (restored) {
-      setNewDefault(storedDefault);
-    }
-  }, [restored, storedDefault]);
+  const dispatch = useAppDispatch();
+  const gameDefault = useAppSelector((state) => state.game.default);
+  const [newDefault, setNewDefault] = useState<Default>(gameDefault);
 
   const onNameInput = (e: InputCustomEvent) => {
     setNewDefault((prev) => ({ ...prev, [e.target.name]: e.target.value as string }));
@@ -200,15 +196,15 @@ const SettingsPage: React.FC = () => {
               !newDefault.player2Name ||
               !newDefault.symbols.O ||
               !newDefault.symbols.X ||
-              (newDefault.numberOfPlayers === storedDefault.numberOfPlayers &&
-                newDefault.level === storedDefault.level &&
-                newDefault.player1Name === storedDefault.player1Name &&
-                newDefault.player2Name === storedDefault.player2Name &&
-                newDefault.symbols.O === storedDefault.symbols.O &&
-                newDefault.symbols.X === storedDefault.symbols.X)
+              (newDefault.numberOfPlayers === gameDefault.numberOfPlayers &&
+                newDefault.level === gameDefault.level &&
+                newDefault.player1Name === gameDefault.player1Name &&
+                newDefault.player2Name === gameDefault.player2Name &&
+                newDefault.symbols.O === gameDefault.symbols.O &&
+                newDefault.symbols.X === gameDefault.symbols.X)
             }
             onClick={async () => {
-              await saveDefault(newDefault);
+              await dispatch(saveDefaultAsync(newDefault));
               showSavedToast();
             }}
           >
