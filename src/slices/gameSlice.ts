@@ -1,8 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { DEFAULT } from '../constants';
 import type { Default, Symbols } from '../helpers/storage.helper';
+import { DefaultStorage } from '../helpers/storage.helper';
 import type { Value } from '../models/Cell';
 import type { Level, NumberOfPlayers } from '../models/Game';
 
@@ -23,6 +24,11 @@ type GameSlice = {
   symbols: Symbols;
 };
 
+export const retriveAsyncDefault = createAsyncThunk('game/retriveAsyncDefault', async () => {
+  const storedDefault = await DefaultStorage.get();
+  return storedDefault;
+});
+
 const initialState: GameSlice = {
   config: undefined,
   default: DEFAULT,
@@ -42,6 +48,11 @@ export const gameSlice = createSlice({
     setGameSymbols: (state, action: PayloadAction<Symbols>) => {
       state.symbols = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(retriveAsyncDefault.fulfilled, (state, action) => {
+      state.default = action.payload;
+    });
   },
 });
 

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,7 +18,7 @@ import './GameComponent.css';
 
 import { CPU_THINKING_TIME } from '../constants';
 import { GameStorage } from '../helpers/storage.helper';
-import { useAppSelector, useCpuCellAnimation } from '../hooks';
+import { useAppDispatch, useAppSelector, useCpuCellAnimation } from '../hooks';
 import type { Value } from '../models/Cell';
 import { CPU } from '../models/cpu/Cpu';
 import type { Index } from '../models/Game';
@@ -28,7 +27,7 @@ import { setGameConfig } from '../slices/gameSlice';
 
 export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const gameConfig = useAppSelector((state) => state.game.config!);
   const [game] = useState(storedGame ? storedGame : Game.fromConfig(gameConfig));
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);

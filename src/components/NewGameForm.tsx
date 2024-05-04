@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -19,14 +18,14 @@ import {
 
 import './NewGameForm.css';
 
-import { useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import type { Value } from '../models/Cell';
 import { Level, NumberOfPlayers } from '../models/Game';
 import type { GameConfig } from '../slices/gameSlice';
 import { setGameConfig } from '../slices/gameSlice';
 
 export const NewGameForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [present] = useIonAlert();
   const gameDefault = useAppSelector((state) => state.game.default!);
   const [newGame, setNewGame] = useState<GameConfig>({

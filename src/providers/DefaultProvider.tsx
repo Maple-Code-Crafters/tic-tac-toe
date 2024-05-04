@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import type { ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
 
-import { DefaultStorage } from '../helpers/storage.helper';
-import { setGameDefault } from '../slices/gameSlice';
+import { useAppDispatch } from '../hooks';
+import { retriveAsyncDefault } from '../slices/gameSlice';
 
 export const DefaultProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [restored, setRestored] = useState(false);
 
   const retrieve = useCallback(async () => {
-    const storedDefault = await DefaultStorage.get();
-    dispatch(setGameDefault(storedDefault));
+    dispatch(retriveAsyncDefault());
     setRestored(true);
   }, [dispatch]);
 
@@ -20,8 +18,7 @@ export const DefaultProvider: React.FC<{ children: ReactNode }> = ({ children })
     retrieve();
   }, [retrieve]);
 
-  if (!restored) return null;
-  return children;
+  return restored ? children : null;
 };
 
 DefaultProvider.propTypes = {
