@@ -107,7 +107,7 @@ const ResultsPage: React.FC = () => {
         ) : playedGames.length > 0 ? (
           <IonList>
             {playedGames.map((playedGame) => (
-              <IonItem key={playedGame.date.toISOString()} button onClick={() => setSelectedPlayedGame(playedGame)}>
+              <IonItem key={playedGame.game.id} button onClick={() => setSelectedPlayedGame(playedGame)}>
                 <IonAvatar className="o-x-value">
                   {playedGame.game.winValue ? playedGame.symbols[playedGame.game.winValue] : ''}
                 </IonAvatar>
