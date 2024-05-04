@@ -35,7 +35,7 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
   const [cpuThinking, setCpuThinking] = useState(false);
   const [saved, setSaved] = useState(Boolean(storedGame));
-  const { animatedCellIndex } = useCpuCellAnimation(game.getAvailableCells(), cpuThinking);
+  const { animatedCellIndex } = useCpuCellAnimation(game, cpuThinking);
   const [, setTurn] = useState<Value>(game.turn);
   const cpuTurn = game.isCpuTurn();
   const hasWin = game.hasWin();

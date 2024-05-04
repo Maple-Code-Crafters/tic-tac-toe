@@ -1,19 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { CPU_THINKING_TIME } from '../constants';
-import type { Index } from '../models/Game';
+import type { Game, Index } from '../models/Game';
 
-export const useCpuCellAnimation = (availableCells: Index[], cpuThinking: boolean) => {
+export const useCpuCellAnimation = (game: Game, cpuThinking: boolean) => {
   const [animatedCellIndex, setAnimatedCellIndex] = useState<Index>();
 
   const setNextAnimatedCell = useCallback(() => {
+    const availableCells = game.getAvailableCells();
     if (animatedCellIndex === undefined) {
       setAnimatedCellIndex(availableCells[0]);
     } else {
       const index = availableCells.indexOf(animatedCellIndex as Index);
       setAnimatedCellIndex(availableCells[(index + 1) % availableCells.length]);
     }
-  }, [animatedCellIndex, availableCells]);
+  }, [animatedCellIndex, game]);
 
   useEffect(() => {
     let setIntervalId: NodeJS.Timeout | undefined = undefined;
