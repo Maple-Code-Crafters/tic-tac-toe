@@ -1,4 +1,4 @@
-import { type Game, type Index, Level } from '../Game';
+import { Game, type Index, Level } from '../Game';
 import type { CpuAlgorithm } from './CpuAlgorithm';
 import { Minimax } from './Minimax';
 import { RandomMove } from './RandomMove';
@@ -15,7 +15,8 @@ export class CPU {
     this._level = level;
   }
 
-  public chooseMove(game: Game): Index | undefined {
+  public chooseMove(originalGame: Game): Index | undefined {
+    const game: Game = Game.fromArchived(originalGame.toArchived());
     const algorithmProbability = Math.random();
     let cpuAlgorithm: CpuAlgorithm;
 

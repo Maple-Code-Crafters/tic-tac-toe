@@ -17,9 +17,9 @@ import {
 import './GameComponent.css';
 
 import { CPU_THINKING_TIME } from '../constants';
+import { sleep } from '../helpers';
 import { GameStorage } from '../helpers/storage.helper';
 import { useAppDispatch, useAppSelector, useCpuCellAnimation } from '../hooks';
-import type { Value } from '../models/Cell';
 import { CPU } from '../models/cpu/Cpu';
 import type { Index } from '../models/Game';
 import { Game } from '../models/Game';
@@ -33,24 +33,20 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const symbols = useAppSelector((state) => state.game.symbols);
   const [game] = useState(storedGame ? storedGame : Game.fromConfig(gameConfig));
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
-  const [cpuThinking, setCpuThinking] = useState(false);
+  const [cpuThinking, setCpuThinking] = useState(game.isCpuTurn());
   const [saved, setSaved] = useState(Boolean(storedGame));
   const { animatedCellIndex } = useCpuCellAnimation(game, cpuThinking);
-  const [, setTurn] = useState<Value>(game.turn);
-  const cpuTurn = game.isCpuTurn();
+  const [, render] = useState({});
   const hasWin = game.hasWin();
   const finished = game.finished();
 
-  const cpuMove = useCallback(() => {
-    setCpuThinking(true);
-    // add a sleep to simulate the cpu thinking
-    setTimeout(() => {
-      const index = cpu?.chooseMove(game);
-      if (index !== undefined) {
-        setTurn(game.makeMove(index));
-      }
-      setCpuThinking(false);
-    }, CPU_THINKING_TIME);
+  const cpuMove = useCallback(async () => {
+    await sleep(CPU_THINKING_TIME);
+    const index = cpu?.chooseMove(game);
+    if (index !== undefined) {
+      game.makeMove(index);
+    }
+    setCpuThinking(false);
   }, [cpu, game]);
 
   useEffect(() => {
@@ -61,13 +57,18 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   }, [finished, game, hasWin, saved, symbols]);
 
   useEffect(() => {
-    if (cpuTurn) {
+    if (cpuThinking) {
       cpuMove();
     }
-  }, [cpuMove, cpuTurn]);
+  }, [cpuMove, cpuThinking]);
 
   const handleCellClick = (index: Index) => {
-    setTurn(game.makeMove(index));
+    game.makeMove(index);
+    if (game.isSinglePlayerMode()) {
+      setCpuThinking(true);
+    } else {
+      render({});
+    }
   };
 
   const handlePlayAgain = () => {
