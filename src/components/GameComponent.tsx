@@ -26,17 +26,17 @@ import { Game } from '../models/Game';
 import { setGameConfig } from '../slices/gameSlice';
 
 export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
+  const height = (window.screen.availWidth * 0.86675) / 3;
   const history = useHistory();
   const dispatch = useAppDispatch();
   const gameConfig = useAppSelector((state) => state.game.config!);
+  const symbols = useAppSelector((state) => state.game.default.symbols);
   const [game] = useState(storedGame ? storedGame : Game.fromConfig(gameConfig));
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
   const [cpuThinking, setCpuThinking] = useState(false);
-  const [, setTurn] = useState<Value>(game.turn);
-  const symbols = useAppSelector((state) => state.game.symbols);
-  const height = (window.screen.availWidth * 0.86675) / 3;
   const [saved, setSaved] = useState(Boolean(storedGame));
   const { animatedCellIndex } = useCpuCellAnimation(game, cpuThinking);
+  const [, setTurn] = useState<Value>(game.turn);
   const hasWin = game.hasWin();
   const finished = game.finished();
 

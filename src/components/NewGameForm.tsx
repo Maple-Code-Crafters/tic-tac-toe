@@ -30,7 +30,10 @@ export const NewGameForm = () => {
   const gameDefault = useAppSelector((state) => state.game.default);
   const [newGame, setNewGame] = useState<GameConfig>({
     id: uuidv4(),
-    ...gameDefault,
+    numberOfPlayers: gameDefault.numberOfPlayers,
+    level: gameDefault.level,
+    player1Name: gameDefault.player1Name,
+    player2Name: gameDefault.player2Name,
     player1Value: 'O',
     player2Value: 'X',
     turn: 'O',

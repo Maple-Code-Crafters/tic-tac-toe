@@ -4,7 +4,7 @@ import { DEFAULT } from '../constants';
 import type { ArchivedGame, Level, NumberOfPlayers } from '../models/Game';
 import { Game } from '../models/Game';
 
-export type Symbols = {
+type Symbols = {
   X: string;
   O: string;
 };
@@ -15,7 +15,7 @@ export type PlayedGame = {
   symbols: Symbols;
 };
 
-export type SavedGame = {
+type SavedGame = {
   date: string;
   game: ArchivedGame;
   symbols: Symbols;
