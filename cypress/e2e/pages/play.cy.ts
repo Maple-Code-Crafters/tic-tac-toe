@@ -22,7 +22,7 @@ describe('Play page', () => {
       cy.get('.alert-message').eq(0).contains('Please, enter player 1 name.');
     });
 
-    it.only('When player1 name is set but player2 name is not set then the alert shows the player2 message', () => {
+    it('When player1 name is set but player2 name is not set then the alert shows the player2 message', () => {
       cy.viewport('iphone-x');
       cy.visit('/');
       cy.wait(1000);
