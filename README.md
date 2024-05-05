@@ -43,6 +43,8 @@
 
 `npm run test.unit`
 
+`npm run test.unit:debu <test file name>` to run only one test
+
 - [Cypress](https://docs.cypress.io/guides/overview/why-cypress)
 
 - Cypress needs the app/server running to work
