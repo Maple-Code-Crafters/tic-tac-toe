@@ -16,10 +16,10 @@ class Move {
   ) {}
 }
 
-const player: Value = 'X';
-const opponent: Value = 'O';
-
 export class Minimax implements CpuAlgorithm {
+  private player: Value = 'X';
+  private opponent: Value = 'O';
+
   /**
    * This function returns true if there are moves
    * remaining on the board. It returns false if
@@ -52,9 +52,9 @@ export class Minimax implements CpuAlgorithm {
     // Checking for Rows for X or O victory.
     for (let row = 0; row < 3; row++) {
       if (board[row][0].value === board[row][1].value && board[row][1].value === board[row][2].value) {
-        if (board[row][0].value === player) {
+        if (board[row][0].value === this.player) {
           return +10;
-        } else if (board[row][0].value === opponent) {
+        } else if (board[row][0].value === this.opponent) {
           return -10;
         }
       }
@@ -63,9 +63,9 @@ export class Minimax implements CpuAlgorithm {
     // Checking for Columns for X or O victory.
     for (let col = 0; col < 3; col++) {
       if (board[0][col].value === board[1][col].value && board[1][col].value === board[2][col].value) {
-        if (board[0][col].value === player) {
+        if (board[0][col].value === this.player) {
           return +10;
-        } else if (board[0][col].value === opponent) {
+        } else if (board[0][col].value === this.opponent) {
           return -10;
         }
       }
@@ -73,17 +73,17 @@ export class Minimax implements CpuAlgorithm {
 
     // Checking for Diagonals for X or O victory.
     if (board[0][0].value === board[1][1].value && board[1][1].value === board[2][2].value) {
-      if (board[0][0].value === player) {
+      if (board[0][0].value === this.player) {
         return +10;
-      } else if (board[0][0].value === opponent) {
+      } else if (board[0][0].value === this.opponent) {
         return -10;
       }
     }
 
     if (board[0][2].value === board[1][1].value && board[1][1].value === board[2][0].value) {
-      if (board[0][2].value === player) {
+      if (board[0][2].value === this.player) {
         return +10;
-      } else if (board[0][2].value === opponent) {
+      } else if (board[0][2].value === this.opponent) {
         return -10;
       }
     }
@@ -134,7 +134,7 @@ export class Minimax implements CpuAlgorithm {
           // Check if cell is empty
           if (board[i][j].value === undefined) {
             // Make the move
-            board[i][j].value = player;
+            board[i][j].value = this.player;
 
             // Call minimax recursively
             // and choose the maximum value
@@ -159,7 +159,7 @@ export class Minimax implements CpuAlgorithm {
           // Check if cell is empty
           if (board[i][j].value === undefined) {
             // Make the move
-            board[i][j].value = opponent;
+            board[i][j].value = this.opponent;
 
             // Call minimax recursively and
             // choose the minimum value
@@ -193,7 +193,7 @@ export class Minimax implements CpuAlgorithm {
         // Check if cell is empty
         if (board[i][j].value === undefined) {
           // Make the move
-          board[i][j].value = player;
+          board[i][j].value = this.player;
 
           // compute evaluation function
           // for this move.
@@ -218,6 +218,14 @@ export class Minimax implements CpuAlgorithm {
   }
 
   public chooseMove(game: Game): Index {
+    if (game.player1.isCpu) {
+      this.player = game.player1.value;
+      this.opponent = game.player2.value;
+    } else {
+      this.player = game.player2.value;
+      this.opponent = game.player1.value;
+    }
+
     const board: Board = [
       [game.getCell(0).clone(), game.getCell(1).clone(), game.getCell(2).clone()],
       [game.getCell(3).clone(), game.getCell(4).clone(), game.getCell(5).clone()],
