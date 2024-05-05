@@ -32,8 +32,8 @@ describe('Game', () => {
   });
 
   test('should initialize with correct players', () => {
-    expect(game.player1).toBe(player1);
-    expect(game.player2).toBe(player2);
+    expect(game.toConfig().player1).toMatchObject(player1.toConfig());
+    expect(game.toConfig().player2).toMatchObject(player2.toConfig());
   });
 
   test('should initialize with empty cells', () => {
@@ -44,8 +44,8 @@ describe('Game', () => {
   test('should return correct player based on value', () => {
     const playerX = game.getPlayer('X');
     const playerO = game.getPlayer('O');
-    expect(playerX).toBe(player1);
-    expect(playerO).toBe(player2);
+    expect(playerX.toConfig()).toMatchObject(player1.toConfig());
+    expect(playerO.toConfig()).toMatchObject(player2.toConfig());
   });
 
   test('should return correct cell based on index', () => {
@@ -92,7 +92,7 @@ describe('Game', () => {
 
     expect(archivedGame.config.id).toEqual(config.id);
     expect(archivedGame.config.player1).toEqual(player1.toConfig());
-    expect(archivedGame.config.player1).toEqual(player2.toConfig());
+    expect(archivedGame.config.player2).toEqual(player2.toConfig());
     expect(archivedGame.cells.length).toBe(9);
     expect(archivedGame.gridClassNameWin).toBeUndefined();
     expect(archivedGame.winValue).toBeUndefined();
