@@ -23,7 +23,7 @@ export class Cell {
   }
 
   public set value(value: Value) {
-    if (!this._value) {
+    if (!(this.value && value && this.value !== value)) {
       this._value = value;
     }
   }
