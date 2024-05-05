@@ -97,7 +97,7 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
     <>
       <IonCard>
         <IonCardHeader>
-          {finished ? (
+          {finished && !hasWin ? (
             <IonCardTitle>No winner</IonCardTitle>
           ) : (
             <>
