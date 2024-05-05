@@ -35,8 +35,7 @@ describe('Minimax', () => {
     expect(minimax.chooseMove(game)).toBe(1 as Index);
   });
 
-  // TODO: fix blocking the adversary to win
-  test.todo('should block the adversary to win', () => {
+  test('should block the adversary to win', () => {
     game.getCell(0).value = 'X';
     game.getCell(3).value = 'O';
     game.getCell(5).value = 'O';
