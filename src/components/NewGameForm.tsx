@@ -231,10 +231,16 @@ export const NewGameForm = () => {
               placeholder="Enter player 2 name"
               value={newGame.player2.name}
               onIonInput={(e) => {
-                setNewGame((s) => ({
-                  ...s,
-                  player2Name: e.detail.value!,
-                }));
+                setNewGame((prevState) => {
+                  const newState: GameConfig = {
+                    ...prevState,
+                    player2: {
+                      ...prevState.player2,
+                      name: e.detail.value ?? '',
+                    },
+                  };
+                  return newState;
+                });
               }}
               clearInput={true}
               enterkeyhint="enter"
