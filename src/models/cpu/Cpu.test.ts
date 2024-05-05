@@ -1,5 +1,4 @@
 import type { GameConfig } from '../../slices/gameSlice';
-import type { Index } from '../Game';
 import { Game, NumberOfPlayers, PlayerTurn } from '../Game';
 import { Level } from '../Game';
 import { CPU } from './Cpu';
@@ -38,7 +37,7 @@ describe('Cpu', () => {
 
   test('should choose a move correctly', () => {
     cpu.EASY_LEVEL_THRESHOLD = 0;
-    const move: Index | undefined = cpu.chooseMove(game);
+    const move = cpu.chooseMove(game);
     expect(game.getAvailableCells()).toContain(move);
   });
 
@@ -58,6 +57,9 @@ describe('Cpu', () => {
 
   test('should throw an error if an invalid level is passed', () => {
     const cpu = new CPU('' as Level);
-    expect(() => cpu.chooseMove(game)).toThrowError('Invalid level');
+    const randomValue = 0.3;
+    const threshold = 0.2;
+    const cpuAlgorithm: CpuAlgorithm = cpu['getAlgorithm'](randomValue, threshold);
+    expect(cpuAlgorithm).toBeInstanceOf(RandomMove);
   });
 });

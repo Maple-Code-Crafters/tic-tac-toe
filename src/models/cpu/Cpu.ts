@@ -1,3 +1,4 @@
+import { logError } from '../../helpers';
 import type { Game, Index } from '../Game';
 import { Level } from '../Game';
 import type { CpuAlgorithm } from './CpuAlgorithm';
@@ -33,8 +34,7 @@ export class CPU {
         cpuAlgorithm = this.getAlgorithm(algorithmProbability, this.HARD_LEVEL_THRESHOLD);
         break;
       default:
-        // eslint-disable-next-line no-console
-        console.error();
+        logError(new Error('Invalid level'), ['CPU.chooseMove']);
         cpuAlgorithm = this.getAlgorithm(algorithmProbability, this.EASY_LEVEL_THRESHOLD);
     }
     return cpuAlgorithm!.chooseMove(game);
