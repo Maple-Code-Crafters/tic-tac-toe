@@ -23,12 +23,12 @@ describe('Bot', () => {
   const testCases: Index[][] = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8],
     [1, 2, 3, 4, 5, 6, 8],
-    [0, 1, 2, 3, 6, 7, 8],
-    [0, 1, 3, 4, 5, 7, 8],
+    [0, 1, 3, 6, 7, 8],
+    [0, 1, 5, 7, 8],
     [3, 4, 5, 6, 7, 8],
     [0, 1, 2, 5, 6, 7, 8],
     [0, 1, 8],
-    [0, 1, 2],
+    [0, 2],
     [1],
   ];
   let randomMove: RandomMove;
@@ -39,10 +39,11 @@ describe('Bot', () => {
     game = new Game(config);
   });
 
-  test.each(testCases)('should make a correct move within available cells. test case %#', (...args) => {
+  test.each(testCases)('should make a correct move within available cells. Test case %#', (...args) => {
     game.getAvailableCells = () => args;
     const move = randomMove.chooseMove(game);
     expect(move).toBeGreaterThanOrEqual(0);
     expect(move).toBeLessThan(9);
+    expect(args).toContain(move);
   });
 });
