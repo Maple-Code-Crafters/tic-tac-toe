@@ -22,6 +22,7 @@ import { GameStorage } from '../helpers/storage.helper';
 import { useAppDispatch, useAppSelector, useCpuCellAnimation } from '../hooks';
 import { CPU } from '../models/cpu/Cpu';
 import type { Index } from '../models/Game';
+import { PlayerTurn } from '../models/Game';
 import { Game } from '../models/Game';
 import { setGameConfig } from '../slices/gameSlice';
 
@@ -32,22 +33,42 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const gameConfig = useAppSelector((state) => state.game.config!);
   const symbols = useAppSelector((state) => state.game.symbols);
   const [game] = useState(storedGame ? storedGame : Game.fromConfig(gameConfig));
+  const [playerTurn, setPlayerTurn] = useState<PlayerTurn>(gameConfig.initialPlayerTurn);
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
-  const [cpuThinking, setCpuThinking] = useState(game.isCpuTurn());
+  const [cpuThinking, setCpuThinking] = useState(false);
   const [saved, setSaved] = useState(Boolean(storedGame));
   const { animatedCellIndex } = useCpuCellAnimation(game, cpuThinking);
-  const [, render] = useState({});
   const hasWin = game.hasWin();
   const finished = game.finished();
+  const currentPlayer = hasWin && game.winValue ? game.getPlayer(game.winValue) : game[playerTurn];
+
+  const setNextPlayerTurn = useCallback(() => {
+    const nextPlayerTurn = playerTurn === PlayerTurn.Player1 ? PlayerTurn.Player2 : PlayerTurn.Player1;
+    setPlayerTurn(nextPlayerTurn);
+  }, [playerTurn]);
 
   const cpuMove = useCallback(async () => {
-    await sleep(CPU_THINKING_TIME);
-    const index = cpu?.chooseMove(game);
-    if (index !== undefined) {
-      game.makeMove(index);
-    }
+    const promises: [Promise<Index>, Promise<void>] = [
+      Promise.resolve(cpu!.chooseMove(game)),
+      sleep(CPU_THINKING_TIME),
+    ];
+    const [index] = await Promise.all(promises);
+    game.makeMove(playerTurn, index);
     setCpuThinking(false);
-  }, [cpu, game]);
+    setNextPlayerTurn();
+  }, [cpu, game, playerTurn, setNextPlayerTurn]);
+
+  useEffect(() => {
+    if (currentPlayer.isCpu && (!finished || !hasWin)) {
+      setCpuThinking(true);
+    }
+  }, [currentPlayer.isCpu, finished, hasWin]);
+
+  useEffect(() => {
+    if (cpuThinking) {
+      cpuMove();
+    }
+  }, [cpuMove, cpuThinking]);
 
   useEffect(() => {
     if ((hasWin || finished) && !saved) {
@@ -56,25 +77,16 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
     }
   }, [finished, game, hasWin, saved, symbols]);
 
-  useEffect(() => {
-    if (cpuThinking) {
-      cpuMove();
-    }
-  }, [cpuMove, cpuThinking]);
-
   const handleCellClick = (index: Index) => {
-    game.makeMove(index);
-    if (game.isSinglePlayerMode()) {
-      setCpuThinking(true);
-    } else {
-      render({});
-    }
+    game.makeMove(playerTurn, index);
+    setNextPlayerTurn();
   };
 
   const handlePlayAgain = () => {
     const config = game.toConfig();
     config.id = uuidv4();
-    config.initialTurn = gameConfig.initialTurn === 'X' ? 'O' : 'X';
+    config.initialPlayerTurn =
+      config.initialPlayerTurn === PlayerTurn.Player1 ? PlayerTurn.Player2 : PlayerTurn.Player1;
     dispatch(setGameConfig(config));
     if (storedGame) {
       history.push('/play');
@@ -85,18 +97,19 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
     <>
       <IonCard>
         <IonCardHeader>
-          {(!finished || (finished && hasWin)) && (
+          {finished ? (
+            <IonCardTitle>No winner</IonCardTitle>
+          ) : (
             <>
               <IonCardSubtitle>{hasWin ? 'Winner' : 'Player turn'}</IonCardSubtitle>
               <IonCardTitle>
                 <IonLabel className="turnLabel ion-margin-end o-x-value" color="medium">
-                  {symbols[hasWin && game.winValue ? game.winValue : game.turn]}
+                  {symbols[currentPlayer.value!]}
                 </IonLabel>
-                {hasWin ? game.getPlayer(game.winValue)?.name : game.getCurrentPlayer()?.name}
+                {currentPlayer.name}
               </IonCardTitle>
             </>
           )}
-          {finished && !hasWin && <IonCardTitle>No winner</IonCardTitle>}
         </IonCardHeader>
       </IonCard>
       <div id="board" className={`main ${cpuThinking ? 'non-clickable-board' : ''}`}>
@@ -109,28 +122,28 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
             <IonCol className="cell cell-1 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(0).className : `${animatedCellIndex === 0 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(0).className : ` ${animatedCellIndex === 0 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(0)}
               >
-                {symbols[game.getCell(0).value]}
+                {symbols[game.getCell(0).value!]}
               </div>
             </IonCol>
             <IonCol className="cell cell-2 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(1).className : `${animatedCellIndex === 1 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(1).className : ` ${animatedCellIndex === 1 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(1)}
               >
-                {symbols[game.getCell(1).value]}
+                {symbols[game.getCell(1).value!]}
               </div>
             </IonCol>
             <IonCol className="cell cell-3 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(2).className : `${animatedCellIndex === 2 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(2).className : ` ${animatedCellIndex === 2 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(2)}
               >
-                {symbols[game.getCell(2).value]}
+                {symbols[game.getCell(2).value!]}
               </div>
             </IonCol>
           </IonRow>
@@ -138,28 +151,28 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
             <IonCol className="cell cell-4 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(3).className : `${animatedCellIndex === 3 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(3).className : ` ${animatedCellIndex === 3 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(3)}
               >
-                {symbols[game.getCell(3).value]}
+                {symbols[game.getCell(3).value!]}
               </div>
             </IonCol>
             <IonCol className="cell cell-5 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(4).className : `${animatedCellIndex === 4 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(4).className : ` ${animatedCellIndex === 4 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(4)}
               >
-                {symbols[game.getCell(4).value]}
+                {symbols[game.getCell(4).value!]}
               </div>
             </IonCol>
             <IonCol className="cell cell-6 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(5).className : `${animatedCellIndex === 5 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(5).className : ` ${animatedCellIndex === 5 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(5)}
               >
-                {symbols[game.getCell(5).value]}
+                {symbols[game.getCell(5).value!]}
               </div>
             </IonCol>
           </IonRow>
@@ -167,28 +180,28 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
             <IonCol className="cell cell-7 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(6).className : `${animatedCellIndex === 6 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(6).className : ` ${animatedCellIndex === 6 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(6)}
               >
-                {symbols[game.getCell(6).value]}
+                {symbols[game.getCell(6).value!]}
               </div>
             </IonCol>
             <IonCol className="cell cell-8 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(7).className : `${animatedCellIndex === 7 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(7).className : ` ${animatedCellIndex === 7 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(7)}
               >
-                {symbols[game.getCell(7).value]}
+                {symbols[game.getCell(7).value!]}
               </div>
             </IonCol>
             <IonCol className="cell cell-9 o-x-value">
               <div
                 style={{ height }}
-                className={hasWin ? game.getCell(8).className : `${animatedCellIndex === 8 ? 'animated' : ''}`}
+                className={hasWin ? game.getCell(8).className : ` ${animatedCellIndex === 8 ? 'animated' : ''}`}
                 onClick={() => handleCellClick(8)}
               >
-                {symbols[game.getCell(8).value]}
+                {symbols[game.getCell(8).value!]}
               </div>
             </IonCol>
           </IonRow>

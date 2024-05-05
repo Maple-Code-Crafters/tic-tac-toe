@@ -5,17 +5,21 @@ import { DEFAULT } from '../constants';
 import type { Default, Symbols } from '../helpers/storage.helper';
 import { DefaultStorage } from '../helpers/storage.helper';
 import type { Value } from '../models/Cell';
-import type { Level, NumberOfPlayers } from '../models/Game';
+import type { Level, NumberOfPlayers, PlayerTurn } from '../models/Game';
+
+export type PlayerConfig = {
+  name: string;
+  value: Value;
+  isCpu: boolean;
+};
 
 export type GameConfig = {
   id: string;
-  player1Name: string;
-  player1Value: Value;
-  player2Name: string;
-  player2Value: Value;
+  player1: PlayerConfig;
+  player2: PlayerConfig;
   numberOfPlayers: NumberOfPlayers;
   level: Level;
-  initialTurn: Value;
+  initialPlayerTurn: PlayerTurn;
 };
 
 type GameSlice = {

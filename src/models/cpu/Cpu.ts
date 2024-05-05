@@ -1,4 +1,5 @@
-import { Game, type Index, Level } from '../Game';
+import type { Game, Index } from '../Game';
+import { Level } from '../Game';
 import type { CpuAlgorithm } from './CpuAlgorithm';
 import { Minimax } from './Minimax';
 import { RandomMove } from './RandomMove';
@@ -15,8 +16,7 @@ export class CPU {
     this._level = level;
   }
 
-  public chooseMove(originalGame: Game): Index | undefined {
-    const game: Game = Game.fromArchived(originalGame.toArchived());
+  public chooseMove(game: Game): Index {
     const algorithmProbability = Math.random();
     let cpuAlgorithm: CpuAlgorithm;
 
@@ -32,11 +32,12 @@ export class CPU {
       case Level.Hard:
         cpuAlgorithm = this.getAlgorithm(algorithmProbability, this.HARD_LEVEL_THRESHOLD);
         break;
-
       default:
-        throw new Error('Invalid level');
+        // eslint-disable-next-line no-console
+        console.error();
+        cpuAlgorithm = this.getAlgorithm(algorithmProbability, this.EASY_LEVEL_THRESHOLD);
     }
-    return cpuAlgorithm.chooseMove(game);
+    return cpuAlgorithm!.chooseMove(game);
   }
 
   private getAlgorithm(randomValue: number, threshold: number): CpuAlgorithm {

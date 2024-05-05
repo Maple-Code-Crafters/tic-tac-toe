@@ -1,10 +1,14 @@
 import type { GameConfig } from '../slices/gameSlice';
 import type { ArchivedCell, Value } from './Cell';
 import { Cell } from './Cell';
-import type { ArchivedPlayer } from './Player';
 import { Player } from './Player';
 
 export type Index = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+
+export enum PlayerTurn {
+  Player1 = 'player1',
+  Player2 = 'player2',
+}
 
 export enum NumberOfPlayers {
   OnePlayer = 1,
@@ -18,15 +22,10 @@ export enum Level {
 }
 
 export type ArchivedGame = {
-  id: string;
-  player1: ArchivedPlayer;
-  player2: ArchivedPlayer;
+  config: GameConfig;
   cells: ArchivedCell[];
   gridClassNameWin: string;
   winValue: Value | undefined;
-  numberOfPlayers: NumberOfPlayers;
-  level: Level;
-  initialTurn: Value;
 };
 
 export class Game {
@@ -46,27 +45,18 @@ export class Game {
   private _player2: Player;
   private _numberOfPlayers: NumberOfPlayers;
   private _level: Level;
+  private _initialPlayerTurn: PlayerTurn;
   private _cells: [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
   private _gridClassNameWin!: string;
-  private _turn: Value;
-  private _initailTurn: Value;
   public winValue: Value | undefined;
 
-  constructor(
-    id: string,
-    player1: Player,
-    player2: Player,
-    numberOfPlayers: NumberOfPlayers,
-    level: Level,
-    initialTurn: Value,
-  ) {
-    this._id = id;
-    this._player1 = player1;
-    this._player2 = player2;
-    this._numberOfPlayers = numberOfPlayers;
-    this._level = level;
-    this._initailTurn = initialTurn;
-    this._turn = initialTurn;
+  constructor(config: GameConfig) {
+    this._id = config.id;
+    this._player1 = new Player(config.player1);
+    this._player2 = new Player(config.player2);
+    this._numberOfPlayers = config.numberOfPlayers;
+    this._level = config.level;
+    this._initialPlayerTurn = config.initialPlayerTurn;
     this._cells = [
       new Cell(0),
       new Cell(1),
@@ -100,15 +90,7 @@ export class Game {
     return this._level;
   }
 
-  public get turn() {
-    return this._turn;
-  }
-
-  public getPlayer(v: Value | undefined) {
-    if (!v) {
-      return undefined;
-    }
-
+  public getPlayer(v: Value) {
     if (this._player1.value === v) {
       return this._player1;
     } else {
@@ -116,30 +98,8 @@ export class Game {
     }
   }
 
-  public getCurrentPlayer() {
-    return this.getPlayer(this._turn);
-  }
-
-  public isCpuTurn() {
-    return this.getCurrentPlayer()?.name.includes('CPU') ?? false;
-  }
-
-  public makeMove(index: Index) {
-    if (this._cells[index].value !== undefined || this.finished() || this.hasWin()) {
-      return;
-    }
-    this._cells[index].value = this._turn;
-    this._turn = this._turn === 'O' ? 'X' : 'O';
-  }
-
-  public undoMove(index: Index) {
-    this._cells[index] = new Cell(index);
-    this._cells.forEach((c) => {
-      c.className = '';
-    });
-    this._gridClassNameWin = '';
-    this.winValue = undefined;
-    this._turn = this._turn === 'O' ? 'X' : 'O';
+  public makeMove(playerTurn: PlayerTurn, index: Index) {
+    this._cells[index].value = this[playerTurn].value;
   }
 
   public isSinglePlayerMode() {
@@ -197,27 +157,22 @@ export class Game {
 
   public toArchived(): ArchivedGame {
     return {
-      id: this.id,
-      player1: this._player1.toArchived(),
-      player2: this._player2.toArchived(),
+      config: {
+        id: this._id,
+        player1: this._player1.toConfig(),
+        player2: this._player2.toConfig(),
+        numberOfPlayers: this._numberOfPlayers,
+        level: this._level,
+        initialPlayerTurn: this._initialPlayerTurn,
+      },
       cells: this._cells.map((c) => c.toArchived()),
       gridClassNameWin: this._gridClassNameWin,
       winValue: this.winValue,
-      numberOfPlayers: this._numberOfPlayers,
-      level: this._level,
-      initialTurn: this._turn,
     };
   }
 
   static fromArchived(archivedGame: ArchivedGame): Game {
-    const game = new Game(
-      archivedGame.id,
-      Player.fromArchived(archivedGame.player1),
-      Player.fromArchived(archivedGame.player2),
-      archivedGame.numberOfPlayers,
-      archivedGame.level,
-      archivedGame.initialTurn,
-    );
+    const game = new Game(archivedGame.config);
 
     archivedGame.cells.forEach((c, i) => {
       const cell = game.getCell(i as Index);
@@ -234,29 +189,15 @@ export class Game {
   public toConfig(): GameConfig {
     return {
       id: this.id,
-      player1Name: this.player1.name,
-      player1Value: this.player1.value,
-      player2Name: this.player2.name,
-      player2Value: this.player2.value,
+      player1: this._player1.toConfig(),
+      player2: this._player2.toConfig(),
       numberOfPlayers: this.numberOfPlayers,
       level: this.level,
-      initialTurn: this._initailTurn,
+      initialPlayerTurn: this._initialPlayerTurn,
     };
   }
 
   static fromConfig(config: GameConfig): Game {
-    const game = new Game(
-      config.id,
-      new Player(config.player1Name, config.player1Value),
-      new Player(
-        config.numberOfPlayers === NumberOfPlayers.OnePlayer ? `CPU (${config.level})` : config.player2Name,
-        config.player2Value,
-      ),
-      config.numberOfPlayers,
-      config.level,
-      config.initialTurn,
-    );
-
-    return game;
+    return new Game(config);
   }
 }

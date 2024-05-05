@@ -1,24 +1,35 @@
+import type { GameConfig } from '../../slices/gameSlice';
 import type { Index } from '../Game';
-import { Game, NumberOfPlayers } from '../Game';
+import { Game, NumberOfPlayers, PlayerTurn } from '../Game';
 import { Level } from '../Game';
-import { Player } from '../Player';
 import { CPU } from './Cpu';
 import type { CpuAlgorithm } from './CpuAlgorithm';
 import { Minimax } from './Minimax';
 import { RandomMove } from './RandomMove';
 
 describe('Cpu', () => {
-  let level: Level;
   let cpu: CPU;
-  const player1 = new Player('Player 1', 'X');
-  const player2 = new Player('Player 2', 'O');
-  const numberOfPlayers: NumberOfPlayers = NumberOfPlayers.OnePlayer;
+  const config: GameConfig = {
+    id: 'fakeId',
+    player1: {
+      name: 'Player 1',
+      value: 'O',
+      isCpu: false,
+    },
+    player2: {
+      name: 'Player 2',
+      value: 'X',
+      isCpu: true,
+    },
+    numberOfPlayers: NumberOfPlayers.OnePlayer,
+    level: Level.Easy,
+    initialPlayerTurn: PlayerTurn.Player1,
+  };
   let game: Game;
 
   beforeEach(() => {
-    level = Level.Easy;
-    cpu = new CPU(level);
-    game = new Game('fakeId', player1, player2, numberOfPlayers, level, 'X');
+    cpu = new CPU(config.level);
+    game = new Game(config);
   });
 
   test('should initialize correctly', () => {

@@ -170,6 +170,7 @@ const SettingsPage: React.FC = () => {
             </IonItemDivider>
             <IonItem lines="none">
               <IonSegment
+                disabled={newDefault.numberOfPlayers === NumberOfPlayers.TwoPlayers}
                 scrollable={true}
                 value={newDefault.level}
                 onIonChange={(e) => setNewDefault((prev) => ({ ...prev, level: e.detail.value as Level }))}

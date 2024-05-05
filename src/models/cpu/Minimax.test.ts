@@ -1,21 +1,30 @@
+import type { GameConfig } from '../../slices/gameSlice';
 import type { Index } from '../Game';
-import { Game, Level, NumberOfPlayers } from '../Game';
-import { Player } from '../Player';
+import { Game, Level, NumberOfPlayers, PlayerTurn } from '../Game';
 import { Minimax } from './Minimax';
 
 describe('Minimax', () => {
   const minimax: Minimax = new Minimax();
+  const config: GameConfig = {
+    id: 'fakeId',
+    player1: {
+      name: 'Player 1',
+      value: 'O',
+      isCpu: false,
+    },
+    player2: {
+      name: 'Player 2',
+      value: 'X',
+      isCpu: true,
+    },
+    numberOfPlayers: NumberOfPlayers.OnePlayer,
+    level: Level.Hard,
+    initialPlayerTurn: PlayerTurn.Player1,
+  };
   let game: Game;
 
   beforeEach(() => {
-    game = new Game(
-      'fakeId',
-      new Player('Player 1', 'X'),
-      new Player('CPU', 'O'),
-      NumberOfPlayers.OnePlayer,
-      Level.Hard,
-      'X',
-    );
+    game = new Game(config);
   });
 
   test('should choose to win the game', () => {

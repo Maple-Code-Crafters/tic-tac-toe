@@ -1,16 +1,34 @@
+import type { GameConfig } from '../slices/gameSlice';
 import { Cell } from './Cell';
 import type { ArchivedGame } from './Game';
-import { Game, Level, NumberOfPlayers } from './Game';
+import { Game, Level, NumberOfPlayers, PlayerTurn } from './Game';
 import { Player } from './Player';
 
 describe('Game', () => {
-  const player1 = new Player('Player 1', 'X');
-  const player2 = new Player('Player 2', 'O');
-  const numberOfPlayers: NumberOfPlayers = NumberOfPlayers.OnePlayer;
+  const config: GameConfig = {
+    id: 'fakeId',
+    player1: {
+      name: 'Player 1',
+      value: 'X',
+      isCpu: false,
+    },
+    player2: {
+      name: 'Player 2',
+      value: 'O',
+      isCpu: false,
+    },
+    numberOfPlayers: NumberOfPlayers.OnePlayer,
+    level: Level.Easy,
+    initialPlayerTurn: PlayerTurn.Player1,
+  };
+  let player1: Player;
+  let player2: Player;
   let game: Game;
 
   beforeEach(() => {
-    game = new Game('fakeId', player1, player2, numberOfPlayers, Level.Easy, 'X');
+    player1 = new Player(config.player1);
+    player2 = new Player(config.player2);
+    game = new Game(config);
   });
 
   test('should initialize with correct players', () => {
@@ -72,8 +90,9 @@ describe('Game', () => {
   test('should convert game to archived format correctly', () => {
     const archivedGame = game.toArchived();
 
-    expect(archivedGame.player1).toEqual(player1.toArchived());
-    expect(archivedGame.player2).toEqual(player2.toArchived());
+    expect(archivedGame.config.id).toEqual(config.id);
+    expect(archivedGame.config.player1).toEqual(player1.toConfig());
+    expect(archivedGame.config.player1).toEqual(player2.toConfig());
     expect(archivedGame.cells.length).toBe(9);
     expect(archivedGame.gridClassNameWin).toBeUndefined();
     expect(archivedGame.winValue).toBeUndefined();
@@ -81,10 +100,7 @@ describe('Game', () => {
 
   test('should create game from archived format correctly', () => {
     const archivedGame: ArchivedGame = {
-      id: 'fakeId',
-      player1: player1.toArchived(),
-      player2: player2.toArchived(),
-      numberOfPlayers: numberOfPlayers,
+      config,
       cells: [
         { index: 0, value: 'X', className: 'horizontal' },
         { index: 1, value: 'O', className: 'vertical' },
@@ -98,15 +114,16 @@ describe('Game', () => {
       ],
       gridClassNameWin: 'grid-horizontal-top',
       winValue: 'X',
-      level: Level.Easy,
-      initialTurn: 'X',
     };
 
     const newGame = Game.fromArchived(archivedGame);
 
+    expect(newGame.id).toEqual(config.id);
     expect(newGame.player1).toEqual(player1);
     expect(newGame.player2).toEqual(player2);
-    expect(newGame.numberOfPlayers).toBe(numberOfPlayers);
+    expect(newGame.numberOfPlayers).toBe(config.numberOfPlayers);
+    expect(newGame.level).toBe(config.level);
+    expect(newGame.toConfig().initialPlayerTurn).toBe(config.initialPlayerTurn);
     expect(newGame.getCell(0).value).toBe('X');
     expect(newGame.getCell(0).className).toBe('horizontal');
     expect(newGame.getCell(1).value).toBe('O');
