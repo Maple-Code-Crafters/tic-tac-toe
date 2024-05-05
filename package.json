@@ -11,6 +11,7 @@
     "test.e2e": "cypress run",
     "test.e2e:debug": "cypress run --headed --no-exit",
     "test.unit": "vitest",
+    "test.unit:debug": "vitest --run --logHeapUsage --bail 1",
     "lint": "npx eslint . --fix",
     "p": "npm run lint && npx prettier --log-level=warn --write .",
     "prepare": "husky",
