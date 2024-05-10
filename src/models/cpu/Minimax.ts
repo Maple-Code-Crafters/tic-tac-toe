@@ -1,93 +1,238 @@
-import type { Value } from '../Cell';
+import type { Cell, Value } from '../Cell';
 import type { Game, Index } from '../Game';
 import type { CpuAlgorithm } from './CpuAlgorithm';
 
+type Board = [[Cell, Cell, Cell], [Cell, Cell, Cell], [Cell, Cell, Cell]];
+
+/**
+ * References:
+ * https://www.geeksforgeeks.org/finding-optimal-move-in-tic-tac-toe-using-minimax-algorithm-in-game-theory/
+ */
+
+class Move {
+  constructor(
+    public row: number,
+    public col: number,
+  ) {}
+}
+
 export class Minimax implements CpuAlgorithm {
-  static readonly MAX_CELLS = 9;
+  private player: Value = 'X';
+  private opponent: Value = 'O';
 
-  public chooseMove(game: Game): Index | undefined {
-    const availableCells = game.getAvailableCells();
-
-    if (game.finished() || game.hasWin() || !availableCells.length) {
-      return;
-    }
-
-    // if the game is in the first turn, choose the left top corner, otherwise Minimax takes almost 2s to come to the same conclusion
-    if (availableCells.length === Minimax.MAX_CELLS) {
-      return 0;
-    }
-
-    const cpuTurn: Value = game.getTurn();
-
-    let bestScore = -Infinity;
-    let move: Index | undefined;
-
-    for (const cell of availableCells) {
-      game.makeMove(cell);
-      const score = this.minimax(game, cpuTurn);
-      game.undoMove(cell);
-
-      if (score > bestScore) {
-        bestScore = score;
-        move = cell;
+  /**
+   * This function returns true if there are moves
+   * remaining on the board. It returns false if
+   * there are no moves left to play.
+   * @param board
+   * @returns
+   */
+  private isMovesLeft(board: Board) {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[i][j].value === undefined) {
+          return true;
+        }
       }
     }
 
-    return move;
+    return false;
   }
 
-  private minimax(game: Game, cpuTurn: Value): number {
-    if (game.hasWin()) {
-      return this.calculateScore(game, cpuTurn);
-    } else if (game.finished()) {
+  // This is the evaluation function as discussed
+  // in the previous article ( http://goo.gl/sJgv68 )
+
+  /**
+   * This is the evaluation function as discussed
+   * in the previous article ( http://goo.gl/sJgv68 )
+   * @param board
+   * @returns
+   */
+  private evaluate(board: Board) {
+    // Checking for Rows for X or O victory.
+    for (let row = 0; row < 3; row++) {
+      if (board[row][0].value === board[row][1].value && board[row][1].value === board[row][2].value) {
+        if (board[row][0].value === this.player) {
+          return +10;
+        } else if (board[row][0].value === this.opponent) {
+          return -10;
+        }
+      }
+    }
+
+    // Checking for Columns for X or O victory.
+    for (let col = 0; col < 3; col++) {
+      if (board[0][col].value === board[1][col].value && board[1][col].value === board[2][col].value) {
+        if (board[0][col].value === this.player) {
+          return +10;
+        } else if (board[0][col].value === this.opponent) {
+          return -10;
+        }
+      }
+    }
+
+    // Checking for Diagonals for X or O victory.
+    if (board[0][0].value === board[1][1].value && board[1][1].value === board[2][2].value) {
+      if (board[0][0].value === this.player) {
+        return +10;
+      } else if (board[0][0].value === this.opponent) {
+        return -10;
+      }
+    }
+
+    if (board[0][2].value === board[1][1].value && board[1][1].value === board[2][0].value) {
+      if (board[0][2].value === this.player) {
+        return +10;
+      } else if (board[0][2].value === this.opponent) {
+        return -10;
+      }
+    }
+
+    // Else if none of them have
+    // won then return 0
+    return 0;
+  }
+
+  /**
+   * This is the minimax function. It
+   * considers all the possible ways
+   * the game can go and returns the
+   * value of the board
+   * @param board
+   * @param depth
+   * @param isMax
+   * @returns
+   */
+  private minimax(board: Board, depth: number, isMax: boolean) {
+    const score = this.evaluate(board);
+
+    // If Maximizer has won the game
+    // return his/her evaluated score
+    if (score === 10) {
+      return score;
+    }
+
+    // If Minimizer has won the game
+    // return his/her evaluated score
+    if (score === -10) {
+      return score;
+    }
+
+    // If there are no more moves and
+    // no winner then it is a tie
+    if (this.isMovesLeft(board) === false) {
       return 0;
     }
 
-    const availableCells = game.getAvailableCells();
+    // If this maximizer's move
+    if (isMax) {
+      let best = -1000;
 
-    if (cpuTurn === game.getTurn()) {
-      let bestScore = -Infinity;
-      for (const cell of availableCells) {
-        game.makeMove(cell);
-        const score = this.minimax(game, cpuTurn);
-        game.undoMove(cell);
-        bestScore = Math.max(score, bestScore);
+      // Traverse all cells
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          // Check if cell is empty
+          if (board[i][j].value === undefined) {
+            // Make the move
+            board[i][j].value = this.player;
+
+            // Call minimax recursively
+            // and choose the maximum value
+            best = Math.max(best, this.minimax(board, depth + 1, !isMax));
+
+            // Undo the move
+            board[i][j].value = undefined;
+          }
+        }
       }
-      return bestScore;
-    } else {
-      let bestScore = Infinity;
-      for (const cell of availableCells) {
-        game.makeMove(cell);
-        const score = this.minimax(game, cpuTurn);
-        game.undoMove(cell);
-        bestScore = Math.min(score, bestScore);
+
+      return best;
+    }
+
+    // If this minimizer's move
+    else {
+      let best = 1000;
+
+      // Traverse all cells
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          // Check if cell is empty
+          if (board[i][j].value === undefined) {
+            // Make the move
+            board[i][j].value = this.opponent;
+
+            // Call minimax recursively and
+            // choose the minimum value
+            best = Math.min(best, this.minimax(board, depth + 1, !isMax));
+
+            // Undo the move
+            board[i][j].value = undefined;
+          }
+        }
       }
-      return bestScore;
+      return best;
     }
   }
 
   /**
-   * The higher the score, the better the move
-   *
-   * The best winning move is the one that takes the least amount of moves
-   * For example:
-   * (1) The Bot wins when there are still 4 available cells to be played, the score is 1 * 4 = 4
-   * (2) The Bot wins when there are still 2 available cells to be played, the score is 1 * 2 = 2
-   * The best move is (1) since the bot can win faster
-   *
-   * The move that will make the bot loose faster is the one that takes least amount of moves
-   * For example:
-   * (1) The Bot loses when there are still 4 available cells to be played (5 played cells), the score is -1 * 5 = -5
-   * (2) The Bot loses when there are still 2 available cells to be played (7 played cells), the score is -1 * 7 = -7
-   * In the two cases the bot loses, but the Bot will loose faster in case (1), so it has to be a higher score. -5 is greater than -7.
-   *
-   * @param game
-   * @param cpuTurn tells if the CPU is the X or O
-   * @returns the score of the move
+   * This will return the best possible
+   * move for the player
+   * @param board
+   * @returns
    */
-  private calculateScore(game: Game, cpuTurn: Value): number {
-    const availableCells = game.getAvailableCells().length;
-    const playedCells = Minimax.MAX_CELLS - availableCells;
-    return game.winValue === cpuTurn ? 1 * availableCells : -1 * playedCells;
+  private findBestMove(board: Board) {
+    let bestVal = -1000;
+    const bestMove = new Move(-1, -1);
+
+    // Traverse all cells, evaluate
+    // minimax function for all empty
+    // cells. And return the cell
+    // with optimal value.
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        // Check if cell is empty
+        if (board[i][j].value === undefined) {
+          // Make the move
+          board[i][j].value = this.player;
+
+          // compute evaluation function
+          // for this move.
+          const moveVal = this.minimax(board, 0, false);
+
+          // Undo the move
+          board[i][j].value = undefined;
+
+          // If the value of the current move
+          // is more than the best value, then
+          // update best
+          if (moveVal > bestVal) {
+            bestMove.row = i;
+            bestMove.col = j;
+            bestVal = moveVal;
+          }
+        }
+      }
+    }
+
+    return bestMove;
+  }
+
+  public chooseMove(game: Game): Index {
+    if (game.player1.isCpu) {
+      this.player = game.player1.value;
+      this.opponent = game.player2.value;
+    } else {
+      this.player = game.player2.value;
+      this.opponent = game.player1.value;
+    }
+
+    const board: Board = [
+      [game.getCell(0).clone(), game.getCell(1).clone(), game.getCell(2).clone()],
+      [game.getCell(3).clone(), game.getCell(4).clone(), game.getCell(5).clone()],
+      [game.getCell(6).clone(), game.getCell(7).clone(), game.getCell(8).clone()],
+    ];
+    const bestMove = this.findBestMove(board);
+    const index = board[bestMove.row][bestMove.col].index;
+    return index;
   }
 }

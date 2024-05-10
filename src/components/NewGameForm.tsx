@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   IonButton,
@@ -17,38 +18,51 @@ import {
 
 import './NewGameForm.css';
 
-import { useStoredDefault } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import type { Value } from '../models/Cell';
-import { Game, Level, NumberOfPlayers } from '../models/Game';
-import { Player } from '../models/Player';
+import { Level, NumberOfPlayers, PlayerTurn } from '../models/Game';
+import type { GameConfig } from '../slices/gameSlice';
+import { setGameConfig, setGameSymbols } from '../slices/gameSlice';
 
-type PlayersState = {
-  player1Name: string;
-  player1Value: Value;
-  player2Name: string;
-  player2Value: Value;
-  numberOfPlayers: NumberOfPlayers;
-  level: Level;
-};
-
-export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.SetStateAction<Game | undefined>> }) => {
+export const NewGameForm = () => {
+  const dispatch = useAppDispatch();
   const [present] = useIonAlert();
-  const { restored, storedDefault } = useStoredDefault();
-  const [state, setState] = useState<PlayersState>({
-    player1Name: '',
-    player1Value: 'O',
-    player2Name: '',
-    player2Value: 'X',
-    numberOfPlayers: NumberOfPlayers.OnePlayer,
-    level: Level.Easy,
+  const gameDefault = useAppSelector((state) => state.game.default);
+  const [newGame, setNewGame] = useState<GameConfig>({
+    id: uuidv4(),
+    player1: {
+      name: gameDefault.player1Name,
+      value: 'X',
+      isCpu: false,
+    },
+    player2: {
+      name: gameDefault.player2Name,
+      value: 'O',
+      isCpu: false,
+    },
+    numberOfPlayers: gameDefault.numberOfPlayers,
+    level: gameDefault.level,
+    initialPlayerTurn: PlayerTurn.Player1,
   });
 
   useEffect(() => {
-    if (restored) {
-      const { player1Name, player2Name, numberOfPlayers, level } = storedDefault;
-      setState((s) => ({ ...s, player1Name, player2Name, numberOfPlayers, level }));
-    }
-  }, [restored, storedDefault]);
+    setNewGame((prevState) => {
+      const newState: GameConfig = {
+        ...prevState,
+        player1: {
+          ...prevState.player1,
+          name: gameDefault.player1Name,
+        },
+        player2: {
+          ...prevState.player2,
+          name: gameDefault.player2Name,
+        },
+        numberOfPlayers: gameDefault.numberOfPlayers,
+        level: gameDefault.level,
+      };
+      return newState;
+    });
+  }, [gameDefault.level, gameDefault.numberOfPlayers, gameDefault.player1Name, gameDefault.player2Name]);
 
   return (
     <IonCard>
@@ -61,12 +75,24 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
           <IonItem lines="none">
             <IonSegment
               scrollable={true}
-              value={state.numberOfPlayers}
+              value={newGame.numberOfPlayers}
               onIonChange={(e) => {
-                setState((s) => ({
-                  ...s,
-                  numberOfPlayers: e.detail.value as NumberOfPlayers,
-                }));
+                setNewGame((prevState) => {
+                  const numberOfPlayers = e.detail.value as NumberOfPlayers;
+                  const newState: GameConfig = {
+                    ...prevState,
+                    numberOfPlayers,
+                    player2: {
+                      ...prevState.player2,
+                      name:
+                        numberOfPlayers === NumberOfPlayers.OnePlayer
+                          ? `CPU (${prevState.level})`
+                          : gameDefault.player2Name,
+                      isCpu: numberOfPlayers === NumberOfPlayers.OnePlayer,
+                    },
+                  };
+                  return newState;
+                });
               }}
             >
               <IonSegmentButton value={NumberOfPlayers.OnePlayer}>
@@ -78,17 +104,25 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
             </IonSegment>
           </IonItem>
           {/* Select the level */}
-          {state.numberOfPlayers === NumberOfPlayers.OnePlayer ? (
+          {newGame.numberOfPlayers === NumberOfPlayers.OnePlayer ? (
             <div>
               <IonItem lines="none">
                 <IonSegment
                   scrollable={true}
-                  value={state.level}
+                  value={newGame.level}
                   onIonChange={(e) => {
-                    setState((s) => ({
-                      ...s,
-                      level: e.detail.value as Level,
-                    }));
+                    setNewGame((prevState) => {
+                      const level = e.detail.value as Level;
+                      const newState: GameConfig = {
+                        ...prevState,
+                        level,
+                        player2: {
+                          ...prevState.player2,
+                          name: `CPU (${level})`,
+                        },
+                      };
+                      return newState;
+                    });
                   }}
                 >
                   <IonSegmentButton value={Level.Easy}>
@@ -109,20 +143,30 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
             <IonSegment
               slot="end"
               scrollable={true}
-              value={state.player1Value}
+              value={newGame.player1.value}
               onIonChange={(e) => {
-                setState((s) => ({
-                  ...s,
-                  player1Value: e.detail.value as Value,
-                  player2Value: (e.detail.value as Value) === 'O' ? 'X' : 'O',
-                }));
+                setNewGame((prevState) => {
+                  const value = e.detail.value as Value;
+                  const newState: GameConfig = {
+                    ...prevState,
+                    player1: {
+                      ...prevState.player1,
+                      value,
+                    },
+                    player2: {
+                      ...prevState.player2,
+                      value: value === 'O' ? 'X' : 'O',
+                    },
+                  };
+                  return newState;
+                });
               }}
             >
               <IonSegmentButton value="O">
-                <IonLabel className="o-x-value">{storedDefault.symbols.O}</IonLabel>
+                <IonLabel className="o-x-value">{gameDefault.symbols.O}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="X">
-                <IonLabel className="o-x-value">{storedDefault.symbols.X}</IonLabel>
+                <IonLabel className="o-x-value">{gameDefault.symbols.X}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
           </IonItem>
@@ -130,12 +174,18 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
           <IonItem>
             <IonInput
               placeholder="Enter player 1 name"
-              value={state.player1Name}
+              value={newGame.player1.name}
               onIonInput={(e) => {
-                setState((s) => ({
-                  ...s,
-                  player1Name: e.detail.value!,
-                }));
+                setNewGame((prevState) => {
+                  const newState: GameConfig = {
+                    ...prevState,
+                    player1: {
+                      ...prevState.player1,
+                      name: e.detail.value ?? '',
+                    },
+                  };
+                  return newState;
+                });
               }}
               autofocus={true}
               clearInput={true}
@@ -143,73 +193,78 @@ export const NewGameForm = ({ startGame }: { startGame: React.Dispatch<React.Set
               inputmode="text"
             ></IonInput>
           </IonItem>
-          {state.numberOfPlayers === NumberOfPlayers.TwoPlayers ? (
-            <div>
-              <IonItem lines="none">
-                <IonSegment
-                  slot="end"
-                  scrollable={true}
-                  value={state.player2Value}
-                  onIonChange={(e) => {
-                    setState((s) => ({
-                      ...s,
-                      player2Value: e.detail.value as Value,
-                      player1Value: (e.detail.value as Value) === 'O' ? 'X' : 'O',
-                    }));
-                  }}
-                >
-                  <IonSegmentButton value="O">
-                    <IonLabel className="o-x-value">{storedDefault.symbols.O}</IonLabel>
-                  </IonSegmentButton>
-                  <IonSegmentButton value="X">
-                    <IonLabel className="o-x-value">{storedDefault.symbols.X}</IonLabel>
-                  </IonSegmentButton>
-                </IonSegment>
-              </IonItem>
-              <IonItem>
-                <IonInput
-                  placeholder="Enter player 2 name"
-                  value={state.player2Name}
-                  onIonInput={(e) => {
-                    setState((s) => ({
-                      ...s,
-                      player2Name: e.detail.value!,
-                    }));
-                  }}
-                  clearInput={true}
-                  enterkeyhint="enter"
-                  inputmode="text"
-                ></IonInput>
-              </IonItem>
-            </div>
-          ) : null}
+          {/* Select the player 2 symbol */}
+          <IonItem lines="none">
+            <IonSegment
+              slot="end"
+              scrollable={true}
+              value={newGame.player2.value}
+              onIonChange={(e) => {
+                setNewGame((prevState) => {
+                  const value = e.detail.value as Value;
+                  const newState: GameConfig = {
+                    ...prevState,
+                    player2: {
+                      ...prevState.player2,
+                      value,
+                    },
+                    player1: {
+                      ...prevState.player1,
+                      value: value === 'O' ? 'X' : 'O',
+                    },
+                  };
+                  return newState;
+                });
+              }}
+            >
+              <IonSegmentButton value="O">
+                <IonLabel className="o-x-value">{gameDefault.symbols.O}</IonLabel>
+              </IonSegmentButton>
+              <IonSegmentButton value="X">
+                <IonLabel className="o-x-value">{gameDefault.symbols.X}</IonLabel>
+              </IonSegmentButton>
+            </IonSegment>
+          </IonItem>
+          {/* Select the player 2 name */}
+          <IonItem>
+            <IonInput
+              placeholder="Enter player 2 name"
+              value={newGame.player2.name}
+              onIonInput={(e) => {
+                setNewGame((prevState) => {
+                  const newState: GameConfig = {
+                    ...prevState,
+                    player2: {
+                      ...prevState.player2,
+                      name: e.detail.value ?? '',
+                    },
+                  };
+                  return newState;
+                });
+              }}
+              clearInput={true}
+              enterkeyhint="enter"
+              inputmode="text"
+            ></IonInput>
+          </IonItem>
         </IonItemGroup>
         <IonButton
           className="ion-margin-top"
           expand="block"
           onClick={() => {
-            if (!state.player1Name) {
+            if (!newGame.player1.name) {
               present({
                 message: 'Please, enter player 1 name.',
                 buttons: ['Ok'],
               });
-            } else if (!state.player2Name) {
+            } else if (!newGame.player2.name) {
               present({
                 message: 'Please, enter player 2 name.',
                 buttons: ['Ok'],
               });
             } else {
-              startGame(
-                new Game(
-                  new Player(state.player1Name, state.player1Value),
-                  new Player(
-                    state.numberOfPlayers === NumberOfPlayers.OnePlayer ? `CPU (${state.level})` : state.player2Name,
-                    state.player2Value,
-                  ),
-                  state.numberOfPlayers,
-                  state.level,
-                ),
-              );
+              dispatch(setGameSymbols(gameDefault.symbols));
+              dispatch(setGameConfig(newGame));
             }
           }}
         >

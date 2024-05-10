@@ -7,7 +7,7 @@ describe('Play page', () => {
       cy.contains('ion-title', 'New Game');
       cy.get('ion-card').should('have.length', 1);
       cy.get('ion-button').should('have.length', 1);
-      cy.get('ion-input').should('have.length', 1);
+      cy.get('ion-input').should('have.length', 2);
     });
   });
 
@@ -26,12 +26,6 @@ describe('Play page', () => {
       cy.viewport('iphone-x');
       cy.visit('/');
       cy.wait(1000);
-      // click on two players button
-      cy.get('ion-segment-button').each(($el, index) => {
-        if (index === 1) {
-          cy.wrap($el).click();
-        }
-      });
       //  clear player 2 name
       cy.get('[aria-label="reset"]').each(($el, index) => {
         if (index === 1) {

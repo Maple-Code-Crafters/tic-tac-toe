@@ -1,23 +1,39 @@
+import type { GameConfig } from '../slices/gameSlice';
 import { Cell } from './Cell';
 import type { ArchivedGame } from './Game';
-import { Game, Level, NumberOfPlayers } from './Game';
+import { Game, Level, NumberOfPlayers, PlayerTurn } from './Game';
 import { Player } from './Player';
 
 describe('Game', () => {
+  const config: GameConfig = {
+    id: 'fakeId',
+    player1: {
+      name: 'Player 1',
+      value: 'X',
+      isCpu: false,
+    },
+    player2: {
+      name: 'Player 2',
+      value: 'O',
+      isCpu: false,
+    },
+    numberOfPlayers: NumberOfPlayers.OnePlayer,
+    level: Level.Easy,
+    initialPlayerTurn: PlayerTurn.Player1,
+  };
   let player1: Player;
   let player2: Player;
-  const numberOfPlayers: NumberOfPlayers = NumberOfPlayers.OnePlayer;
   let game: Game;
 
   beforeEach(() => {
-    player1 = new Player('Player 1', 'X');
-    player2 = new Player('Player 2', 'O');
-    game = new Game(player1, player2, numberOfPlayers, Level.Easy);
+    player1 = new Player(config.player1);
+    player2 = new Player(config.player2);
+    game = new Game(config);
   });
 
   test('should initialize with correct players', () => {
-    expect(game.player1).toBe(player1);
-    expect(game.player2).toBe(player2);
+    expect(game.toConfig().player1).toMatchObject(player1.toConfig());
+    expect(game.toConfig().player2).toMatchObject(player2.toConfig());
   });
 
   test('should initialize with empty cells', () => {
@@ -28,8 +44,8 @@ describe('Game', () => {
   test('should return correct player based on value', () => {
     const playerX = game.getPlayer('X');
     const playerO = game.getPlayer('O');
-    expect(playerX).toBe(player1);
-    expect(playerO).toBe(player2);
+    expect(playerX.toConfig()).toMatchObject(player1.toConfig());
+    expect(playerO.toConfig()).toMatchObject(player2.toConfig());
   });
 
   test('should return correct cell based on index', () => {
@@ -74,8 +90,9 @@ describe('Game', () => {
   test('should convert game to archived format correctly', () => {
     const archivedGame = game.toArchived();
 
-    expect(archivedGame.player1).toEqual(player1.toArchived());
-    expect(archivedGame.player2).toEqual(player2.toArchived());
+    expect(archivedGame.config.id).toEqual(config.id);
+    expect(archivedGame.config.player1).toEqual(player1.toConfig());
+    expect(archivedGame.config.player2).toEqual(player2.toConfig());
     expect(archivedGame.cells.length).toBe(9);
     expect(archivedGame.gridClassNameWin).toBeUndefined();
     expect(archivedGame.winValue).toBeUndefined();
@@ -83,9 +100,7 @@ describe('Game', () => {
 
   test('should create game from archived format correctly', () => {
     const archivedGame: ArchivedGame = {
-      player1: player1.toArchived(),
-      player2: player2.toArchived(),
-      numberOfPlayers: numberOfPlayers,
+      config,
       cells: [
         { index: 0, value: 'X', className: 'horizontal' },
         { index: 1, value: 'O', className: 'vertical' },
@@ -99,14 +114,16 @@ describe('Game', () => {
       ],
       gridClassNameWin: 'grid-horizontal-top',
       winValue: 'X',
-      level: Level.Easy,
     };
 
     const newGame = Game.fromArchived(archivedGame);
 
+    expect(newGame.id).toEqual(config.id);
     expect(newGame.player1).toEqual(player1);
     expect(newGame.player2).toEqual(player2);
-    expect(newGame.numberOfPlayers).toBe(numberOfPlayers);
+    expect(newGame.numberOfPlayers).toBe(config.numberOfPlayers);
+    expect(newGame.level).toBe(config.level);
+    expect(newGame.toConfig().initialPlayerTurn).toBe(config.initialPlayerTurn);
     expect(newGame.getCell(0).value).toBe('X');
     expect(newGame.getCell(0).className).toBe('horizontal');
     expect(newGame.getCell(1).value).toBe('O');

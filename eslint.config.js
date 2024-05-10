@@ -31,6 +31,12 @@ export default tseslint.config(
   jestDom.configs['flat/recommended'],
   {
     plugins: {
+      'react-hooks': hooksPlugin,
+    },
+    rules: hooksPlugin.configs.recommended.rules,
+  },
+  {
+    plugins: {
       'simple-import-sort': simpleImportSort,
     },
     rules: {

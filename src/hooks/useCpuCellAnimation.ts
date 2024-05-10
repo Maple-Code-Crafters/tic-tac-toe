@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { CPU_THINKING_TIME } from '../constants';
 import type { Game, Index } from '../models/Game';
 
-export const useCpuCellAnimation = ({ cpuThinking, game }: { cpuThinking: boolean; game: Game }) => {
+export const useCpuCellAnimation = (game: Game, cpuThinking: boolean) => {
   const [animatedCellIndex, setAnimatedCellIndex] = useState<Index>();
 
   const setNextAnimatedCell = useCallback(() => {

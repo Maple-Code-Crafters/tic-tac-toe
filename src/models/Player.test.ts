@@ -1,36 +1,44 @@
-import type { ArchivedPlayer } from './Player';
+import type { PlayerConfig } from '../slices/gameSlice';
 import { Player } from './Player';
 
 describe('Player', () => {
-  const playerName = 'Player 1';
-  const playerValue = 'X';
+  const config: PlayerConfig = {
+    name: 'Player 1',
+    value: 'X',
+    isCpu: false,
+  };
 
   let player: Player;
 
   beforeEach(() => {
-    player = new Player(playerName, playerValue);
+    player = new Player(config);
   });
 
   test('should have correct name', () => {
-    expect(player.name).toBe(playerName);
+    expect(player.name).toBe(config.name);
   });
 
   test('should have correct value', () => {
-    expect(player.value).toBe(playerValue);
+    expect(player.value).toBe(config.value);
+  });
+
+  test('should have correct isCpu', () => {
+    expect(player.isCpu).toBe(config.isCpu);
   });
 
   test('should convert player to archived format correctly', () => {
-    const archivedPlayer = player.toArchived();
+    const archivedPlayer = player.toConfig();
 
-    expect(archivedPlayer.name).toBe(playerName);
-    expect(archivedPlayer.value).toBe(playerValue);
+    expect(archivedPlayer.name).toBe(config.name);
+    expect(archivedPlayer.value).toBe(config.value);
+    expect(archivedPlayer.isCpu).toBe(config.isCpu);
   });
 
   test('should create player from archived format correctly', () => {
-    const archivedPlayer: ArchivedPlayer = { name: playerName, value: playerValue };
-    const newPlayer = Player.fromArchived(archivedPlayer);
+    const newPlayer = Player.fromConfig(config);
 
-    expect(newPlayer.name).toBe(playerName);
-    expect(newPlayer.value).toBe(playerValue);
+    expect(newPlayer.name).toBe(config.name);
+    expect(newPlayer.value).toBe(config.value);
+    expect(newPlayer.isCpu).toBe(config.isCpu);
   });
 });

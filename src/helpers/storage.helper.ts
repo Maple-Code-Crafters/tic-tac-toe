@@ -1,5 +1,7 @@
 import { Preferences } from '@capacitor/preferences';
 
+import { logError } from '.';
+
 import { DEFAULT } from '../constants';
 import type { ArchivedGame, Level, NumberOfPlayers } from '../models/Game';
 import { Game } from '../models/Game';
@@ -15,7 +17,7 @@ export type PlayedGame = {
   symbols: Symbols;
 };
 
-export type SavedGame = {
+type SavedGame = {
   date: string;
   game: ArchivedGame;
   symbols: Symbols;
@@ -44,8 +46,7 @@ export const GameStorage = {
         value: JSON.stringify(results),
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error saving game', error);
+      logError(error, ['GameStorage.saveGame']);
     }
   },
 
@@ -59,8 +60,7 @@ export const GameStorage = {
         symbols,
       }));
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error getting results', error);
+      logError(error, ['GameStorage.getResults']);
       return [];
     }
   },
@@ -77,8 +77,7 @@ export const GameStorage = {
         value: JSON.stringify(newResults),
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error deleting saved result', error);
+      logError(error, ['GameStorage.deteleOne']);
     }
   },
 };
@@ -94,8 +93,7 @@ export const DefaultStorage = {
       const { value } = await Preferences.get({ key: 'default' });
       return value ? (JSON.parse(value) as Default) : DEFAULT;
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error getting default', error);
+      logError(error, ['DefaultStorage.get']);
       return DEFAULT;
     }
   },

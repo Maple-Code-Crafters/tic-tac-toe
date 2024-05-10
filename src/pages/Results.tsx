@@ -23,9 +23,12 @@ import './Results.css';
 import { GameComponent } from '../components/GameComponent';
 import type { PlayedGame } from '../helpers/storage.helper';
 import { GameStorage } from '../helpers/storage.helper';
+import { useAppDispatch } from '../hooks';
+import { setGameSymbols } from '../slices/gameSlice';
 
 const ResultsPage: React.FC = () => {
   const [presentAlert] = useIonAlert();
+  const dispatch = useAppDispatch();
   const [playedGames, setPlayedGames] = useState<PlayedGame[]>([]);
   const [selectedPlayedGame, setSelectedPlayedGame] = useState<PlayedGame>();
 
@@ -102,17 +105,19 @@ const ResultsPage: React.FC = () => {
                 Delete
               </IonButton>
             </IonListHeader>
-            <GameComponent
-              game={selectedPlayedGame.game}
-              symbols={selectedPlayedGame.symbols}
-              setGame={() => setSelectedPlayedGame(undefined)}
-              isStoredGame={true}
-            />
+            <GameComponent key={selectedPlayedGame.game.id} storedGame={selectedPlayedGame.game} />
           </>
         ) : playedGames.length > 0 ? (
           <IonList>
             {playedGames.map((playedGame) => (
-              <IonItem key={playedGame.date.toISOString()} button onClick={() => setSelectedPlayedGame(playedGame)}>
+              <IonItem
+                key={playedGame.game.id}
+                button
+                onClick={() => {
+                  dispatch(setGameSymbols(playedGame.symbols));
+                  setSelectedPlayedGame(playedGame);
+                }}
+              >
                 <IonAvatar className="o-x-value">
                   {playedGame.game.winValue ? playedGame.symbols[playedGame.game.winValue] : ''}
                 </IonAvatar>
