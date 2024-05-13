@@ -1,5 +1,5 @@
 echo "eslint running..."
-npx eslint . --max-warnings=0 .
+npx eslint . --max-warnings=0
 echo "tsc running..."
 npx tsc
 echo "prettier running..."
