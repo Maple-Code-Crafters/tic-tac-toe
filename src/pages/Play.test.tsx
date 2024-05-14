@@ -50,6 +50,9 @@ describe('PlayPage', () => {
     expect(screen.getByText('Player turn')).toBeVisible();
     const cells = container.getElementsByClassName('cell');
     expect(cells).toHaveLength(9);
+    for (const cell of cells) {
+      expect(cell).toHaveTextContent('');
+    }
     const cancelButton = screen.getByText('Cancel');
     expect(cancelButton).toBeVisible();
     expect(cancelButton).toContainHTML('ion-button');
