@@ -1,3 +1,5 @@
+import userEvent from '@testing-library/user-event';
+
 import { render, safeAct, screen } from '../test-utils';
 import PlayPage from './Play';
 
@@ -24,5 +26,18 @@ describe('PlayPage', () => {
     const startButton = screen.getByText('Start');
     expect(startButton).toBeVisible();
     expect(startButton).toContainHTML('ion-button');
+  });
+
+  test('selecting two players removes CPU level options', async () => {
+    const user = userEvent.setup();
+    render(<PlayPage />);
+    await safeAct();
+    const easy = screen.getByText('Easy');
+    const medium = screen.getByText('Easy');
+    const hard = screen.getByText('Easy');
+    await user.click(screen.getByText('Two Players'));
+    expect(easy).not.toBeVisible();
+    expect(medium).not.toBeVisible();
+    expect(hard).not.toBeVisible();
   });
 });
