@@ -40,4 +40,28 @@ describe('PlayPage', () => {
     expect(medium).not.toBeVisible();
     expect(hard).not.toBeVisible();
   });
+
+  test('clicking start starts a game', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<PlayPage />);
+    await safeAct();
+    await user.click(screen.getByText('Start'));
+    expect(screen.getByText('Player 1')).toBeVisible();
+    expect(screen.getByText('Player turn')).toBeVisible();
+    const cells = container.getElementsByClassName('cell');
+    expect(cells).toHaveLength(9);
+    const cancelButton = screen.getByText('Cancel');
+    expect(cancelButton).toBeVisible();
+    expect(cancelButton).toContainHTML('ion-button');
+  });
+
+  test('clicking cancel cancels a game', async () => {
+    const user = userEvent.setup();
+    render(<PlayPage />);
+    await safeAct();
+    await user.click(screen.getByText('Start'));
+    expect(screen.getByText('Player turn')).toBeVisible();
+    await user.click(screen.getByText('Cancel'));
+    expect(screen.getByText('Select Players')).toBeVisible();
+  });
 });
