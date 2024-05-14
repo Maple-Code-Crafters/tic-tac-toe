@@ -8,17 +8,22 @@ import { IonReactRouter } from '@ionic/react-router';
 import type { RenderOptions } from '@testing-library/react';
 import { configure, render as rtlRender } from '@testing-library/react';
 
-import { store } from './store';
+import { createStore } from './store';
 
 configure({
   ...getConfig(),
   reactStrictMode: true,
 });
 
-const render = (ui: ReactElement, customHistory = createMemoryHistory(), renderOptions?: RenderOptions) => {
+const render = (
+  ui: ReactElement,
+  customStore = createStore(),
+  customHistory = createMemoryHistory(),
+  renderOptions?: RenderOptions,
+) => {
   const Wrapper = ({ children }: { children: ReactNode }) => {
     return (
-      <Provider store={store}>
+      <Provider store={customStore}>
         <IonApp>
           <IonReactRouter history={customHistory}>{children}</IonReactRouter>
         </IonApp>
