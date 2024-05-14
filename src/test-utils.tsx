@@ -40,4 +40,4 @@ const safeAct = () => act(async () => await Promise.resolve());
 export * from '@testing-library/react';
 
 // override render method
-export { render, safeAct, createMemoryHistory as createTestHistory };
+export { render, safeAct, createMemoryHistory as createTestHistory, createStore as createTestStore };
