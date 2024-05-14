@@ -8,6 +8,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import type { RenderOptions } from '@testing-library/react';
 import { configure, render as rtlRender } from '@testing-library/react';
 
+import { DefaultProvider } from './providers/DefaultProvider';
 import { createStore } from './store';
 
 configure({
@@ -24,9 +25,11 @@ const render = (
   const Wrapper = ({ children }: { children: ReactNode }) => {
     return (
       <Provider store={customStore}>
-        <IonApp>
-          <IonReactRouter history={customHistory}>{children}</IonReactRouter>
-        </IonApp>
+        <DefaultProvider>
+          <IonApp>
+            <IonReactRouter history={customHistory}>{children}</IonReactRouter>
+          </IonApp>
+        </DefaultProvider>
       </Provider>
     );
   };
