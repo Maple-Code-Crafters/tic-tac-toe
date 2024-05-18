@@ -28,21 +28,24 @@ export const NewGameForm = () => {
   const dispatch = useAppDispatch();
   const [present] = useIonAlert();
   const gameDefault = useAppSelector((state) => state.game.default);
-  const [newGame, setNewGame] = useState<GameConfig>({
-    id: uuidv4(),
-    player1: {
-      name: gameDefault.player1Name,
-      value: 'X',
-      isCpu: false,
-    },
-    player2: {
-      name: gameDefault.player2Name,
-      value: 'O',
-      isCpu: false,
-    },
-    numberOfPlayers: gameDefault.numberOfPlayers,
-    level: gameDefault.level,
-    initialPlayerTurn: PlayerTurn.Player1,
+  const [newGame, setNewGame] = useState<GameConfig>(() => {
+    const isCpu = gameDefault.numberOfPlayers === NumberOfPlayers.OnePlayer;
+    return {
+      id: uuidv4(),
+      player1: {
+        name: gameDefault.player1Name,
+        value: 'X',
+        isCpu: false,
+      },
+      player2: {
+        name: isCpu ? `CPU (${gameDefault.level})` : gameDefault.player2Name,
+        value: 'O',
+        isCpu: isCpu,
+      },
+      numberOfPlayers: gameDefault.numberOfPlayers,
+      level: gameDefault.level,
+      initialPlayerTurn: PlayerTurn.Player1,
+    };
   });
 
   useEffect(() => {
