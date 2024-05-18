@@ -32,13 +32,15 @@ describe('PlayPage', () => {
     const user = userEvent.setup();
     render(<PlayPage />);
     await safeAct();
+    expect(screen.getByDisplayValue('CPU (Easy)')).toBeVisible();
     const easy = screen.getByText('Easy');
-    const medium = screen.getByText('Easy');
-    const hard = screen.getByText('Easy');
+    const medium = screen.getByText('Medium');
+    const hard = screen.getByText('Hard');
     await user.click(screen.getByText('Two Players'));
     expect(easy).not.toBeVisible();
     expect(medium).not.toBeVisible();
     expect(hard).not.toBeVisible();
+    expect(screen.getByDisplayValue('Player 2')).toBeVisible();
   });
 
   test('clicking start starts a game', async () => {
