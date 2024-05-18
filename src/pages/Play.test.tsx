@@ -84,8 +84,8 @@ describe('PlayPage', () => {
     await user2.click(cell5!);
     const cell9 = container.querySelector('.cell-9 > div');
     await user1.click(cell9!);
-    expect(await screen.findByText('Player 1')).toBeVisible();
-    expect(await screen.findByText('Winner')).toBeVisible();
+    expect(screen.getByText('Player 1')).toBeVisible();
+    expect(screen.getByText('Winner')).toBeVisible();
     expect(screen.getByText('Play Again')).toBeVisible();
     expect(screen.getByText('New Game', { selector: 'ion-button' })).toBeVisible();
   });
