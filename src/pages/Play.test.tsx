@@ -66,7 +66,7 @@ describe('PlayPage', () => {
     expect(screen.getByText('Select Players')).toBeVisible();
   });
 
-  test('Two players game and player 1 wins the game', async () => {
+  test('two players game and player 1 wins the game', async () => {
     const user1 = userEvent.setup();
     const user2 = userEvent.setup();
     const { container } = render(<PlayPage />);
@@ -89,7 +89,7 @@ describe('PlayPage', () => {
     expect(screen.getByText('New Game', { selector: 'ion-button' })).toBeVisible();
   });
 
-  test('Two players game, player 2 wins and starts with player 2 turn', async () => {
+  test('two players game, player 2 wins and starts with player 2 turn', async () => {
     const user1 = userEvent.setup();
     const user2 = userEvent.setup();
     const { container } = render(<PlayPage />);
