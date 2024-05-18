@@ -120,4 +120,16 @@ describe('PlayPage', () => {
       expect(cell).toHaveTextContent('');
     }
   });
+
+  test('one player game and cpu plays after player 1', async () => {
+    const user1 = userEvent.setup();
+    const { container } = render(<PlayPage />);
+    await safeAct();
+    await user1.click(screen.getByText('Start'));
+    const cell1 = container.querySelector('.cell-1 > div');
+    await user1.click(cell1!);
+    // cpu playes and await for player 1 turn
+    expect(await screen.findByText('Player 1')).toBeVisible();
+    expect(await screen.findByText('Player turn')).toBeVisible();
+  });
 });
