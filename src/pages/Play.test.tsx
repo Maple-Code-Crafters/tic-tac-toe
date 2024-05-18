@@ -22,7 +22,7 @@ describe('PlayPage', () => {
     expect(screen.getAllByText('O')).toHaveLength(2);
     expect(screen.getAllByText('X')).toHaveLength(2);
     expect(screen.getByDisplayValue('Player 1')).toBeVisible();
-    expect(screen.getByDisplayValue('Player 2')).toBeVisible();
+    expect(screen.getByDisplayValue('CPU (Easy)')).toBeVisible();
     const startButton = screen.getByText('Start');
     expect(startButton).toBeVisible();
     expect(startButton).toContainHTML('ion-button');
