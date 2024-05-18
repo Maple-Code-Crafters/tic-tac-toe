@@ -78,15 +78,47 @@ describe('PlayPage', () => {
     await user1.click(cell1!);
     const cell2 = container.querySelector('.cell-2 > div');
     await user2.click(cell2!);
-    const cell4 = container.querySelector('.cell-5 > div');
-    await user1.click(cell4!);
-    const cell5 = container.querySelector('.cell-6 > div');
-    await user2.click(cell5!);
+    const cell5 = container.querySelector('.cell-5 > div');
+    await user1.click(cell5!);
+    const cell6 = container.querySelector('.cell-6 > div');
+    await user2.click(cell6!);
     const cell9 = container.querySelector('.cell-9 > div');
     await user1.click(cell9!);
     expect(screen.getByText('Player 1')).toBeVisible();
     expect(screen.getByText('Winner')).toBeVisible();
     expect(screen.getByText('Play Again')).toBeVisible();
     expect(screen.getByText('New Game', { selector: 'ion-button' })).toBeVisible();
+  });
+
+  test('Two players game, player 2 wins and starts with player 2 turn', async () => {
+    const user1 = userEvent.setup();
+    const user2 = userEvent.setup();
+    const { container } = render(<PlayPage />);
+    await safeAct();
+    await user1.click(screen.getByText('Two Players'));
+    await user1.click(screen.getByText('Start'));
+    const cell1 = container.querySelector('.cell-1 > div');
+    await user1.click(cell1!);
+    const cell3 = container.querySelector('.cell-3 > div');
+    await user2.click(cell3!);
+    const cell5 = container.querySelector('.cell-5 > div');
+    await user1.click(cell5!);
+    const cell9 = container.querySelector('.cell-9 > div');
+    await user2.click(cell9!);
+    const cell7 = container.querySelector('.cell-7 > div');
+    await user1.click(cell7!);
+    const cell6 = container.querySelector('.cell-6 > div');
+    await user2.click(cell6!);
+    expect(screen.getByText('Player 2')).toBeVisible();
+    expect(screen.getByText('Winner')).toBeVisible();
+    expect(screen.getByText('Play Again')).toBeVisible();
+    await user1.click(screen.getByText('Play Again'));
+    expect(screen.getByText('Player 2')).toBeVisible();
+    expect(screen.getByText('Player turn')).toBeVisible();
+    const cells = container.getElementsByClassName('cell');
+    expect(cells).toHaveLength(9);
+    for (const cell of cells) {
+      expect(cell).toHaveTextContent('');
+    }
   });
 });
