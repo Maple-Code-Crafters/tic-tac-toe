@@ -47,6 +47,7 @@ export const NewGameForm = () => {
 
   useEffect(() => {
     setNewGame((prevState) => {
+      const isCpu = gameDefault.numberOfPlayers === NumberOfPlayers.OnePlayer;
       const newState: GameConfig = {
         ...prevState,
         player1: {
@@ -55,7 +56,8 @@ export const NewGameForm = () => {
         },
         player2: {
           ...prevState.player2,
-          name: gameDefault.player2Name,
+          name: isCpu ? `CPU (${gameDefault.level})` : gameDefault.player2Name,
+          isCpu,
         },
         numberOfPlayers: gameDefault.numberOfPlayers,
         level: gameDefault.level,
@@ -79,16 +81,14 @@ export const NewGameForm = () => {
               onIonChange={(e) => {
                 setNewGame((prevState) => {
                   const numberOfPlayers = e.detail.value as NumberOfPlayers;
+                  const isCpu = numberOfPlayers === NumberOfPlayers.OnePlayer;
                   const newState: GameConfig = {
                     ...prevState,
                     numberOfPlayers,
                     player2: {
                       ...prevState.player2,
-                      name:
-                        numberOfPlayers === NumberOfPlayers.OnePlayer
-                          ? `CPU (${prevState.level})`
-                          : gameDefault.player2Name,
-                      isCpu: numberOfPlayers === NumberOfPlayers.OnePlayer,
+                      name: isCpu ? `CPU (${prevState.level})` : gameDefault.player2Name,
+                      isCpu,
                     },
                   };
                   return newState;
