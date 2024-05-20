@@ -1,6 +1,10 @@
+import { Route } from 'react-router-dom';
+
+import { IonRouterOutlet } from '@ionic/react';
 import userEvent from '@testing-library/user-event';
 
-import { render, safeAct, screen } from '../test-utils';
+import { createTestHistory, render, safeAct, screen, waitFor } from '../test-utils';
+import PlayPage from './Play';
 import ResultsPage from './Results';
 
 export const fakeResults = [
@@ -196,5 +200,41 @@ describe('ResultsPage', () => {
     expect(cell8).toHaveTextContent('');
     expect(cell9).toHaveTextContent('');
     expect(screen.getByText('Play Again', { selector: 'ion-button' })).toBeVisible();
+  });
+
+  test('clicking back returns to list', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPage />);
+    await safeAct();
+    const dateStr = `Date: ${new Date(fakeResults[3].date).toLocaleString()}`;
+    await user.click(screen.getByText(dateStr));
+    await user.click(screen.getByText('Back', { selector: 'ion-button' }));
+    expect(screen.getAllByText('Player 1 vs', { exact: false })).toHaveLength(5);
+  });
+
+  test('clicking "Play Again" redirects to /play page and starts a new game', async () => {
+    const user = userEvent.setup();
+    const history = createTestHistory();
+    render(
+      <IonRouterOutlet>
+        <Route exact path="/play">
+          <PlayPage />
+        </Route>
+        <Route>
+          <ResultsPage />
+        </Route>
+      </IonRouterOutlet>,
+      undefined,
+      history,
+    );
+    await safeAct();
+    const dateStr = `Date: ${new Date(fakeResults[3].date).toLocaleString()}`;
+    await user.click(screen.getByText(dateStr));
+    await user.click(screen.getByText('Play Again', { selector: 'ion-button' }));
+    await waitFor(() => {
+      expect(history.location.pathname).toBe('/play');
+      // CPU started and played first "O"
+      expect(screen.getByText('O')).toBeVisible();
+    });
   });
 });
