@@ -12,6 +12,7 @@ import {
   IonList,
   IonListHeader,
   IonPage,
+  IonSpinner,
   IonTitle,
   IonToolbar,
   useIonAlert,
@@ -29,7 +30,7 @@ import { setGameSymbols } from '../slices/gameSlice';
 const ResultsPage: React.FC = () => {
   const [presentAlert] = useIonAlert();
   const dispatch = useAppDispatch();
-  const [playedGames, setPlayedGames] = useState<PlayedGame[]>([]);
+  const [playedGames, setPlayedGames] = useState<PlayedGame[]>();
   const [selectedPlayedGame, setSelectedPlayedGame] = useState<PlayedGame>();
 
   const load = useCallback(async () => {
@@ -107,7 +108,7 @@ const ResultsPage: React.FC = () => {
             </IonListHeader>
             <GameComponent key={selectedPlayedGame.game.id} storedGame={selectedPlayedGame.game} />
           </>
-        ) : playedGames.length > 0 ? (
+        ) : playedGames && playedGames.length > 0 ? (
           <IonList>
             {playedGames.map((playedGame) => (
               <IonItem
@@ -137,8 +138,14 @@ const ResultsPage: React.FC = () => {
           </IonList>
         ) : (
           <div className="no-game">
-            <IonIcon icon={fileTrayOutline} />
-            <IonLabel>No game</IonLabel>
+            {!playedGames ? (
+              <IonSpinner />
+            ) : (
+              <>
+                <IonIcon icon={fileTrayOutline} />
+                <IonLabel>No game</IonLabel>
+              </>
+            )}
           </div>
         )}
       </IonContent>
