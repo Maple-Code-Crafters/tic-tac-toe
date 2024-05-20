@@ -147,7 +147,7 @@ describe('ResultsPage', () => {
     expect(screen.getByText('Delete All', { selector: 'ion-button' })).toBeVisible();
   });
 
-  test.only('shows saved game list and proper elements', async () => {
+  test('shows saved game list and proper elements', async () => {
     render(<ResultsPage />);
     await safeAct();
     expect(screen.getAllByText('Player 1 vs', { exact: false })).toHaveLength(5);
