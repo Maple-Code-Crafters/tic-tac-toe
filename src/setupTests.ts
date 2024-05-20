@@ -41,6 +41,7 @@ vi.mock('@capacitor/preferences', async (importOriginal) => {
             return Promise.resolve({ value: '' });
         }
       },
+      set: () => Promise.resolve(),
     },
   };
 });

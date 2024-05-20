@@ -30,7 +30,7 @@ export const NewGameForm = () => {
   const gameDefault = useAppSelector((state) => state.game.default);
   const [newGame, setNewGame] = useState<GameConfig>(() => {
     const isCpu = gameDefault.numberOfPlayers === NumberOfPlayers.OnePlayer;
-    return {
+    const initialGame: GameConfig = {
       id: uuidv4(),
       player1: {
         name: gameDefault.player1Name,
@@ -46,6 +46,7 @@ export const NewGameForm = () => {
       level: gameDefault.level,
       initialPlayerTurn: PlayerTurn.Player1,
     };
+    return initialGame;
   });
 
   useEffect(() => {

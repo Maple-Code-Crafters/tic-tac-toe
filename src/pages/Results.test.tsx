@@ -1,3 +1,5 @@
+import userEvent from '@testing-library/user-event';
+
 import { render, safeAct, screen } from '../test-utils';
 import ResultsPage from './Results';
 
@@ -161,5 +163,38 @@ describe('ResultsPage', () => {
       const [, dateMatch] = date.innerHTML.match(/Date: (.+)/)!;
       expect(dateMatch).toBe(new Date(fakeResults[i].date).toLocaleString());
     }
+  });
+
+  test('clicking a stored game shows the played game', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ResultsPage />);
+    await safeAct();
+    const dateStr = `Date: ${new Date(fakeResults[3].date).toLocaleString()}`;
+    await user.click(screen.getByText(dateStr));
+    expect(screen.getByText('Player 1 vs CPU (Easy)')).toBeVisible();
+    expect(screen.getByText(dateStr)).toBeVisible();
+    expect(screen.getByText('Back', { selector: 'ion-button' })).toBeVisible();
+    expect(screen.getByText('Delete', { selector: 'ion-button' })).toBeVisible();
+    expect(screen.getByText('Player 1')).toBeVisible();
+    expect(screen.getByText('Winner')).toBeVisible();
+    const cell1 = container.querySelector('.cell-1 > div');
+    const cell2 = container.querySelector('.cell-2 > div');
+    const cell3 = container.querySelector('.cell-3 > div');
+    const cell4 = container.querySelector('.cell-4 > div');
+    const cell5 = container.querySelector('.cell-5 > div');
+    const cell6 = container.querySelector('.cell-6 > div');
+    const cell7 = container.querySelector('.cell-7 > div');
+    const cell8 = container.querySelector('.cell-8 > div');
+    const cell9 = container.querySelector('.cell-9 > div');
+    expect(cell1).toHaveTextContent('X');
+    expect(cell2).toHaveTextContent('X');
+    expect(cell3).toHaveTextContent('X');
+    expect(cell4).toHaveTextContent('O');
+    expect(cell5).toHaveTextContent('');
+    expect(cell6).toHaveTextContent('O');
+    expect(cell7).toHaveTextContent('');
+    expect(cell8).toHaveTextContent('');
+    expect(cell9).toHaveTextContent('');
+    expect(screen.getByText('Play Again', { selector: 'ion-button' })).toBeVisible();
   });
 });
