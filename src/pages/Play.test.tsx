@@ -20,10 +20,10 @@ describe('PlayPage', () => {
     expect(screen.getByText('Easy')).toBeVisible();
     expect(screen.getByText('Medium')).toBeVisible();
     expect(screen.getByText('Hard')).toBeVisible();
-    expect(screen.getAllByText('O')).toHaveLength(2);
-    expect(screen.getAllByText('X')).toHaveLength(2);
     expect(screen.getByDisplayValue('Player 1')).toBeVisible();
     expect(screen.getByDisplayValue('CPU (Easy)')).toBeVisible();
+    expect(screen.getAllByText('O')).toHaveLength(2);
+    expect(screen.getAllByText('X')).toHaveLength(2);
     expect(screen.getByText('Start', { selector: 'ion-button' })).toBeVisible();
   });
 
