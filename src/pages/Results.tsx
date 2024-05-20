@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { fileTrayOutline } from 'ionicons/icons';
+import { useLocation } from 'react-router';
 
 import {
   IonAvatar,
@@ -16,7 +17,6 @@ import {
   IonTitle,
   IonToolbar,
   useIonAlert,
-  useIonViewWillEnter,
 } from '@ionic/react';
 
 import './Results.css';
@@ -28,6 +28,7 @@ import { useAppDispatch } from '../hooks';
 import { setGameSymbols } from '../slices/gameSlice';
 
 const ResultsPage: React.FC = () => {
+  const location = useLocation();
   const [presentAlert] = useIonAlert();
   const dispatch = useAppDispatch();
   const [playedGames, setPlayedGames] = useState<PlayedGame[]>();
@@ -38,9 +39,10 @@ const ResultsPage: React.FC = () => {
     setPlayedGames(await GameStorage.getResults());
   }, []);
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     load();
-  }, [load]);
+    // location is here to trigger loading/refreshing after navigation from another tab
+  }, [load, location]);
 
   return (
     <IonPage>

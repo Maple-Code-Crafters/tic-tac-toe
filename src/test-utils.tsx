@@ -2,9 +2,8 @@ import { act } from 'react';
 import { createMemoryHistory } from 'history';
 import type { ReactElement, ReactNode } from 'react';
 import { Provider } from 'react-redux';
-import { Route } from 'react-router';
 
-import { getConfig, IonApp, IonRouterOutlet } from '@ionic/react';
+import { getConfig, IonApp } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import type { RenderOptions } from '@testing-library/react';
 import { configure, render as rtlRender } from '@testing-library/react';
@@ -28,11 +27,7 @@ const render = (
       <Provider store={customStore}>
         <DefaultProvider>
           <IonApp>
-            <IonReactRouter history={customHistory}>
-              <IonRouterOutlet>
-                <Route>{children}</Route>
-              </IonRouterOutlet>
-            </IonReactRouter>
+            <IonReactRouter history={customHistory}>{children}</IonReactRouter>
           </IonApp>
         </DefaultProvider>
       </Provider>
