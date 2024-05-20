@@ -33,7 +33,7 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   const gameConfig = useAppSelector((state) => state.game.config!);
   const symbols = useAppSelector((state) => state.game.symbols);
   const [game] = useState(storedGame ? storedGame : Game.fromConfig(gameConfig));
-  const [playerTurn, setPlayerTurn] = useState<PlayerTurn>(gameConfig.initialPlayerTurn);
+  const [playerTurn, setPlayerTurn] = useState<PlayerTurn>(game.initialPlayerTurn);
   const [cpu] = useState<CPU | undefined>(game.isSinglePlayerMode() ? new CPU(game.level) : undefined);
   const [cpuThinking, setCpuThinking] = useState(false);
   const [saved, setSaved] = useState(Boolean(storedGame));

@@ -147,9 +147,19 @@ describe('ResultsPage', () => {
     expect(screen.getByText('Delete All', { selector: 'ion-button' })).toBeVisible();
   });
 
-  test('shows saved game list', async () => {
+  test.only('shows saved game list and proper elements', async () => {
     render(<ResultsPage />);
     await safeAct();
     expect(screen.getAllByText('Player 1 vs', { exact: false })).toHaveLength(5);
+    expect(screen.getAllByText('No winner')).toHaveLength(3);
+    expect(screen.getAllByText('Winner: Player 1')).toHaveLength(1);
+    expect(screen.getAllByText('Winner: Player 2')).toHaveLength(1);
+    const dates = screen.getAllByText('Date:', { exact: false });
+    expect(dates).toHaveLength(5);
+    for (let i = 0; i < dates.length; i++) {
+      const date = dates[i];
+      const [, dateMatch] = date.innerHTML.match(/Date: (.+)/)!;
+      expect(dateMatch).toBe(new Date(fakeResults[i].date).toLocaleString());
+    }
   });
 });

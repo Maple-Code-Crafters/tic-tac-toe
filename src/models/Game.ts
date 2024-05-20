@@ -90,6 +90,10 @@ export class Game {
     return this._level;
   }
 
+  public get initialPlayerTurn() {
+    return this._initialPlayerTurn;
+  }
+
   public getPlayer(v: Value) {
     if (this._player1.value === v) {
       return this._player1;
