@@ -59,7 +59,7 @@ export const GameComponent = ({ storedGame }: { storedGame?: Game }) => {
   }, [cpu, game, playerTurn, setNextPlayerTurn]);
 
   useEffect(() => {
-    if (currentPlayer.isCpu && (!finished || !hasWin)) {
+    if (currentPlayer.isCpu && !(finished || hasWin)) {
       setCpuThinking(true);
     }
   }, [currentPlayer.isCpu, finished, hasWin]);
