@@ -233,7 +233,7 @@ describe('ResultsPage', () => {
     await user.click(screen.getByText('Play Again', { selector: 'ion-button' }));
     await waitFor(() => {
       expect(history.location.pathname).toBe('/play');
-      // CPU started and played first "O"
+      // CPU started the game and played first "O"
       expect(screen.getByText('O')).toBeVisible();
     });
   });
