@@ -4,8 +4,9 @@ import { render, safeAct, screen } from '../test-utils';
 import PlayPage from './Play';
 
 describe('PlayPage', () => {
-  test('renders without crashing', () => {
+  test('renders without crashing', async () => {
     const { baseElement } = render(<PlayPage />);
+    await safeAct();
     expect(baseElement).toBeDefined();
   });
 
