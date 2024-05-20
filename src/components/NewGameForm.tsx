@@ -49,6 +49,7 @@ export const NewGameForm = () => {
     return initialGame;
   });
 
+  // Update form with new default values from Settings page changes
   useEffect(() => {
     setNewGame((prevState) => {
       const isCpu = gameDefault.numberOfPlayers === NumberOfPlayers.OnePlayer;
