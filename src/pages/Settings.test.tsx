@@ -23,14 +23,14 @@ describe('SettingsPage', () => {
     expect(screen.getByText(APP_NAME)).toBeVisible();
     expect(screen.getByText(`version: ${APP_VERSION}`)).toBeVisible();
     expect(screen.getByText('Players names')).toBeVisible();
-    expect(screen.getByText('Player 1')).toBeVisible();
+    expect(screen.getByLabelText('Player 1')).toBeVisible();
     expect(screen.getByDisplayValue('Player 1')).toBeVisible();
-    expect(screen.getByText('Player 2')).toBeVisible();
+    expect(screen.getByLabelText('Player 2')).toBeVisible();
     expect(screen.getByDisplayValue('Player 2')).toBeVisible();
     expect(screen.getByText('Symbols')).toBeVisible();
-    expect(screen.getByText('O')).toBeVisible();
+    expect(screen.getByLabelText('O')).toBeVisible();
     expect(screen.getByDisplayValue('O')).toBeVisible();
-    expect(screen.getByText('X')).toBeVisible();
+    expect(screen.getByLabelText('X')).toBeVisible();
     expect(screen.getByDisplayValue('X')).toBeVisible();
     expect(screen.getByText('Number of Players')).toBeVisible();
     expect(screen.getByText('One Player')).toBeVisible();
