@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { fileTrayOutline } from 'ionicons/icons';
+import { useLocation } from 'react-router';
 
 import {
   IonAvatar,
@@ -12,10 +13,10 @@ import {
   IonList,
   IonListHeader,
   IonPage,
+  IonSpinner,
   IonTitle,
   IonToolbar,
   useIonAlert,
-  useIonViewWillEnter,
 } from '@ionic/react';
 
 import './Results.css';
@@ -27,9 +28,10 @@ import { useAppDispatch } from '../hooks';
 import { setGameSymbols } from '../slices/gameSlice';
 
 const ResultsPage: React.FC = () => {
+  const location = useLocation();
   const [presentAlert] = useIonAlert();
   const dispatch = useAppDispatch();
-  const [playedGames, setPlayedGames] = useState<PlayedGame[]>([]);
+  const [playedGames, setPlayedGames] = useState<PlayedGame[]>();
   const [selectedPlayedGame, setSelectedPlayedGame] = useState<PlayedGame>();
 
   const load = useCallback(async () => {
@@ -37,9 +39,10 @@ const ResultsPage: React.FC = () => {
     setPlayedGames(await GameStorage.getResults());
   }, []);
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     load();
-  }, [load]);
+    // location is here to trigger loading/refreshing after navigation from another tab
+  }, [load, location]);
 
   return (
     <IonPage>
@@ -107,7 +110,7 @@ const ResultsPage: React.FC = () => {
             </IonListHeader>
             <GameComponent key={selectedPlayedGame.game.id} storedGame={selectedPlayedGame.game} />
           </>
-        ) : playedGames.length > 0 ? (
+        ) : playedGames && playedGames.length > 0 ? (
           <IonList>
             {playedGames.map((playedGame) => (
               <IonItem
@@ -137,8 +140,14 @@ const ResultsPage: React.FC = () => {
           </IonList>
         ) : (
           <div className="no-game">
-            <IonIcon icon={fileTrayOutline} />
-            <IonLabel>No game</IonLabel>
+            {!playedGames ? (
+              <IonSpinner />
+            ) : (
+              <>
+                <IonIcon icon={fileTrayOutline} />
+                <IonLabel>No game</IonLabel>
+              </>
+            )}
           </div>
         )}
       </IonContent>
