@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import type { ReactNode } from 'react';
 
 import { useAppDispatch } from '../hooks';
 import { retrieveDefaultAsync } from '../slices/gameSlice';
 
-export const DefaultProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const DefaultProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
   const [restored, setRestored] = useState(false);
 
@@ -19,8 +18,4 @@ export const DefaultProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, [retrieve]);
 
   return restored ? children : null;
-};
-
-DefaultProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };

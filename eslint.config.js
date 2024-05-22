@@ -3,6 +3,7 @@ import jestDom from 'eslint-plugin-jest-dom';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import hooksPlugin from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import vitest from 'eslint-plugin-vitest';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -30,10 +31,18 @@ export default tseslint.config(
   eslintConfigPrettier,
   jestDom.configs['flat/recommended'],
   {
+    files: ['**/*.test.ts?(x)'],
     plugins: {
-      'react-hooks': hooksPlugin,
+      vitest,
     },
-    rules: hooksPlugin.configs.recommended.rules,
+    rules: {
+      ...vitest.configs.recommended.rules,
+    },
+    languageOptions: {
+      globals: {
+        ...vitest.environments.env.globals,
+      },
+    },
   },
   {
     plugins: {

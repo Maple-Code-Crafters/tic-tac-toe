@@ -8,20 +8,28 @@ import { IonReactRouter } from '@ionic/react-router';
 import type { RenderOptions } from '@testing-library/react';
 import { configure, render as rtlRender } from '@testing-library/react';
 
-import { store } from './store';
+import { DefaultProvider } from './providers/DefaultProvider';
+import { createStore } from './store';
 
 configure({
   ...getConfig(),
   reactStrictMode: true,
 });
 
-const render = (ui: ReactElement, customHistory = createMemoryHistory(), renderOptions?: RenderOptions) => {
+const render = (
+  ui: ReactElement,
+  customStore = createStore(),
+  customHistory = createMemoryHistory(),
+  renderOptions?: RenderOptions,
+) => {
   const Wrapper = ({ children }: { children: ReactNode }) => {
     return (
-      <Provider store={store}>
-        <IonApp>
-          <IonReactRouter history={customHistory}>{children}</IonReactRouter>
-        </IonApp>
+      <Provider store={customStore}>
+        <DefaultProvider>
+          <IonApp>
+            <IonReactRouter history={customHistory}>{children}</IonReactRouter>
+          </IonApp>
+        </DefaultProvider>
       </Provider>
     );
   };
@@ -35,4 +43,4 @@ const safeAct = () => act(async () => await Promise.resolve());
 export * from '@testing-library/react';
 
 // override render method
-export { render, safeAct, createMemoryHistory as createTestHistory };
+export { render, safeAct, createMemoryHistory as createTestHistory, createStore as createTestStore };
