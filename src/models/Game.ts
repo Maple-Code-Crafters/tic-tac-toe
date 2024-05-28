@@ -1,28 +1,62 @@
+import type { GameConfig } from '../slices/gameSlice';
 import type { ArchivedCell, Value } from './Cell';
 import { Cell } from './Cell';
-import type { ArchivedPlayer } from './Player';
 import { Player } from './Player';
 
 export type Index = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
+export enum PlayerTurn {
+  Player1 = 'player1',
+  Player2 = 'player2',
+}
+
+export enum NumberOfPlayers {
+  OnePlayer = 1,
+  TwoPlayers = 2,
+}
+
+export enum Level {
+  Easy = 'Easy',
+  Medium = 'Medium',
+  Hard = 'Hard',
+}
+
 export type ArchivedGame = {
-  player1: ArchivedPlayer;
-  player2: ArchivedPlayer;
+  config: GameConfig;
   cells: ArchivedCell[];
   gridClassNameWin: string;
   winValue: Value | undefined;
 };
 
 export class Game {
+  classNameCombs: [string, string][] = [
+    ['grid-horizontal-top', 'horizontal'],
+    ['grid-horizontal-middle', 'horizontal'],
+    ['grid-horizontal-bottom', 'horizontal'],
+    ['grid-vertical-left', 'vertical'],
+    ['grid-vertical-middle', 'vertical'],
+    ['grid-vertical-right', 'vertical'],
+    ['top-left-to-bottom-right', 'top-left-to-bottom-right'],
+    ['top-right-to-bottom-left', 'top-right-to-bottom-left'],
+  ];
+
+  private _id: string;
   private _player1: Player;
   private _player2: Player;
+  private _numberOfPlayers: NumberOfPlayers;
+  private _level: Level;
+  private _initialPlayerTurn: PlayerTurn;
   private _cells: [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
   private _gridClassNameWin!: string;
   public winValue: Value | undefined;
 
-  constructor(player1: Player, player2: Player) {
-    this._player1 = player1;
-    this._player2 = player2;
+  constructor(config: GameConfig) {
+    this._id = config.id;
+    this._player1 = new Player(config.player1);
+    this._player2 = new Player(config.player2);
+    this._numberOfPlayers = config.numberOfPlayers;
+    this._level = config.level;
+    this._initialPlayerTurn = config.initialPlayerTurn;
     this._cells = [
       new Cell(0),
       new Cell(1),
@@ -36,6 +70,10 @@ export class Game {
     ];
   }
 
+  public get id() {
+    return this._id;
+  }
+
   public get player1() {
     return this._player1;
   }
@@ -44,16 +82,41 @@ export class Game {
     return this._player2;
   }
 
-  public getPlayer(v: Value | undefined) {
-    if (!v) {
-      return undefined;
-    }
+  public get numberOfPlayers() {
+    return this._numberOfPlayers;
+  }
 
+  public get level() {
+    return this._level;
+  }
+
+  public get initialPlayerTurn() {
+    return this._initialPlayerTurn;
+  }
+
+  public getPlayer(v: Value) {
     if (this._player1.value === v) {
       return this._player1;
     } else {
       return this._player2;
     }
+  }
+
+  public makeMove(playerTurn: PlayerTurn, index: Index) {
+    this._cells[index].value = this[playerTurn].value;
+  }
+
+  public isSinglePlayerMode() {
+    return this._numberOfPlayers === NumberOfPlayers.OnePlayer;
+  }
+
+  public getAvailableCells(): Index[] {
+    return this._cells.reduce((availableCells, cell, index) => {
+      if (!cell.value) {
+        availableCells.push(index as Index);
+      }
+      return availableCells;
+    }, [] as Index[]);
   }
 
   public getCell(index: Index) {
@@ -71,22 +134,12 @@ export class Game {
       [this._cells[0], this._cells[4], this._cells[8]],
       [this._cells[2], this._cells[4], this._cells[6]],
     ];
-    const classNameCombs: [string, string][] = [
-      ['grid-horizontal-top', 'horizontal'],
-      ['grid-horizontal-middle', 'horizontal'],
-      ['grid-horizontal-bottom', 'horizontal'],
-      ['grid-vertical-left', 'vertical'],
-      ['grid-vertical-middle', 'vertical'],
-      ['grid-vertical-right', 'vertical'],
-      ['top-left-to-bottom-right', 'top-left-to-bottom-right'],
-      ['top-right-to-bottom-left', 'top-right-to-bottom-left'],
-    ];
 
     for (let i = 0; i < combs.length; i++) {
       const comb = combs[i];
       const result = comb.join('');
       if (result === 'OOO' || result === 'XXX') {
-        const [gridClass, cellClass] = classNameCombs[i];
+        const [gridClass, cellClass] = this.classNameCombs[i];
         this._gridClassNameWin = gridClass;
         this.winValue = result[0] as Value;
         for (const cell of comb) {
@@ -108,8 +161,14 @@ export class Game {
 
   public toArchived(): ArchivedGame {
     return {
-      player1: this._player1.toArchived(),
-      player2: this._player2.toArchived(),
+      config: {
+        id: this._id,
+        player1: this._player1.toConfig(),
+        player2: this._player2.toConfig(),
+        numberOfPlayers: this._numberOfPlayers,
+        level: this._level,
+        initialPlayerTurn: this._initialPlayerTurn,
+      },
       cells: this._cells.map((c) => c.toArchived()),
       gridClassNameWin: this._gridClassNameWin,
       winValue: this.winValue,
@@ -117,7 +176,7 @@ export class Game {
   }
 
   static fromArchived(archivedGame: ArchivedGame): Game {
-    const game = new Game(Player.fromArchived(archivedGame.player1), Player.fromArchived(archivedGame.player2));
+    const game = new Game(archivedGame.config);
 
     archivedGame.cells.forEach((c, i) => {
       const cell = game.getCell(i as Index);
@@ -129,5 +188,20 @@ export class Game {
     game.winValue = archivedGame.winValue;
 
     return game;
+  }
+
+  public toConfig(): GameConfig {
+    return {
+      id: this.id,
+      player1: this._player1.toConfig(),
+      player2: this._player2.toConfig(),
+      numberOfPlayers: this.numberOfPlayers,
+      level: this.level,
+      initialPlayerTurn: this._initialPlayerTurn,
+    };
+  }
+
+  static fromConfig(config: GameConfig): Game {
+    return new Game(config);
   }
 }

@@ -1,16 +1,18 @@
-export type Value = 'O' | 'X';
+import type { Index } from './Game';
+
+export type Value = 'O' | 'X' | undefined;
 
 export type ArchivedCell = {
-  index: number;
+  index: Index;
   value: Value;
-  className: string;
+  className: string | undefined;
 };
 
 export class Cell {
-  private _value!: Value;
-  public className!: string;
+  private _value: Value;
+  public className: string | undefined;
 
-  constructor(private _index: number) {}
+  constructor(private _index: Index) {}
 
   public get value() {
     return this._value;
@@ -21,7 +23,7 @@ export class Cell {
   }
 
   public set value(value: Value) {
-    if (!this._value) {
+    if (!(this.value && value && this.value !== value)) {
       this._value = value;
     }
   }
@@ -36,5 +38,11 @@ export class Cell {
       value: this._value,
       className: this.className,
     };
+  }
+
+  public clone(): Cell {
+    const cell = new Cell(this.index);
+    cell.value = this.value;
+    return cell;
   }
 }

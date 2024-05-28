@@ -1,22 +1,36 @@
+import { act } from 'react';
 import { createMemoryHistory } from 'history';
 import type { ReactElement, ReactNode } from 'react';
+import { Provider } from 'react-redux';
 
 import { getConfig, IonApp } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import type { RenderOptions } from '@testing-library/react';
-import { act, configure, render as rtlRender } from '@testing-library/react';
+import { configure, fireEvent, render as rtlRender } from '@testing-library/react';
+
+import { DefaultProvider } from './providers/DefaultProvider';
+import { createStore } from './store';
 
 configure({
   ...getConfig(),
   reactStrictMode: true,
 });
 
-const render = (ui: ReactElement, customHistory = createMemoryHistory(), renderOptions?: RenderOptions) => {
+const render = (
+  ui: ReactElement,
+  customStore = createStore(),
+  customHistory = createMemoryHistory(),
+  renderOptions?: RenderOptions,
+) => {
   const Wrapper = ({ children }: { children: ReactNode }) => {
     return (
-      <IonApp>
-        <IonReactRouter history={customHistory}>{children}</IonReactRouter>
-      </IonApp>
+      <Provider store={customStore}>
+        <DefaultProvider>
+          <IonApp>
+            <IonReactRouter history={customHistory}>{children}</IonReactRouter>
+          </IonApp>
+        </DefaultProvider>
+      </Provider>
     );
   };
 
@@ -25,8 +39,12 @@ const render = (ui: ReactElement, customHistory = createMemoryHistory(), renderO
 
 const safeAct = () => act(async () => await Promise.resolve());
 
+const ionChange = (element: Document | Element | Window, value: string) => {
+  fireEvent(element, new CustomEvent('ionChange', { detail: { value } }));
+};
+
 // re-export everything
 export * from '@testing-library/react';
 
 // override render method
-export { render, safeAct, createMemoryHistory as createTestHistory };
+export { ionChange, render, safeAct, createMemoryHistory as createTestHistory, createStore as createTestStore };

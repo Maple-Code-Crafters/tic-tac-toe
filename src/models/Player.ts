@@ -1,15 +1,16 @@
+import type { PlayerConfig } from '../slices/gameSlice';
 import type { Value } from './Cell';
 
-export type ArchivedPlayer = {
-  name: string;
-  value: Value;
-};
-
 export class Player {
-  constructor(
-    private _name: string,
-    private _value: Value,
-  ) {}
+  private _name: string;
+  private _value: Value;
+  private _isCpu: boolean;
+
+  constructor(config: PlayerConfig) {
+    this._name = config.name;
+    this._value = config.value;
+    this._isCpu = config.isCpu;
+  }
 
   public get name() {
     return this._name;
@@ -19,11 +20,15 @@ export class Player {
     return this._value;
   }
 
-  public toArchived(): ArchivedPlayer {
-    return { name: this._name, value: this._value };
+  public get isCpu() {
+    return this._isCpu;
   }
 
-  static fromArchived(archivedPlayer: ArchivedPlayer): Player {
-    return new Player(archivedPlayer.name, archivedPlayer.value);
+  public toConfig(): PlayerConfig {
+    return { name: this._name, value: this._value, isCpu: this._isCpu };
+  }
+
+  static fromConfig(config: PlayerConfig): Player {
+    return new Player(config);
   }
 }

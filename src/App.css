@@ -1,3 +1,9 @@
+:root {
+  --ion-color-primary: #bebb00;
+  --ion-color-primary-shade: #a7a500;
+  --ion-color-primary-tint: #c5c21a;
+}
+
 .o-x-value {
   font-family: 'Fuzzy Bubbles' !important;
 }
