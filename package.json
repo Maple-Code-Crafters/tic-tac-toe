@@ -18,14 +18,14 @@
     "generate": "npx @capacitor/assets generate --ios --android --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#111111'"
   },
   "dependencies": {
-    "@capacitor/android": "^6.0.0",
+    "@capacitor/android": "^6.1.0",
     "@capacitor/app": "^6.0.0",
-    "@capacitor/core": "^6.0.0",
+    "@capacitor/core": "^6.1.0",
     "@capacitor/haptics": "^6.0.0",
-    "@capacitor/ios": "^6.0.0",
-    "@capacitor/keyboard": "^6.0.0",
+    "@capacitor/ios": "^6.1.0",
+    "@capacitor/keyboard": "^6.0.1",
     "@capacitor/preferences": "^6.0.0",
-    "@capacitor/splash-screen": "^6.0.0",
+    "@capacitor/splash-screen": "^6.0.1",
     "@capacitor/status-bar": "^6.0.0",
     "@ionic/react": "^8.2.2",
     "@ionic/react-router": "^8.2.2",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
-    "@capacitor/cli": "^6.0.0",
+    "@capacitor/cli": "^6.1.0",
     "@eslint/js": "^9.3.0",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "^6.4.5",
