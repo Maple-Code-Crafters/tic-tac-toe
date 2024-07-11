@@ -82,3 +82,11 @@
 - `npm run generate`
 
 - <https://github.com/ionic-team/capacitor-assets>
+
+## Upload iOS build (Xcode)
+
+1. Update iOS app project version
+
+2. Product > Archive
+
+3. Archives > Validate App and Distribute App

@@ -2,7 +2,7 @@ import type { Default } from '../helpers/storage.helper';
 import { Level, NumberOfPlayers } from '../models/Game';
 
 export const APP_VERSION = '1.0.0';
-export const APP_NAME = 'tic-tac-toe';
+export const APP_NAME = 'Maple Tic-Tac-Toe';
 export const DEFAULT: Default = {
   player1Name: 'Player 1',
   player2Name: 'Player 2',
